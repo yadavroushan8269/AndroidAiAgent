@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:label="AI Agent"
+        android:label="Android AI Agent"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -20,8 +23,7 @@
 
         <service
             android:name=".AgentAccessibilityService"
-            android:exported="true"
-            android:label="AI Agent Accessibility"
+            android:exported="false"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
 
             <intent-filter>
