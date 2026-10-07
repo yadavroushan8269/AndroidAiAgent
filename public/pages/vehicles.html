@@ -2,195 +2,223 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5a400">
   <title>Vehicles - Hyma RMC Kokapet</title>
-
   <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
-  <div class="vehicles-page">
+  <div class="app-page">
 
-    <!-- Header -->
-    <header class="dashboard-header">
-
+    <header class="top-header">
       <div>
-        <p class="header-small">Hyma RMC Kokapet</p>
         <h1>Vehicles</h1>
+        <p>Manage site vehicles</p>
       </div>
 
-      <button
-        type="button"
-        id="addVehicleBtn"
-        class="header-add-btn"
-      >
+      <button id="addVehicleBtn" class="header-action" type="button">
         + Add
       </button>
-
     </header>
 
-    <!-- Search -->
-    <section class="vehicle-search">
+    <main class="page-content">
 
       <div class="search-box">
-
         <span>🔍</span>
-
         <input
           type="search"
           id="vehicleSearch"
           placeholder="Search vehicle number..."
           autocomplete="off"
         >
-
       </div>
 
-    </section>
-
-    <!-- Filters -->
-    <section class="vehicle-filters">
-
-      <button
-        type="button"
-        class="filter-btn active"
-        data-filter="all"
-      >
-        All
-      </button>
-
-      <button
-        type="button"
-        class="filter-btn"
-        data-filter="tm"
-      >
-        TM
-      </button>
-
-      <button
-        type="button"
-        class="filter-btn"
-        data-filter="truck"
-      >
-        Truck
-      </button>
-
-      <button
-        type="button"
-        class="filter-btn"
-        data-filter="dumper"
-      >
-        Dumper
-      </button>
-
-      <button
-        type="button"
-        class="filter-btn"
-        data-filter="other"
-      >
-        Other
-      </button>
-
-    </section>
-
-    <!-- Vehicle Count -->
-    <section class="vehicle-summary">
-
-      <div>
-        <span>Total Vehicles</span>
-        <strong id="vehicleCount">0</strong>
-      </div>
-
-      <div>
-        <span>Active</span>
-        <strong id="activeVehicleCount">0</strong>
-      </div>
-
-    </section>
-
-    <!-- Vehicle List -->
-    <main
-      id="vehicleList"
-      class="vehicle-list"
-    >
-
-      <div class="empty-state">
-
-        <div class="empty-icon">🚚</div>
-
-        <h3>No vehicles added</h3>
-
-        <p>
-          Add your first vehicle to start tracking.
-        </p>
-
-        <button
-          type="button"
-          id="emptyAddVehicleBtn"
-          class="primary-btn"
-        >
-          + Add Vehicle
+      <div class="filter-row">
+        <button class="filter-btn active" data-filter="all">
+          All
         </button>
 
+        <button class="filter-btn" data-filter="tm">
+          TM
+        </button>
+
+        <button class="filter-btn" data-filter="truck">
+          Truck
+        </button>
+
+        <button class="filter-btn" data-filter="dumper">
+          Dumper
+        </button>
+
+        <button class="filter-btn" data-filter="other">
+          Other
+        </button>
       </div>
+
+      <div class="vehicle-summary">
+        <div>
+          <strong id="vehicleCount">0</strong>
+          <span>Total Vehicles</span>
+        </div>
+
+        <div>
+          <strong id="activeVehicleCount">0</strong>
+          <span>Active</span>
+        </div>
+      </div>
+
+      <section class="vehicle-section">
+
+        <div id="vehicleList" class="vehicle-list"></div>
+
+        <div id="vehicleEmpty" class="empty-state">
+          <div class="empty-icon">🚚</div>
+          <h3>No Vehicles Yet</h3>
+          <p>Add your first vehicle to start tracking duration.</p>
+
+          <button
+            id="emptyAddVehicleBtn"
+            class="primary-btn"
+            type="button"
+          >
+            + Add Vehicle
+          </button>
+        </div>
+
+      </section>
 
     </main>
 
+    <!-- Add Vehicle Modal -->
+
+    <div id="vehicleModal" class="modal-overlay hidden">
+
+      <div class="modal-card">
+
+        <div class="modal-header">
+          <div>
+            <h2>Add Vehicle</h2>
+            <p>Enter vehicle details</p>
+          </div>
+
+          <button
+            id="closeVehicleModal"
+            class="modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <form id="vehicleForm">
+
+          <label for="vehicleNumber">
+            Vehicle Number
+          </label>
+
+          <input
+            id="vehicleNumber"
+            type="text"
+            placeholder="Example: TS09AB1234"
+            autocomplete="off"
+            required
+          >
+
+          <label for="vehicleType">
+            Vehicle Type
+          </label>
+
+          <select id="vehicleType" required>
+            <option value="">Select vehicle type</option>
+            <option value="TM">TM / Transit Mixer</option>
+            <option value="Truck">Truck</option>
+            <option value="Dumper">Dumper</option>
+            <option value="Excavator">Excavator</option>
+            <option value="JCB">JCB</option>
+            <option value="Loader">Loader</option>
+            <option value="Crane">Crane</option>
+            <option value="Tractor">Tractor</option>
+            <option value="Water Tanker">Water Tanker</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label for="vehicleDriver">
+            Driver Name
+          </label>
+
+          <input
+            id="vehicleDriver"
+            type="text"
+            placeholder="Driver name"
+            autocomplete="off"
+          >
+
+          <label for="vehicleContractor">
+            Contractor / Company
+          </label>
+
+          <input
+            id="vehicleContractor"
+            type="text"
+            placeholder="Contractor name"
+            autocomplete="off"
+          >
+
+          <label for="vehicleStatus">
+            Status
+          </label>
+
+          <select id="vehicleStatus">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+
+          <div id="vehicleFormMessage" class="form-message"></div>
+
+          <button
+            class="primary-btn full-width"
+            type="submit"
+          >
+            Save Vehicle
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+    <nav class="bottom-nav">
+
+      <button class="nav-item" data-page="dashboard" type="button">
+        <span>⌂</span>
+        <small>Home</small>
+      </button>
+
+      <button class="nav-item active" data-page="vehicles" type="button">
+        <span>🚚</span>
+        <small>Vehicles</small>
+      </button>
+
+      <button class="nav-item add-nav" data-page="add-entry" type="button">
+        <span>+</span>
+      </button>
+
+      <button class="nav-item" data-page="calendar" type="button">
+        <span>▣</span>
+        <small>Calendar</small>
+      </button>
+
+      <button class="nav-item" data-page="profile" type="button">
+        <span>👤</span>
+        <small>You</small>
+      </button>
+
+    </nav>
+
   </div>
-
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="dashboard"
-    >
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item active"
-      data-page="vehicles"
-    >
-      <span>🚚</span>
-      <small>Vehicles</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item add-nav"
-      data-page="add-entry"
-    >
-      <span>+</span>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="calendar"
-    >
-      <span>📅</span>
-      <small>Calendar</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="profile"
-    >
-      <span>👤</span>
-      <small>You</small>
-    </button>
-
-  </nav>
 
   <script src="../app.js"></script>
 
