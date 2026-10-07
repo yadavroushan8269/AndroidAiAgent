@@ -1,297 +1,983 @@
-/* =========================================
-   HYMA RMC KOKAPET
-   Vehicle Duration Management System
-   ========================================= */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :root {
   --primary: #f5a400;
   --primary-dark: #d98c00;
-
   --background: #f5f6f8;
   --white: #ffffff;
-
   --text: #171717;
   --muted: #737373;
-
   --border: #e5e7eb;
-
   --success: #16a34a;
   --danger: #dc2626;
-
-  --shadow:
-    0 12px 35px rgba(0, 0, 0, 0.08);
-
-  --radius: 18px;
+  --shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+  --radius: 16px;
 }
 
-/* =========================================
-   BASE
-   ========================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 html {
-  width: 100%;
   min-height: 100%;
-  background: var(--background);
 }
 
 body {
-  width: 100%;
   min-height: 100vh;
-
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
   background: var(--background);
   color: var(--text);
-
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
 }
 
 button,
 input,
 select,
 textarea {
-  font-family: inherit;
+  font: inherit;
 }
 
 button {
-  border: 0;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--text);
+  padding: 13px 14px;
   outline: none;
 }
 
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid rgba(245, 164, 0, 0.25);
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.14);
 }
 
-/* =========================================
-   APP
-   ========================================= */
-
-#app {
-  width: 100%;
-  min-height: 100vh;
+textarea {
+  resize: vertical;
 }
 
-/* =========================================
-   WELCOME SCREEN
-   ========================================= */
-
-.welcome-screen {
-  width: 100%;
-  min-height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-  justify-content: center;
-
-  padding: 30px 22px;
-
-  text-align: center;
-
-  background:
-    linear-gradient(
-      180deg,
-      #fffaf0 0%,
-      var(--background) 55%,
-      var(--background) 100%
-    );
-}
-
-/* =========================================
-   APP LOGO
-   ========================================= */
-
-.app-logo {
-  width: 96px;
-  height: 96px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: var(--white);
-
-  border: 1px solid rgba(245, 164, 0, 0.15);
-
-  border-radius: 26px;
-
-  font-size: 50px;
-
-  box-shadow: var(--shadow);
-
-  margin-bottom: 24px;
-
-  animation: logoAppear 0.5s ease;
-}
-
-@keyframes logoAppear {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* =========================================
-   HEADING
-   ========================================= */
-
-.welcome-screen h1 {
-  font-size: 29px;
-  line-height: 1.2;
-
-  font-weight: 800;
-
-  letter-spacing: -0.5px;
-
-  margin-bottom: 9px;
-}
-
-/* =========================================
-   SUBTITLE
-   ========================================= */
-
-.subtitle {
-  max-width: 300px;
-
-  color: var(--muted);
-
-  font-size: 15px;
-  line-height: 1.5;
-
-  margin-bottom: 30px;
-}
-
-/* =========================================
-   PRIMARY BUTTON
-   ========================================= */
+/* =========================
+   COMMON BUTTONS
+========================= */
 
 .primary-btn {
   width: 100%;
-  max-width: 330px;
-
-  min-height: 52px;
-
-  padding: 14px 22px;
-
-  border-radius: 14px;
-
+  border: none;
+  border-radius: 12px;
   background: var(--primary);
-  color: #111111;
-
-  font-size: 16px;
+  color: #111;
+  padding: 14px 18px;
   font-weight: 700;
-
-  box-shadow:
-    0 7px 18px rgba(245, 164, 0, 0.22);
-
-  cursor: pointer;
-
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: 0.2s ease;
 }
 
 .primary-btn:hover {
   background: var(--primary-dark);
-
-  box-shadow:
-    0 9px 22px rgba(245, 164, 0, 0.28);
 }
 
-.primary-btn:active {
-  transform: scale(0.97);
+.secondary-btn {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--text);
+  padding: 13px 18px;
+  font-weight: 700;
+  margin-top: 10px;
 }
 
-/* =========================================
-   TABLET
-   ========================================= */
-
-@media (min-width: 600px) {
-
-  .welcome-screen {
-    padding: 50px 30px;
-  }
-
-  .app-logo {
-    width: 110px;
-    height: 110px;
-
-    font-size: 58px;
-
-    border-radius: 30px;
-  }
-
-  .welcome-screen h1 {
-    font-size: 34px;
-  }
-
-  .subtitle {
-    font-size: 16px;
-  }
-
-  .primary-btn {
-    max-width: 340px;
-  }
+.icon-btn,
+.header-add-btn,
+.today-btn {
+  border: none;
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--text);
+  padding: 10px 13px;
+  box-shadow: var(--shadow);
 }
 
-/* =========================================
+.header-add-btn {
+  background: var(--primary);
+  font-weight: 700;
+}
+
+.link-btn {
+  border: none;
+  background: transparent;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.back-btn {
+  display: block;
+  margin: 18px auto 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+}
+
+/* =========================
+   WELCOME
+========================= */
+
+.welcome-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  background: var(--white);
+}
+
+.app-logo {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  background: #fff3cf;
+  font-size: 48px;
+  margin-bottom: 22px;
+}
+
+.welcome-screen h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-bottom: 30px;
+}
+
+.welcome-screen .primary-btn {
+  max-width: 340px;
+}
+
+/* =========================
+   AUTH
+========================= */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 450px;
+  margin: auto;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 28px 20px;
+  box-shadow: var(--shadow);
+}
+
+.auth-logo {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff3cf;
+  border-radius: 20px;
+  font-size: 36px;
+}
+
+.auth-container h1 {
+  text-align: center;
+  font-size: 25px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--muted);
+  margin: 6px 0 25px;
+}
+
+.form-group {
+  margin-bottom: 17px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  padding: 8px;
+}
+
+.forgot-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -5px;
+  margin-bottom: 18px;
+}
+
+.auth-submit {
+  margin-top: 5px;
+}
+
+.auth-footer {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.auth-message {
+  min-height: 22px;
+  margin-top: 14px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.auth-message.success {
+  color: var(--success);
+}
+
+.auth-message.error {
+  color: var(--danger);
+}
+
+.auth-message.info {
+  color: var(--muted);
+}
+
+/* =========================
+   MAIN APP
+========================= */
+
+.dashboard-page,
+.vehicles-page,
+.entry-page,
+.calendar-page,
+.reports-page,
+.profile-page {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 16px 105px;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.dashboard-header h1 {
+  font-size: 26px;
+}
+
+.header-small {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+/* =========================
+   DATE CARD
+========================= */
+
+.date-card,
+.selected-date-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.date-card strong,
+.selected-date-card strong {
+  display: block;
+  margin-top: 3px;
+}
+
+.card-label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.calendar-icon {
+  font-size: 27px;
+}
+
+/* =========================
+   DASHBOARD STATS
+========================= */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.stat-card,
+.report-stat,
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 15px;
+}
+
+.stat-icon {
+  font-size: 25px;
+}
+
+.stat-card span:not(.stat-icon),
+.report-stat small,
+.summary-item small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stat-card strong,
+.report-stat strong,
+.summary-item strong {
+  display: block;
+  font-size: 19px;
+  margin-top: 2px;
+}
+
+/* =========================
+   QUICK ADD
+========================= */
+
+.quick-section {
+  margin: 18px 0;
+}
+
+.quick-add-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--primary);
+  padding: 17px;
+}
+
+.quick-add-icon {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+  font-size: 28px;
+}
+
+.quick-add-btn strong,
+.quick-add-btn small {
+  display: block;
+}
+
+.quick-add-btn small {
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+.quick-add-btn .arrow {
+  margin-left: auto;
+  font-size: 23px;
+}
+
+/* =========================
+   SECTION / ACTIVITY
+========================= */
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 12px;
+}
+
+.section-heading h2 {
+  font-size: 18px;
+}
+
+.section-heading p {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 35px 18px;
+  background: var(--white);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.empty-icon {
+  font-size: 35px;
+  margin-bottom: 8px;
+}
+
+.empty-state h3 {
+  font-size: 16px;
+}
+
+.empty-state p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 5px 0 15px;
+}
+
+/* =========================
+   VEHICLES
+========================= */
+
+.vehicle-search {
+  margin-bottom: 12px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding-left: 13px;
+}
+
+.search-box input {
+  border: none;
+  box-shadow: none;
+}
+
+.vehicle-filters,
+.report-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.filter-btn,
+.report-tab {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--white);
+  padding: 8px 15px;
+}
+
+.filter-btn.active,
+.report-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  font-weight: 700;
+}
+
+.vehicle-summary {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.vehicle-summary > div {
+  flex: 1;
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 13px;
+  border: 1px solid var(--border);
+}
+
+.vehicle-summary span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.vehicle-summary strong {
+  font-size: 20px;
+}
+
+/* =========================
+   ENTRY
+========================= */
+
+.entry-container {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.duration-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: #fff8e7;
+  border: 1px solid #f7d889;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 18px;
+}
+
+.duration-icon {
+  font-size: 27px;
+}
+
+.duration-card span,
+.duration-card strong {
+  display: block;
+}
+
+.duration-card span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.duration-card strong {
+  font-size: 20px;
+}
+
+/* =========================
+   CALENDAR
+========================= */
+
+.month-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 10px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+
+.month-arrow {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background: var(--background);
+  font-size: 25px;
+}
+
+.calendar-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 13px;
+  box-shadow: var(--shadow);
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 7px;
+}
+
+.calendar-weekdays span {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.calendar-grid button {
+  min-height: 42px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.calendar-grid button:hover {
+  background: #fff3cf;
+}
+
+.calendar-grid button.selected {
+  background: var(--primary);
+  font-weight: 700;
+}
+
+.calendar-grid button.today {
+  border: 2px solid var(--primary);
+}
+
+.daily-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* =========================
+   REPORTS
+========================= */
+
+.report-tabs {
+  margin-bottom: 15px;
+}
+
+.report-filter-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 17px;
+  box-shadow: var(--shadow);
+}
+
+.report-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  min-width: 750px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+th {
+  background: #fff8e7;
+  font-size: 12px;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary);
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.profile-main-info h2 {
+  font-size: 20px;
+}
+
+.profile-main-info p {
+  color: var(--muted);
+  font-size: 13px;
+  word-break: break-word;
+}
+
+.role-badge {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 4px 9px;
+  border-radius: 20px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.profile-info-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  margin-top: 14px;
+  box-shadow: var(--shadow);
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-icon {
+  font-size: 22px;
+}
+
+.info-row small,
+.info-row strong {
+  display: block;
+}
+
+.info-row small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.info-row strong {
+  font-size: 14px;
+}
+
+.profile-actions {
+  margin-top: 15px;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.profile-action {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  padding: 16px;
+}
+
+.profile-action:last-child {
+  border-bottom: none;
+}
+
+.profile-action > div {
+  flex: 1;
+}
+
+.profile-action strong,
+.profile-action small {
+  display: block;
+}
+
+.profile-action small {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.logout-section {
+  margin-top: 18px;
+}
+
+.logout-btn {
+  width: 100%;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--danger);
+  padding: 13px;
+  font-weight: 700;
+}
+
+.app-version {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 20px;
+}
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+.bottom-nav {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 900px;
+  min-height: 70px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: rgba(255, 255, 255, 0.97);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.06);
+  padding: 6px 6px max(6px, env(safe-area-inset-bottom));
+}
+
+.nav-item {
+  position: relative;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.nav-item span {
+  font-size: 20px;
+}
+
+.nav-item small {
+  font-size: 10px;
+}
+
+.nav-item.active {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.nav-item.add-nav {
+  width: 52px;
+  height: 52px;
+  align-self: center;
+  justify-self: center;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #111;
+  font-size: 28px;
+}
+
+.nav-item.add-nav span {
+  font-size: 29px;
+}
+
+/* =========================
    DESKTOP
-   ========================================= */
+========================= */
 
-@media (min-width: 900px) {
+@media (min-width: 700px) {
 
-  body {
-    display: flex;
-    justify-content: center;
+  .auth-page {
+    padding: 50px 20px;
   }
 
-  #app {
-    max-width: 500px;
-
-    min-height: 100vh;
-
-    background: var(--background);
-
-    box-shadow:
-      0 0 50px rgba(0, 0, 0, 0.06);
+  .auth-container {
+    padding: 35px;
   }
 
-  .welcome-screen {
-    min-height: 100vh;
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
+
+  .bottom-nav {
+    border-radius: 18px 18px 0 0;
+  }
+
 }
 
-/* =========================================
+@media (min-width: 1000px) {
+
+  .dashboard-page,
+  .vehicles-page,
+  .entry-page,
+  .calendar-page,
+  .reports-page,
+  .profile-page {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+}
+
+/* =========================
    REDUCED MOTION
-   ========================================= */
+========================= */
 
 @media (prefers-reduced-motion: reduce) {
 
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
   }
+
 }
