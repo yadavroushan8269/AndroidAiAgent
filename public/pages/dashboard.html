@@ -2,214 +2,202 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5a400">
   <title>Dashboard - Hyma RMC Kokapet</title>
-
   <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
-  <div class="dashboard-page">
+  <div class="app-page">
 
-    <!-- Header -->
-    <header class="dashboard-header">
+    <header class="top-header">
 
       <div>
-        <p class="header-small">Hyma RMC Kokapet</p>
-        <h1>Dashboard</h1>
+        <h1 id="dashboardTitle">
+          Dashboard
+        </h1>
+
+        <p id="dashboardDate">
+          Today
+        </p>
       </div>
 
       <button
-        type="button"
         id="notificationBtn"
-        class="icon-btn"
-        aria-label="Notifications"
+        class="header-action notification-badge"
+        type="button"
       >
         🔔
       </button>
 
     </header>
 
-    <!-- Date -->
-    <section class="date-card">
+    <main class="page-content">
 
-      <div>
-        <span class="card-label">Today</span>
-        <strong id="todayDate">Loading...</strong>
-      </div>
+      <section class="dashboard-welcome">
 
-      <span class="calendar-icon">📅</span>
+        <h2 id="welcomeName">
+          Welcome
+        </h2>
 
-    </section>
+        <p>
+          Vehicle duration management
+        </p>
 
-    <!-- Statistics -->
-    <section class="stats-grid">
+      </section>
 
-      <div class="stat-card">
+      <section class="stats-grid">
 
-        <span class="stat-icon">🚚</span>
-
-        <div>
-          <span>Total Vehicles</span>
-          <strong id="totalVehicles">0</strong>
+        <div class="stat-card">
+          <strong id="dashboardVehicleCount">0</strong>
+          <span>Vehicles</span>
         </div>
 
-      </div>
-
-      <div class="stat-card">
-
-        <span class="stat-icon">🟢</span>
-
-        <div>
+        <div class="stat-card green">
+          <strong id="dashboardRunningCount">0</strong>
           <span>Running</span>
-          <strong id="runningVehicles">0</strong>
         </div>
 
-      </div>
-
-      <div class="stat-card">
-
-        <span class="stat-icon">⏱️</span>
-
-        <div>
-          <span>Total Duration</span>
-          <strong id="totalDuration">0h 0m</strong>
-        </div>
-
-      </div>
-
-      <div class="stat-card">
-
-        <span class="stat-icon">📋</span>
-
-        <div>
+        <div class="stat-card orange">
+          <strong id="dashboardEntryCount">0</strong>
           <span>Today's Entries</span>
-          <strong id="todayEntries">0</strong>
         </div>
 
-      </div>
+        <div class="stat-card blue">
+          <strong id="dashboardDuration">0h 0m</strong>
+          <span>Total Duration</span>
+        </div>
 
-    </section>
+      </section>
 
-    <!-- Quick Add -->
-    <section class="quick-section">
+      <section>
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Quick Actions</h2>
+            <p>Frequently used options</p>
+          </div>
+
+        </div>
+
+        <div class="quick-actions">
+
+          <button
+            class="quick-action"
+            data-page="add-entry"
+            type="button"
+          >
+            <span>➕</span>
+            <strong>Add Entry</strong>
+            <span>Record vehicle entry</span>
+          </button>
+
+          <button
+            class="quick-action"
+            data-page="vehicles"
+            type="button"
+          >
+            <span>🚚</span>
+            <strong>Vehicles</strong>
+            <span>Manage vehicles</span>
+          </button>
+
+          <button
+            class="quick-action"
+            data-page="calendar"
+            type="button"
+          >
+            <span>📅</span>
+            <strong>Calendar</strong>
+            <span>View daily activity</span>
+          </button>
+
+          <button
+            class="quick-action"
+            data-page="reports"
+            type="button"
+          >
+            <span>📊</span>
+            <strong>Reports</strong>
+            <span>View duration reports</span>
+          </button>
+
+        </div>
+
+      </section>
+
+      <section>
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Today's Activity</h2>
+            <p>Latest vehicle entries</p>
+          </div>
+
+        </div>
+
+        <div
+          id="dashboardActivityList"
+          class="activity-list"
+        ></div>
+
+      </section>
+
+    </main>
+
+    <nav class="bottom-nav">
 
       <button
+        class="nav-item active"
+        data-page="dashboard"
         type="button"
-        id="quickAddBtn"
-        class="quick-add-btn"
       >
-
-        <span class="quick-add-icon">+</span>
-
-        <span>
-          <strong>Quick Add Entry</strong>
-          <small>Record vehicle entry / exit</small>
-        </span>
-
-        <span class="arrow">→</span>
-
+        <span>⌂</span>
+        <small>Home</small>
       </button>
 
-    </section>
-
-    <!-- Today's Activity -->
-    <section class="activity-section">
-
-      <div class="section-heading">
-
-        <div>
-          <h2>Today's Activity</h2>
-          <p>Latest vehicle movements</p>
-        </div>
-
-        <button
-          type="button"
-          id="viewAllBtn"
-          class="link-btn"
-        >
-          View All
-        </button>
-
-      </div>
-
-      <div
-        id="activityList"
-        class="activity-list"
+      <button
+        class="nav-item"
+        data-page="vehicles"
+        type="button"
       >
+        <span>🚚</span>
+        <small>Vehicles</small>
+      </button>
 
-        <div class="empty-state">
+      <button
+        class="nav-item add-nav"
+        data-page="add-entry"
+        type="button"
+      >
+        <span>+</span>
+      </button>
 
-          <div class="empty-icon">🚚</div>
+      <button
+        class="nav-item"
+        data-page="calendar"
+        type="button"
+      >
+        <span>▣</span>
+        <small>Calendar</small>
+      </button>
 
-          <h3>No activity yet</h3>
+      <button
+        class="nav-item"
+        data-page="profile"
+        type="button"
+      >
+        <span>👤</span>
+        <small>You</small>
+      </button>
 
-          <p>
-            Vehicle entries will appear here.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
+    </nav>
 
   </div>
-
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-
-    <button
-      type="button"
-      class="nav-item active"
-      data-page="dashboard"
-    >
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="vehicles"
-    >
-      <span>🚚</span>
-      <small>Vehicles</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item add-nav"
-      data-page="add-entry"
-    >
-      <span>+</span>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="calendar"
-    >
-      <span>📅</span>
-      <small>Calendar</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="profile"
-    >
-      <span>👤</span>
-      <small>You</small>
-    </button>
-
-  </nav>
 
   <script src="../app.js"></script>
 
