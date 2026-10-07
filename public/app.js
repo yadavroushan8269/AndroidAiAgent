@@ -1,785 +1,683 @@
-/* =========================================
-   HYMA RMC KOKAPET
-   Vehicle Duration Management System
-   ========================================= */
+const pages = {
+  login: "pages/login.html",
+  register: "pages/register.html",
+  dashboard: "pages/dashboard.html",
+  vehicles: "pages/vehicles.html",
+  "add-entry": "pages/add-entry.html",
+  calendar: "pages/calendar.html",
+  reports: "pages/reports.html",
+  profile: "pages/profile.html"
+};
 
-"use strict";
+function goTo(page) {
+  if (pages[page]) {
+    window.location.href = pages[page];
+  }
+}
 
+function showMessage(element, message, type = "info") {
+  if (!element) return;
 
-/* =========================================
-   APP ELEMENT
-   ========================================= */
+  element.textContent = message;
+  element.className = `auth-message ${type}`;
 
-const app = document.getElementById("app");
+  setTimeout(() => {
+    element.textContent = "";
+  }, 3500);
+}
 
+/* =========================
+   WELCOME PAGE
+========================= */
 
-/* =========================================
-   GET STARTED
-   ========================================= */
+function setupWelcome() {
+  const startBtn = document.getElementById("startBtn");
 
-function showLoginScreen() {
+  if (!startBtn) return;
 
-  app.innerHTML = `
-    <main class="auth-screen">
-
-      <div class="auth-header">
-
-        <button
-          class="back-btn"
-          id="backToWelcome"
-          type="button"
-          aria-label="Go back"
-        >
-          ←
-        </button>
-
-        <div class="small-logo">
-          🚧
-        </div>
-
-        <h1>Welcome Back</h1>
-
-        <p>
-          Login to Hyma RMC Kokapet
-        </p>
-
-      </div>
-
-
-      <form
-        id="loginForm"
-        class="auth-form"
-      >
-
-        <div class="form-group">
-
-          <label for="loginEmail">
-            Email or Mobile
-          </label>
-
-          <input
-            id="loginEmail"
-            type="text"
-            placeholder="Enter email or mobile"
-            autocomplete="username"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="loginPassword">
-            Password
-          </label>
-
-          <div class="password-box">
-
-            <input
-              id="loginPassword"
-              type="password"
-              placeholder="Enter password"
-              autocomplete="current-password"
-              required
-            >
-
-            <button
-              type="button"
-              class="password-toggle"
-              id="togglePassword"
-              aria-label="Show password"
-            >
-              👁
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <button
-          type="button"
-          class="forgot-btn"
-          id="forgotPassword"
-        >
-          Forgot Password?
-        </button>
-
-
-        <button
-          type="submit"
-          class="primary-btn auth-submit"
-        >
-          Login
-        </button>
-
-      </form>
-
-
-      <div class="register-area">
-
-        <span>
-          Don't have an account?
-        </span>
-
-        <button
-          type="button"
-          class="register-btn"
-          id="registerBtn"
-        >
-          Register
-        </button>
-
-      </div>
-
-    </main>
-  `;
-
-
-  addAuthStyles();
-
-  setupLoginEvents();
+  startBtn.addEventListener("click", () => {
+    goTo("login");
+  });
 }
 
 
-/* =========================================
-   LOGIN EVENTS
-   ========================================= */
+/* =========================
+   LOGIN PAGE
+========================= */
 
-function setupLoginEvents() {
+function setupLogin() {
+  const loginForm = document.getElementById("loginForm");
+  const registerBtn = document.getElementById("registerBtn");
+  const forgotPasswordBtn =
+    document.getElementById("forgotPasswordBtn");
 
-  const backButton =
-    document.getElementById("backToWelcome");
+  const backBtn = document.getElementById("backBtn");
 
-  const loginForm =
-    document.getElementById("loginForm");
-
-  const togglePassword =
-    document.getElementById("togglePassword");
-
-  const passwordInput =
+  const password =
     document.getElementById("loginPassword");
 
-  const forgotPassword =
-    document.getElementById("forgotPassword");
-
-  const registerButton =
-    document.getElementById("registerBtn");
-
-
-  /* Back */
-
-  backButton.addEventListener("click", () => {
-    showWelcomeScreen();
-  });
-
-
-  /* Password visibility */
-
-  togglePassword.addEventListener("click", () => {
-
-    if (passwordInput.type === "password") {
-
-      passwordInput.type = "text";
-
-      togglePassword.textContent = "🙈";
-
-    } else {
-
-      passwordInput.type = "password";
-
-      togglePassword.textContent = "👁";
-
-    }
-
-  });
-
-
-  /* Login */
-
-  loginForm.addEventListener("submit", (event) => {
-
-    event.preventDefault();
-
-    showMessage(
-      "Login system database se connect hone ke baad active hoga."
-    );
-
-  });
-
-
-  /* Forgot password */
-
-  forgotPassword.addEventListener("click", () => {
-
-    showMessage(
-      "Password recovery next step me add ki jayegi."
-    );
-
-  });
-
-
-  /* Register */
-
-  registerButton.addEventListener("click", () => {
-
-    showRegisterScreen();
-
-  });
-
-}
-
-
-/* =========================================
-   REGISTER SCREEN
-   ========================================= */
-
-function showRegisterScreen() {
-
-  app.innerHTML = `
-    <main class="auth-screen">
-
-      <div class="auth-header">
-
-        <button
-          class="back-btn"
-          id="backToLogin"
-          type="button"
-        >
-          ←
-        </button>
-
-        <div class="small-logo">
-          🚧
-        </div>
-
-        <h1>Create Account</h1>
-
-        <p>
-          Register for Hyma RMC Kokapet
-        </p>
-
-      </div>
-
-
-      <form
-        id="registerForm"
-        class="auth-form"
-      >
-
-        <div class="form-group">
-
-          <label for="registerName">
-            Full Name
-          </label>
-
-          <input
-            id="registerName"
-            type="text"
-            placeholder="Enter your name"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="registerMobile">
-            Mobile Number
-          </label>
-
-          <input
-            id="registerMobile"
-            type="tel"
-            placeholder="Enter mobile number"
-            inputmode="numeric"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="registerEmail">
-            Email
-          </label>
-
-          <input
-            id="registerEmail"
-            type="email"
-            placeholder="Enter email"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="registerPassword">
-            Password
-          </label>
-
-          <input
-            id="registerPassword"
-            type="password"
-            placeholder="Create password"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="registerRole">
-            Role
-          </label>
-
-          <select
-            id="registerRole"
-            required
-          >
-
-            <option value="">
-              Select Role
-            </option>
-
-            <option value="security">
-              Security Guard
-            </option>
-
-            <option value="admin">
-              Admin
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <button
-          type="submit"
-          class="primary-btn auth-submit"
-        >
-          Create Account
-        </button>
-
-      </form>
-
-
-      <div class="register-area">
-
-        <span>
-          Already have an account?
-        </span>
-
-        <button
-          type="button"
-          class="register-btn"
-          id="loginBtn"
-        >
-          Login
-        </button>
-
-      </div>
-
-    </main>
-  `;
-
-
-  addAuthStyles();
-
-
-  document
-    .getElementById("backToLogin")
-    .addEventListener("click", showLoginScreen);
-
-
-  document
-    .getElementById("loginBtn")
-    .addEventListener("click", showLoginScreen);
-
-
-  document
-    .getElementById("registerForm")
-    .addEventListener("submit", (event) => {
+  const togglePassword =
+    document.getElementById("toggleLoginPassword");
+
+  const message =
+    document.getElementById("loginMessage");
+
+  if (registerBtn) {
+    registerBtn.addEventListener("click", () => {
+      goTo("register");
+    });
+  }
+
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      window.location.href = "../index.html";
+    });
+  }
+
+  if (forgotPasswordBtn) {
+    forgotPasswordBtn.addEventListener("click", () => {
+      showMessage(
+        message,
+        "Password recovery will be connected later.",
+        "info"
+      );
+    });
+  }
+
+  if (togglePassword && password) {
+    togglePassword.addEventListener("click", () => {
+
+      const isPassword =
+        password.type === "password";
+
+      password.type =
+        isPassword ? "text" : "password";
+
+      togglePassword.textContent =
+        isPassword ? "🙈" : "👁️";
+
+    });
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", (event) => {
 
       event.preventDefault();
 
-      showMessage(
-        "Registration database se connect hone ke baad active hogi."
+      const user =
+        document.getElementById("loginUser")?.value.trim();
+
+      const pass =
+        document.getElementById("loginPassword")?.value;
+
+      if (!user || !pass) {
+        showMessage(
+          message,
+          "Please enter email/mobile and password.",
+          "error"
+        );
+        return;
+      }
+
+      /*
+       * Temporary frontend login.
+       * Real database authentication will be added later.
+       */
+
+      localStorage.setItem(
+        "hymaLoggedIn",
+        "true"
       );
+
+      localStorage.setItem(
+        "hymaUser",
+        JSON.stringify({
+          name: "User",
+          contact: user,
+          role: "Security Guard",
+          company: "Hyma RMC Kokapet"
+        })
+      );
+
+      goTo("dashboard");
+    });
+  }
+}
+
+
+/* =========================
+   REGISTER PAGE
+========================= */
+
+function setupRegister() {
+
+  const form =
+    document.getElementById("registerForm");
+
+  if (!form) return;
+
+  const loginBtn =
+    document.getElementById("loginBtn");
+
+  const backBtn =
+    document.getElementById("backBtn");
+
+  const password =
+    document.getElementById("registerPassword");
+
+  const confirmPassword =
+    document.getElementById("confirmPassword");
+
+  const togglePassword =
+    document.getElementById("toggleRegisterPassword");
+
+  const toggleConfirm =
+    document.getElementById("toggleConfirmPassword");
+
+  const message =
+    document.getElementById("registerMessage");
+
+
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      goTo("login");
+    });
+  }
+
+
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      goTo("login");
+    });
+  }
+
+
+  if (togglePassword && password) {
+
+    togglePassword.addEventListener("click", () => {
+
+      const isPassword =
+        password.type === "password";
+
+      password.type =
+        isPassword ? "text" : "password";
+
+      togglePassword.textContent =
+        isPassword ? "🙈" : "👁️";
 
     });
 
-}
-
-
-/* =========================================
-   WELCOME SCREEN
-   ========================================= */
-
-function showWelcomeScreen() {
-
-  app.innerHTML = `
-
-    <main class="welcome-screen">
-
-      <div class="app-logo">
-        🚧
-      </div>
-
-      <h1>
-        Hyma RMC Kokapet
-      </h1>
-
-      <p class="subtitle">
-        Vehicle Duration Management
-      </p>
-
-      <button
-        id="startBtn"
-        class="primary-btn"
-        type="button"
-      >
-        Get Started
-      </button>
-
-    </main>
-
-  `;
-
-
-  document
-    .getElementById("startBtn")
-    .addEventListener("click", showLoginScreen);
-
-}
-
-
-/* =========================================
-   AUTH CSS
-   ========================================= */
-
-function addAuthStyles() {
-
-  if (document.getElementById("authStyles")) {
-    return;
   }
 
 
-  const style =
-    document.createElement("style");
+  if (toggleConfirm && confirmPassword) {
 
-  style.id = "authStyles";
+    toggleConfirm.addEventListener("click", () => {
+
+      const isPassword =
+        confirmPassword.type === "password";
+
+      confirmPassword.type =
+        isPassword ? "text" : "password";
+
+      toggleConfirm.textContent =
+        isPassword ? "🙈" : "👁️";
+
+    });
+
+  }
 
 
-  style.textContent = `
+  form.addEventListener("submit", (event) => {
 
-    .auth-screen {
-      min-height: 100vh;
+    event.preventDefault();
 
-      padding: 28px 22px;
+    const name =
+      document.getElementById("registerName")?.value.trim();
 
-      background: var(--background);
+    const contact =
+      document.getElementById("registerContact")?.value.trim();
+
+    const company =
+      document.getElementById("registerCompany")?.value.trim();
+
+    const role =
+      document.getElementById("registerRole")?.value;
+
+    const pass =
+      document.getElementById("registerPassword")?.value;
+
+    const confirm =
+      document.getElementById("confirmPassword")?.value;
+
+
+    if (!name || !contact || !company || !role || !pass) {
+
+      showMessage(
+        message,
+        "Please fill all required fields.",
+        "error"
+      );
+
+      return;
     }
 
 
-    .auth-header {
-      position: relative;
+    if (pass !== confirm) {
 
-      text-align: center;
+      showMessage(
+        message,
+        "Passwords do not match.",
+        "error"
+      );
 
-      padding-top: 18px;
-
-      margin-bottom: 30px;
+      return;
     }
 
 
-    .back-btn {
-      position: absolute;
+    localStorage.setItem(
+      "hymaUser",
+      JSON.stringify({
+        name,
+        contact,
+        role:
+          role === "admin"
+            ? "Admin"
+            : "Security Guard",
+        company
+      })
+    );
 
-      top: 0;
-      left: 0;
 
-      width: 42px;
-      height: 42px;
+    localStorage.setItem(
+      "hymaLoggedIn",
+      "true"
+    );
 
-      border-radius: 12px;
 
-      background: var(--white);
+    showMessage(
+      message,
+      "Account created successfully.",
+      "success"
+    );
 
-      color: var(--text);
 
-      font-size: 24px;
+    setTimeout(() => {
+      goTo("dashboard");
+    }, 700);
 
-      box-shadow:
-        0 5px 18px rgba(0, 0, 0, 0.06);
+  });
 
-      cursor: pointer;
-    }
+}
 
 
-    .small-logo {
-      width: 66px;
-      height: 66px;
+/* =========================
+   DASHBOARD
+========================= */
 
-      margin: 0 auto 18px;
+function setupDashboard() {
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  const todayDate =
+    document.getElementById("todayDate");
 
-      background: var(--white);
+  if (!todayDate) return;
 
-      border-radius: 18px;
 
-      font-size: 34px;
+  const now = new Date();
 
-      box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.07);
-    }
+  todayDate.textContent =
+    now.toLocaleDateString("en-IN", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
 
 
-    .auth-header h1 {
-      font-size: 27px;
+  const quickAdd =
+    document.getElementById("quickAddBtn");
 
-      margin-bottom: 8px;
-    }
+  if (quickAdd) {
+    quickAdd.addEventListener("click", () => {
+      goTo("add-entry");
+    });
+  }
 
 
-    .auth-header p {
-      color: var(--muted);
+  const viewAll =
+    document.getElementById("viewAllBtn");
 
-      font-size: 14px;
-    }
+  if (viewAll) {
+    viewAll.addEventListener("click", () => {
+      goTo("calendar");
+    });
+  }
 
+}
 
-    .auth-form {
-      width: 100%;
-      max-width: 430px;
 
-      margin: 0 auto;
-    }
+/* =========================
+   VEHICLES
+========================= */
 
+function setupVehicles() {
 
-    .form-group {
-      margin-bottom: 18px;
-    }
+  const search =
+    document.getElementById("vehicleSearch");
 
+  if (!search) return;
 
-    .form-group label {
-      display: block;
 
-      margin-bottom: 8px;
+  const addVehicle =
+    document.getElementById("addVehicleBtn");
 
-      font-size: 14px;
+  const emptyAdd =
+    document.getElementById("emptyAddVehicleBtn");
 
-      font-weight: 700;
-    }
 
+  const addVehicleAction = () => {
 
-    .form-group input,
-    .form-group select {
-      width: 100%;
+    alert(
+      "Vehicle management will be connected to the database next."
+    );
 
-      height: 52px;
+  };
 
-      padding: 0 15px;
 
-      border: 1px solid var(--border);
+  if (addVehicle) {
+    addVehicle.addEventListener(
+      "click",
+      addVehicleAction
+    );
+  }
 
-      border-radius: 13px;
 
-      background: var(--white);
+  if (emptyAdd) {
+    emptyAdd.addEventListener(
+      "click",
+      addVehicleAction
+    );
+  }
 
-      color: var(--text);
+}
 
-      font-size: 15px;
 
-      outline: none;
-    }
+/* =========================
+   ADD ENTRY
+========================= */
 
+function setupAddEntry() {
 
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--primary);
-    }
+  const form =
+    document.getElementById("entryForm");
 
+  if (!form) return;
 
-    .password-box {
-      position: relative;
-    }
 
+  const entryTime =
+    document.getElementById("entryTime");
 
-    .password-box input {
-      padding-right: 55px;
-    }
+  const exitTime =
+    document.getElementById("exitTime");
 
+  const duration =
+    document.getElementById("calculatedDuration");
 
-    .password-toggle {
-      position: absolute;
 
-      right: 6px;
-      top: 6px;
+  function calculateDuration() {
 
-      width: 40px;
-      height: 40px;
+    if (!entryTime?.value || !exitTime?.value) {
 
-      border-radius: 10px;
-
-      background: transparent;
-
-      font-size: 18px;
-
-      cursor: pointer;
-    }
-
-
-    .forgot-btn {
-      display: block;
-
-      margin: 2px 0 20px auto;
-
-      background: transparent;
-
-      color: var(--primary-dark);
-
-      font-size: 14px;
-
-      font-weight: 700;
-
-      cursor: pointer;
-    }
-
-
-    .auth-submit {
-      max-width: none;
-
-      margin-top: 4px;
-    }
-
-
-    .register-area {
-      margin-top: 26px;
-
-      text-align: center;
-
-      color: var(--muted);
-
-      font-size: 14px;
-    }
-
-
-    .register-btn {
-      margin-left: 5px;
-
-      background: transparent;
-
-      color: var(--primary-dark);
-
-      font-weight: 700;
-
-      cursor: pointer;
-    }
-
-
-    @media (min-width: 900px) {
-
-      .auth-screen {
-        min-height: 100vh;
-
-        padding-top: 60px;
-        padding-bottom: 60px;
+      if (duration) {
+        duration.textContent = "0h 0m";
       }
 
+      return;
     }
 
-  `;
+
+    const [eh, em] =
+      entryTime.value.split(":").map(Number);
+
+    const [xh, xm] =
+      exitTime.value.split(":").map(Number);
 
 
-  document.head.appendChild(style);
-}
+    let start =
+      eh * 60 + em;
+
+    let end =
+      xh * 60 + xm;
 
 
-/* =========================================
-   MESSAGE
-   ========================================= */
+    /*
+     * Handles an exit after midnight.
+     */
 
-function showMessage(message) {
+    if (end < start) {
+      end += 24 * 60;
+    }
 
-  const oldMessage =
-    document.querySelector(".app-message");
 
-  if (oldMessage) {
-    oldMessage.remove();
+    const total =
+      end - start;
+
+    const hours =
+      Math.floor(total / 60);
+
+    const minutes =
+      total % 60;
+
+
+    if (duration) {
+      duration.textContent =
+        `${hours}h ${minutes}m`;
+    }
+
   }
 
 
-  const box =
-    document.createElement("div");
+  entryTime?.addEventListener(
+    "change",
+    calculateDuration
+  );
 
-  box.className = "app-message";
-
-
-  box.textContent = message;
-
-
-  box.style.cssText = `
-    position: fixed;
-    left: 50%;
-    bottom: 25px;
-    transform: translateX(-50%);
-
-    width: calc(100% - 40px);
-    max-width: 420px;
-
-    padding: 14px 16px;
-
-    background: #202124;
-    color: #ffffff;
-
-    border-radius: 12px;
-
-    font-size: 14px;
-    line-height: 1.4;
-
-    text-align: center;
-
-    z-index: 9999;
-
-    box-shadow:
-      0 10px 30px rgba(0,0,0,0.2);
-  `;
+  exitTime?.addEventListener(
+    "change",
+    calculateDuration
+  );
 
 
-  document.body.appendChild(box);
+  const today =
+    new Date().toISOString().split("T")[0];
+
+  const dateInput =
+    document.getElementById("entryDate");
+
+  if (dateInput) {
+    dateInput.value = today;
+  }
 
 
-  setTimeout(() => {
+  form.addEventListener("submit", (event) => {
 
-    box.remove();
+    event.preventDefault();
 
-  }, 3000);
-}
+    const message =
+      document.getElementById("entryMessage");
+
+    showMessage(
+      message,
+      "Entry saved locally for now. Database will be connected next.",
+      "success"
+    );
+
+  });
 
 
-/* =========================================
-   INITIALIZE APP
-   ========================================= */
+  const closeBtn =
+    document.getElementById("closeEntryBtn");
 
-const startButton =
-  document.getElementById("startBtn");
+  const cancelBtn =
+    document.getElementById("cancelEntryBtn");
 
 
-if (startButton) {
-
-  startButton.addEventListener(
+  closeBtn?.addEventListener(
     "click",
-    showLoginScreen
+    () => goTo("dashboard")
+  );
+
+  cancelBtn?.addEventListener(
+    "click",
+    () => goTo("dashboard")
   );
 
 }
+
+
+/* =========================
+   PROFILE
+========================= */
+
+function setupProfile() {
+
+  const profileName =
+    document.getElementById("profileName");
+
+  if (!profileName) return;
+
+
+  let user = null;
+
+  try {
+
+    user = JSON.parse(
+      localStorage.getItem("hymaUser")
+    );
+
+  } catch {
+    user = null;
+  }
+
+
+  if (user) {
+
+    profileName.textContent =
+      user.name || "User";
+
+    const contact =
+      document.getElementById("profileContact");
+
+    if (contact) {
+      contact.textContent =
+        user.contact || "Not added";
+    }
+
+
+    const role =
+      document.getElementById("profileRole");
+
+    if (role) {
+      role.textContent =
+        user.role || "Security Guard";
+    }
+
+
+    const company =
+      document.getElementById("profileCompany");
+
+    if (company) {
+      company.textContent =
+        user.company || "Hyma RMC Kokapet";
+    }
+
+
+    const avatar =
+      document.getElementById("profileAvatar");
+
+    if (avatar) {
+
+      avatar.textContent =
+        (user.name || "U")
+          .charAt(0)
+          .toUpperCase();
+
+    }
+
+  }
+
+
+  const logout =
+    document.getElementById("logoutBtn");
+
+  if (logout) {
+
+    logout.addEventListener("click", () => {
+
+      localStorage.removeItem(
+        "hymaLoggedIn"
+      );
+
+      localStorage.removeItem(
+        "hymaUser"
+      );
+
+      window.location.href =
+        "../index.html";
+
+    });
+
+  }
+
+}
+
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+function setupNavigation() {
+
+  const navItems =
+    document.querySelectorAll(
+      ".bottom-nav .nav-item"
+    );
+
+
+  navItems.forEach((item) => {
+
+    item.addEventListener("click", () => {
+
+      const page =
+        item.dataset.page;
+
+      if (page) {
+        goTo(page);
+      }
+
+    });
+
+  });
+
+}
+
+
+/* =========================
+   START APPLICATION
+========================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    setupWelcome();
+    setupLogin();
+    setupRegister();
+    setupDashboard();
+    setupVehicles();
+    setupAddEntry();
+    setupProfile();
+    setupNavigation();
+
+  }
+);
