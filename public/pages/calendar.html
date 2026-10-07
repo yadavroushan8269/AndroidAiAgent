@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5a400">
   <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    name="description"
+    content="Hyma RMC Kokapet Vehicle Calendar"
   >
-
   <title>Calendar - Hyma RMC Kokapet</title>
 
   <link rel="stylesheet" href="../style.css">
@@ -15,55 +15,62 @@
 
 <body>
 
-  <div class="calendar-page">
+  <div class="app-page">
 
-    <!-- Header -->
-    <header class="dashboard-header">
+    <!-- HEADER -->
+
+    <header class="top-header">
 
       <div>
-        <p class="header-small">Hyma RMC Kokapet</p>
         <h1>Calendar</h1>
+        <p>Vehicle activity by date</p>
       </div>
 
       <button
-        type="button"
         id="calendarTodayBtn"
-        class="today-btn"
+        class="header-action"
+        type="button"
       >
         Today
       </button>
 
     </header>
 
-    <!-- Month Selector -->
-    <section class="month-selector">
 
-      <button
-        type="button"
-        id="previousMonthBtn"
-        class="month-arrow"
-        aria-label="Previous month"
-      >
-        ‹
-      </button>
+    <!-- MAIN -->
 
-      <div class="month-title">
-        <strong id="currentMonth">October 2026</strong>
-      </div>
+    <main class="page-content">
 
-      <button
-        type="button"
-        id="nextMonthBtn"
-        class="month-arrow"
-        aria-label="Next month"
-      >
-        ›
-      </button>
+      <!-- MONTH NAVIGATION -->
 
-    </section>
+      <section class="calendar-month-bar">
 
-    <!-- Calendar -->
-    <section class="calendar-card">
+        <button
+          id="previousMonthBtn"
+          class="month-btn"
+          type="button"
+          aria-label="Previous month"
+        >
+          ‹
+        </button>
+
+        <h2 id="currentMonth">
+          Month Year
+        </h2>
+
+        <button
+          id="nextMonthBtn"
+          class="month-btn"
+          type="button"
+          aria-label="Next month"
+        >
+          ›
+        </button>
+
+      </section>
+
+
+      <!-- WEEK DAYS -->
 
       <div class="calendar-weekdays">
 
@@ -77,153 +84,165 @@
 
       </div>
 
-      <div
+
+      <!-- CALENDAR -->
+
+      <section
         id="calendarGrid"
         class="calendar-grid"
+      ></section>
+
+
+      <!-- SELECTED DATE -->
+
+      <section class="selected-date-card">
+
+        <div class="selected-date-heading">
+
+          <div>
+            <span>Selected Date</span>
+
+            <h2 id="activityDateText">
+              Today
+            </h2>
+          </div>
+
+          <div class="selected-date-icon">
+            📅
+          </div>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="calendar-summary">
+
+          <div class="calendar-summary-item">
+
+            <strong id="calendarVehicleCount">
+              0
+            </strong>
+
+            <span>
+              Vehicles
+            </span>
+
+          </div>
+
+
+          <div class="calendar-summary-item">
+
+            <strong id="calendarEntryCount">
+              0
+            </strong>
+
+            <span>
+              Entries
+            </span>
+
+          </div>
+
+
+          <div class="calendar-summary-item">
+
+            <strong id="calendarDuration">
+              0h 0m
+            </strong>
+
+            <span>
+              Duration
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ACTIVITY -->
+
+      <section class="calendar-activity-section">
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Vehicle Activity</h2>
+            <p>
+              Entries recorded on selected date
+            </p>
+          </div>
+
+        </div>
+
+
+        <div
+          id="calendarEntryList"
+          class="activity-list"
+        ></div>
+
+      </section>
+
+    </main>
+
+
+    <!-- BOTTOM NAV -->
+
+    <nav class="bottom-nav">
+
+      <button
+        class="nav-item"
+        data-page="dashboard"
+        type="button"
       >
-        <!-- Calendar days will be generated here -->
-      </div>
+        <span>⌂</span>
+        <small>Home</small>
+      </button>
 
-    </section>
 
-    <!-- Selected Date -->
-    <section class="selected-date-card">
-
-      <div>
-        <span class="card-label">Selected Date</span>
-
-        <strong id="selectedDate">
-          Select a date
-        </strong>
-      </div>
-
-      <span class="calendar-icon">📅</span>
-
-    </section>
-
-    <!-- Daily Summary -->
-    <section class="daily-summary">
-
-      <div class="summary-item">
-
+      <button
+        class="nav-item"
+        data-page="vehicles"
+        type="button"
+      >
         <span>🚚</span>
+        <small>Vehicles</small>
+      </button>
 
-        <div>
-          <small>Vehicles</small>
-          <strong id="calendarVehicleCount">0</strong>
-        </div>
 
-      </div>
-
-      <div class="summary-item">
-
-        <span>📋</span>
-
-        <div>
-          <small>Entries</small>
-          <strong id="calendarEntryCount">0</strong>
-        </div>
-
-      </div>
-
-      <div class="summary-item">
-
-        <span>⏱️</span>
-
-        <div>
-          <small>Duration</small>
-          <strong id="calendarDuration">0h 0m</strong>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- Selected Date Entries -->
-    <section class="calendar-entries">
-
-      <div class="section-heading">
-
-        <div>
-          <h2>Vehicle Activity</h2>
-          <p id="activityDateText">
-            Select a date to view activity
-          </p>
-        </div>
-
-      </div>
-
-      <div
-        id="calendarEntryList"
-        class="activity-list"
+      <button
+        class="nav-item add-nav"
+        data-page="add-entry"
+        type="button"
       >
+        <span>+</span>
+      </button>
 
-        <div class="empty-state">
 
-          <div class="empty-icon">📅</div>
+      <button
+        class="nav-item active"
+        data-page="calendar"
+        type="button"
+      >
+        <span>▣</span>
+        <small>Calendar</small>
+      </button>
 
-          <h3>No entries</h3>
 
-          <p>
-            Vehicle activity for the selected date will appear here.
-          </p>
+      <button
+        class="nav-item"
+        data-page="profile"
+        type="button"
+      >
+        <span>👤</span>
+        <small>You</small>
+      </button>
 
-        </div>
-
-      </div>
-
-    </section>
+    </nav>
 
   </div>
 
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="dashboard"
-    >
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="vehicles"
-    >
-      <span>🚚</span>
-      <small>Vehicles</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item add-nav"
-      data-page="add-entry"
-    >
-      <span>+</span>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item active"
-      data-page="calendar"
-    >
-      <span>📅</span>
-      <small>Calendar</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="profile"
-    >
-      <span>👤</span>
-      <small>You</small>
-    </button>
-
-  </nav>
 
   <script src="../app.js"></script>
 
