@@ -14,7 +14,7 @@
     content="#f5a400"
   >
 
-  <title>MY HOME GROUP @Developed_by-ROUSHAN-YADAV</title>
+  <title>Dashboard - Hyma RMC Kokapet</title>
 
   <link
     rel="stylesheet"
@@ -25,6 +25,11 @@
 <body>
 
   <div class="app-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <header class="top-header">
 
@@ -40,6 +45,7 @@
 
       </div>
 
+
       <button
         id="notificationBtn"
         class="header-action notification-badge"
@@ -51,8 +57,14 @@
     </header>
 
 
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
     <main class="page-content">
 
+
+      <!-- WELCOME -->
 
       <section class="dashboard-welcome">
 
@@ -61,13 +73,16 @@
         </h2>
 
         <p>
-          This app/web is made for the  construction side
+          Vehicle duration management
         </p>
 
       </section>
 
 
+      <!-- STATS -->
+
       <section class="stats-grid">
+
 
         <div class="stat-card">
 
@@ -120,8 +135,99 @@
 
         </div>
 
+
       </section>
 
+
+      <!-- =====================================================
+           PERSONAL DURATION CALCULATOR
+      ====================================================== -->
+
+      <section class="personal-duration-card">
+
+
+        <div class="personal-duration-header">
+
+          <div>
+
+            <h2>
+              ⏱️ Only Duration
+            </h2>
+
+            <p>
+              Calculate time between In and Out
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="duration-input-grid">
+
+
+          <div>
+
+            <label for="personalInTime">
+              In Time
+            </label>
+
+            <input
+              id="personalInTime"
+              type="time"
+            >
+
+          </div>
+
+
+          <div>
+
+            <label for="personalOutTime">
+              Out Time
+            </label>
+
+            <input
+              id="personalOutTime"
+              type="time"
+            >
+
+          </div>
+
+
+        </div>
+
+
+        <button
+          id="calculatePersonalDuration"
+          class="primary-btn full-width"
+          type="button"
+        >
+          Calculate Duration
+        </button>
+
+
+        <div
+          id="personalDurationResult"
+          class="personal-duration-result"
+        >
+
+          <span>
+            Duration
+          </span>
+
+          <strong>
+            0h 0m
+          </strong>
+
+        </div>
+
+
+      </section>
+
+
+      <!-- =====================================================
+           QUICK ACTIONS
+      ====================================================== -->
 
       <section>
 
@@ -145,6 +251,8 @@
         <div class="quick-actions">
 
 
+          <!-- ADD ENTRY -->
+
           <button
             class="quick-action"
             type="button"
@@ -152,19 +260,21 @@
           >
 
             <span>
-              Get
+              ➕
             </span>
 
             <strong>
-              Duration Time
+              Add Entry
             </strong>
 
             <span>
-              By saved vehicles/users
+              Record vehicle entry
             </span>
 
           </button>
 
+
+          <!-- VEHICLES -->
 
           <button
             class="quick-action"
@@ -173,19 +283,21 @@
           >
 
             <span>
-              Add
+              🚚
             </span>
 
             <strong>
-              Vehicle Details/Operator
+              Vehicles
             </strong>
 
             <span>
-              Manage vehicles and user
+              Manage vehicles
             </span>
 
           </button>
 
+
+          <!-- CALENDAR -->
 
           <button
             class="quick-action"
@@ -207,6 +319,8 @@
 
           </button>
 
+
+          <!-- REPORTS -->
 
           <button
             class="quick-action"
@@ -234,6 +348,10 @@
       </section>
 
 
+      <!-- =====================================================
+           TODAY ACTIVITY
+      ====================================================== -->
+
       <section>
 
         <div class="section-heading">
@@ -259,6 +377,7 @@
         ></div>
 
       </section>
+
 
     </main>
 
@@ -354,7 +473,156 @@
 
     </nav>
 
+
   </div>
+
+
+  <script>
+
+    /* =====================================================
+       PERSONAL ONLY DURATION
+    ====================================================== */
+
+    const personalInTime =
+      document.getElementById(
+        "personalInTime"
+      );
+
+    const personalOutTime =
+      document.getElementById(
+        "personalOutTime"
+      );
+
+    const calculatePersonalDuration =
+      document.getElementById(
+        "calculatePersonalDuration"
+      );
+
+    const personalDurationResult =
+      document.getElementById(
+        "personalDurationResult"
+      );
+
+
+    calculatePersonalDuration.addEventListener(
+      "click",
+      function () {
+
+        const inTime =
+          personalInTime.value;
+
+        const outTime =
+          personalOutTime.value;
+
+
+        if (!inTime || !outTime) {
+
+          personalDurationResult.innerHTML = `
+            <span>
+              Please select In Time and Out Time
+            </span>
+
+            <strong>
+              —
+            </strong>
+          `;
+
+          return;
+        }
+
+
+        const inParts =
+          inTime
+            .split(":")
+            .map(Number);
+
+
+        const outParts =
+          outTime
+            .split(":")
+            .map(Number);
+
+
+        let start =
+          inParts[0] * 60 +
+          inParts[1];
+
+
+        let end =
+          outParts[0] * 60 +
+          outParts[1];
+
+
+        /*
+          If Out Time is earlier than
+          In Time, assume it crossed midnight.
+        */
+
+        if (end < start) {
+          end += 24 * 60;
+        }
+
+
+        const totalMinutes =
+          end - start;
+
+
+        const hours =
+          Math.floor(
+            totalMinutes / 60
+          );
+
+
+        const minutes =
+          totalMinutes % 60;
+
+
+        personalDurationResult.innerHTML = `
+          <span>
+            Total Duration
+          </span>
+
+          <strong>
+            ${hours}h ${minutes}m
+          </strong>
+        `;
+
+      }
+    );
+
+
+    /* =====================================================
+       LIVE RECALCULATION
+    ====================================================== */
+
+    personalInTime.addEventListener(
+      "change",
+      function () {
+
+        if (
+          personalOutTime.value
+        ) {
+          calculatePersonalDuration.click();
+        }
+
+      }
+    );
+
+
+    personalOutTime.addEventListener(
+      "change",
+      function () {
+
+        if (
+          personalInTime.value
+        ) {
+          calculatePersonalDuration.click();
+        }
+
+      }
+    );
+
+  </script>
 
 
   <script src="../app.js"></script>
