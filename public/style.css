@@ -981,3 +981,349 @@ th {
   }
 
 }
+/* ================================
+   VEHICLE MANAGEMENT
+================================ */
+
+.vehicle-section {
+  margin-top: 16px;
+}
+
+.vehicle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vehicle-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.vehicle-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vehicle-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #fff4d6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.vehicle-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.vehicle-main h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.vehicle-main p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.vehicle-status {
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.vehicle-status.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.vehicle-status.inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.vehicle-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 13px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.vehicle-details div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vehicle-details span {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.vehicle-details strong {
+  font-size: 13px;
+  color: #374151;
+  overflow-wrap: anywhere;
+}
+
+.vehicle-delete-btn {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  background: #fff;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.vehicle-delete-btn:active {
+  transform: scale(0.98);
+}
+
+
+/* ================================
+   VEHICLE SUMMARY
+================================ */
+
+.vehicle-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.vehicle-summary > div {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+}
+
+.vehicle-summary strong {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  color: #f5a400;
+}
+
+.vehicle-summary span {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+
+/* ================================
+   FILTER BUTTONS
+================================ */
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px 0 2px;
+  scrollbar-width: none;
+}
+
+.filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #4b5563;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background: #f5a400;
+  border-color: #f5a400;
+  color: #ffffff;
+}
+
+
+/* ================================
+   MODAL
+================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.48);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 520px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 22px 22px 0 0;
+  padding: 20px;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 21px;
+  color: #1f2937;
+}
+
+.modal-header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-card label {
+  margin: 0 0 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.modal-card input,
+.modal-card select {
+  width: 100%;
+  min-height: 48px;
+  margin-bottom: 15px;
+  padding: 0 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 11px;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.modal-card input:focus,
+.modal-card select:focus {
+  border-color: #f5a400;
+  box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
+}
+
+.form-message {
+  min-height: 20px;
+  margin-bottom: 8px;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.full-width {
+  width: 100%;
+}
+
+
+/* Prevent background scrolling while modal is open */
+
+body.modal-open {
+  overflow: hidden;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 420px) {
+
+  .vehicle-card {
+    padding: 14px;
+  }
+
+  .vehicle-status {
+    font-size: 10px;
+    padding: 4px 7px;
+  }
+
+  .vehicle-main h3 {
+    font-size: 16px;
+  }
+
+  .vehicle-details {
+    gap: 8px;
+  }
+
+}
+
+
+/* ================================
+   DESKTOP MODAL
+================================ */
+
+@media (min-width: 700px) {
+
+  .modal-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+
+  .modal-card {
+    border-radius: 20px;
+    max-height: 90vh;
+  }
+
+}
