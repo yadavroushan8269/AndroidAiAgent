@@ -1,0 +1,26 @@
+{
+  "name": "hyma-rmc-kokapet",
+  "version": "1.0.0",
+  "description": "Hyma RMC Kokapet Vehicle Duration Management Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "vehicle",
+    "duration",
+    "construction",
+    "hyma",
+    "rmc",
+    "kokapet"
+  ],
+  "author": "Hyma RMC Kokapet",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
