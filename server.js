@@ -3,12 +3,8 @@ const path = require("path");
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
-
-
-/* =========================================
-   MIDDLEWARE
-   ========================================= */
+const PORT =
+  process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -18,21 +14,11 @@ app.use(
   })
 );
 
-
-/* =========================================
-   STATIC WEBSITE
-   ========================================= */
-
 app.use(
   express.static(
     path.join(__dirname, "public")
   )
 );
-
-
-/* =========================================
-   MAIN WEBSITE
-   ========================================= */
 
 app.get("/", (req, res) => {
 
@@ -46,12 +32,6 @@ app.get("/", (req, res) => {
 
 });
 
-
-/* =========================================
-   HEALTH CHECK
-   Render ke liye useful
-   ========================================= */
-
 app.get("/health", (req, res) => {
 
   res.json({
@@ -62,53 +42,45 @@ app.get("/health", (req, res) => {
 
 });
 
-
-/* =========================================
-   404
-   ========================================= */
-
 app.use((req, res) => {
 
   res.status(404).send(`
     <!DOCTYPE html>
+    <html lang="en">
 
-    <html>
-      <head>
-        <title>Page Not Found</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        >
-      </head>
-
-      <body
-        style="
-          font-family: Arial;
-          text-align: center;
-          padding: 60px 20px;
-        "
+    <head>
+      <meta charset="UTF-8">
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
       >
+      <title>404 - Hyma RMC Kokapet</title>
+    </head>
 
-        <h1>404</h1>
+    <body
+      style="
+        font-family: Arial;
+        text-align: center;
+        padding: 60px 20px;
+      "
+    >
 
-        <p>
-          Page not found.
-        </p>
+      <h1>404</h1>
 
-        <a href="/">
-          Go to Home
-        </a>
+      <p>
+        Page not found.
+      </p>
 
-      </body>
+      <a href="/">
+        Go to Home
+      </a>
+
+    </body>
+
     </html>
   `);
 
 });
-
-
-/* =========================================
-   START SERVER
-   ========================================= */
 
 app.listen(PORT, () => {
 
