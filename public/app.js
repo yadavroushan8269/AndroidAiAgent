@@ -1,47 +1,105 @@
+"use strict";
+
+/* =========================================================
+   HYMA RMC KOKAPET
+   Vehicle Duration Management
+========================================================= */
+
+const STORAGE = {
+  users: "hyma_users",
+  currentUser: "hyma_current_user",
+  vehicles: "hyma_vehicles",
+  entries: "hyma_entries"
+};
+
 const pages = {
   login: "/pages/login.html",
   register: "/pages/register.html",
   dashboard: "/pages/dashboard.html",
   vehicles: "/pages/vehicles.html",
-  "add-entry": "/pages/add-entry.html",
+  addEntry: "/pages/add-entry.html",
   calendar: "/pages/calendar.html",
   reports: "/pages/reports.html",
   profile: "/pages/profile.html"
 };
 
-/* =========================
-   NAVIGATION
-========================= */
 
-function goTo(page) {
-  if (pages[page]) {
-    window.location.href = pages[page];
+/* =========================================================
+   BASIC HELPERS
+========================================================= */
+
+function getJSON(key, fallback = []) {
+  try {
+    const value = localStorage.getItem(key);
+
+    if (!value) {
+      return fallback;
+    }
+
+    return JSON.parse(value);
+  } catch (error) {
+    return fallback;
   }
 }
 
-
-/* =========================
-   MESSAGE
-========================= */
-
-function showMessage(element, message, type = "info") {
-  if (!element) return;
-
-  element.textContent = message;
-  element.className = `auth-message ${type}`;
-
-  setTimeout(() => {
-    element.textContent = "";
-  }, 3500);
+function setJSON(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
 }
 
+function getUsers() {
+  return getJSON(STORAGE.users, []);
+}
 
-/* =========================
-   SAFE HTML
-========================= */
+function saveUsers(users) {
+  setJSON(STORAGE.users, users);
+}
+
+function getVehicles() {
+  return getJSON(STORAGE.vehicles, []);
+}
+
+function saveVehicles(vehicles) {
+  setJSON(STORAGE.vehicles, vehicles);
+}
+
+function getEntries() {
+  return getJSON(STORAGE.entries, []);
+}
+
+function saveEntries(entries) {
+  setJSON(STORAGE.entries, entries);
+}
+
+function getCurrentUser() {
+  return getJSON(STORAGE.currentUser, null);
+}
+
+function saveCurrentUser(user) {
+  setJSON(STORAGE.currentUser, user);
+}
+
+function removeCurrentUser() {
+  localStorage.removeItem(STORAGE.currentUser);
+}
+
+function todayString() {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function generateId(prefix = "id") {
+  return `${prefix}_${Date.now()}_${Math.random()
+    .toString(36)
+    .slice(2, 8)}`;
+}
 
 function escapeHtml(value) {
-  return String(value || "")
+  return String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
@@ -49,649 +107,536 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function showMessage(element, message, type = "info") {
+  if (!element) return;
 
-/* =========================
-   STORAGE HELPERS
-========================= */
+  element.textContent = message;
+  element.className = `form-message ${type}`;
+}
 
-function getVehicles() {
-  try {
-    return JSON.parse(
-      localStorage.getItem("hymaVehicles")
-    ) || [];
-  } catch {
-    return [];
+function formatDate(dateString) {
+  if (!dateString) return "-";
+
+  const date = new Date(`${dateString}T00:00:00`);
+
+  return date.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+function formatDuration(minutes) {
+  minutes = Number(minutes) || 0;
+
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  return `${hours}h ${mins}m`;
+}
+
+function calculateDuration(entryTime, exitTime) {
+  if (!entryTime || !exitTime) {
+    return 0;
+  }
+
+  const [eh, em] = entryTime.split(":").map(Number);
+  const [xh, xm] = exitTime.split(":").map(Number);
+
+  let start = eh * 60 + em;
+  let end = xh * 60 + xm;
+
+  if (end < start) {
+    end += 24 * 60;
+  }
+
+  return end - start;
+}
+
+function navigate(page) {
+  if (pages[page]) {
+    window.location.href = pages[page];
   }
 }
 
-function saveVehicles(vehicles) {
-  localStorage.setItem(
-    "hymaVehicles",
-    JSON.stringify(vehicles)
-  );
-}
 
-function getEntries() {
-  try {
-    return JSON.parse(
-      localStorage.getItem("hymaEntries")
-    ) || [];
-  } catch {
-    return [];
+/* =========================================================
+   AUTH CHECK
+========================================================= */
+
+function requireLogin() {
+  const user = getCurrentUser();
+
+  const path = window.location.pathname;
+
+  const publicPages = [
+    "/",
+    "/index.html",
+    "/pages/login.html",
+    "/pages/register.html"
+  ];
+
+  if (!user && !publicPages.includes(path)) {
+    window.location.href = pages.login;
+    return false;
   }
-}
 
-function saveEntries(entries) {
-  localStorage.setItem(
-    "hymaEntries",
-    JSON.stringify(entries)
-  );
+  return true;
 }
 
 
-/* =========================
+/* =========================================================
    WELCOME
-========================= */
+========================================================= */
 
 function setupWelcome() {
-  const startBtn =
-    document.getElementById("startBtn");
+  const startBtn = document.getElementById("startBtn");
 
   if (!startBtn) return;
 
   startBtn.addEventListener("click", () => {
-    goTo("login");
+    const user = getCurrentUser();
+
+    if (user) {
+      navigate("dashboard");
+    } else {
+      navigate("login");
+    }
   });
 }
 
 
-/* =========================
-   LOGIN
-========================= */
-
-function setupLogin() {
-  const loginForm =
-    document.getElementById("loginForm");
-
-  if (!loginForm) return;
-
-  const registerBtn =
-    document.getElementById("registerBtn");
-
-  const forgotPasswordBtn =
-    document.getElementById("forgotPasswordBtn");
-
-  const backBtn =
-    document.getElementById("backBtn");
-
-  const password =
-    document.getElementById("loginPassword");
-
-  const togglePassword =
-    document.getElementById(
-      "toggleLoginPassword"
-    );
-
-  const message =
-    document.getElementById("loginMessage");
-
-  registerBtn?.addEventListener(
-    "click",
-    () => goTo("register")
-  );
-
-  backBtn?.addEventListener(
-    "click",
-    () => {
-      window.location.href = "/";
-    }
-  );
-
-  forgotPasswordBtn?.addEventListener(
-    "click",
-    () => {
-      showMessage(
-        message,
-        "Password recovery will be connected later.",
-        "info"
-      );
-    }
-  );
-
-  togglePassword?.addEventListener(
-    "click",
-    () => {
-
-      if (!password) return;
-
-      const isPassword =
-        password.type === "password";
-
-      password.type =
-        isPassword ? "text" : "password";
-
-      togglePassword.textContent =
-        isPassword ? "🙈" : "👁️";
-    }
-  );
-
-  loginForm.addEventListener(
-    "submit",
-    (event) => {
-
-      event.preventDefault();
-
-      const user =
-        document.getElementById(
-          "loginUser"
-        )?.value.trim();
-
-      const pass =
-        document.getElementById(
-          "loginPassword"
-        )?.value;
-
-      if (!user || !pass) {
-
-        showMessage(
-          message,
-          "Please enter email/mobile and password.",
-          "error"
-        );
-
-        return;
-      }
-
-      localStorage.setItem(
-        "hymaLoggedIn",
-        "true"
-      );
-
-      localStorage.setItem(
-        "hymaUser",
-        JSON.stringify({
-          name: "User",
-          contact: user,
-          role: "Security Guard",
-          company: "Hyma RMC Kokapet"
-        })
-      );
-
-      goTo("dashboard");
-    }
-  );
-}
-
-
-/* =========================
+/* =========================================================
    REGISTER
-========================= */
+========================================================= */
 
 function setupRegister() {
-  const form =
-    document.getElementById("registerForm");
+  const form = document.getElementById("registerForm");
 
   if (!form) return;
 
-  const loginBtn =
-    document.getElementById("loginBtn");
+  const message = document.getElementById("registerMessage");
 
-  const backBtn =
-    document.getElementById("backBtn");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-  const password =
-    document.getElementById(
-      "registerPassword"
-    );
+    const name = document
+      .getElementById("registerName")
+      .value.trim();
 
-  const confirmPassword =
-    document.getElementById(
-      "confirmPassword"
-    );
+    const email = document
+      .getElementById("registerEmail")
+      .value.trim()
+      .toLowerCase();
 
-  const togglePassword =
-    document.getElementById(
-      "toggleRegisterPassword"
-    );
+    const mobile = document
+      .getElementById("registerMobile")
+      .value.trim();
 
-  const toggleConfirm =
-    document.getElementById(
-      "toggleConfirmPassword"
-    );
+    const company = document
+      .getElementById("registerCompany")
+      .value.trim();
 
-  const message =
-    document.getElementById(
-      "registerMessage"
-    );
+    const role = document
+      .getElementById("registerRole")
+      .value;
 
-  loginBtn?.addEventListener(
-    "click",
-    () => goTo("login")
-  );
+    const password = document
+      .getElementById("registerPassword")
+      .value;
 
-  backBtn?.addEventListener(
-    "click",
-    () => goTo("login")
-  );
+    const confirmPassword = document
+      .getElementById("registerConfirmPassword")
+      .value;
 
-  togglePassword?.addEventListener(
-    "click",
-    () => {
-
-      const isPassword =
-        password.type === "password";
-
-      password.type =
-        isPassword ? "text" : "password";
-
-      togglePassword.textContent =
-        isPassword ? "🙈" : "👁️";
-    }
-  );
-
-  toggleConfirm?.addEventListener(
-    "click",
-    () => {
-
-      const isPassword =
-        confirmPassword.type === "password";
-
-      confirmPassword.type =
-        isPassword ? "text" : "password";
-
-      toggleConfirm.textContent =
-        isPassword ? "🙈" : "👁️";
-    }
-  );
-
-  form.addEventListener(
-    "submit",
-    (event) => {
-
-      event.preventDefault();
-
-      const name =
-        document.getElementById(
-          "registerName"
-        )?.value.trim();
-
-      const contact =
-        document.getElementById(
-          "registerContact"
-        )?.value.trim();
-
-      const company =
-        document.getElementById(
-          "registerCompany"
-        )?.value.trim();
-
-      const role =
-        document.getElementById(
-          "registerRole"
-        )?.value;
-
-      const pass =
-        document.getElementById(
-          "registerPassword"
-        )?.value;
-
-      const confirm =
-        document.getElementById(
-          "confirmPassword"
-        )?.value;
-
-      if (
-        !name ||
-        !contact ||
-        !company ||
-        !role ||
-        !pass
-      ) {
-
-        showMessage(
-          message,
-          "Please fill all required fields.",
-          "error"
-        );
-
-        return;
-      }
-
-      if (pass !== confirm) {
-
-        showMessage(
-          message,
-          "Passwords do not match.",
-          "error"
-        );
-
-        return;
-      }
-
-      localStorage.setItem(
-        "hymaUser",
-        JSON.stringify({
-          name,
-          contact,
-          role:
-            role === "admin"
-              ? "Admin"
-              : "Security Guard",
-          company
-        })
-      );
-
-      localStorage.setItem(
-        "hymaLoggedIn",
-        "true"
-      );
-
+    if (password.length < 6) {
       showMessage(
         message,
-        "Account created successfully.",
-        "success"
+        "Password should be at least 6 characters.",
+        "error"
       );
-
-      setTimeout(
-        () => goTo("dashboard"),
-        700
-      );
+      return;
     }
-  );
+
+    if (password !== confirmPassword) {
+      showMessage(
+        message,
+        "Passwords do not match.",
+        "error"
+      );
+      return;
+    }
+
+    const users = getUsers();
+
+    const exists = users.some(
+      user =>
+        user.email === email ||
+        user.mobile === mobile
+    );
+
+    if (exists) {
+      showMessage(
+        message,
+        "Email or mobile is already registered.",
+        "error"
+      );
+      return;
+    }
+
+    const user = {
+      id: generateId("user"),
+      name,
+      email,
+      mobile,
+      password,
+      company,
+      role,
+      createdAt: new Date().toISOString()
+    };
+
+    users.push(user);
+
+    saveUsers(users);
+
+    showMessage(
+      message,
+      "Account created successfully. Redirecting...",
+      "success"
+    );
+
+    setTimeout(() => {
+      navigate("login");
+    }, 900);
+  });
 }
 
 
-/* =========================
-   DASHBOARD
-========================= */
+/* =========================================================
+   LOGIN
+========================================================= */
 
-function setupDashboard() {
-  const todayDate =
-    document.getElementById(
-      "todayDate"
+function setupLogin() {
+  const form = document.getElementById("loginForm");
+
+  if (!form) return;
+
+  const message = document.getElementById("loginMessage");
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const identity = document
+      .getElementById("loginEmail")
+      .value
+      .trim()
+      .toLowerCase();
+
+    const password = document
+      .getElementById("loginPassword")
+      .value;
+
+    const users = getUsers();
+
+    const user = users.find(
+      item =>
+        (
+          item.email.toLowerCase() === identity ||
+          item.mobile.toLowerCase() === identity
+        ) &&
+        item.password === password
     );
 
-  if (!todayDate) return;
+    if (!user) {
+      showMessage(
+        message,
+        "Invalid email/mobile or password.",
+        "error"
+      );
+      return;
+    }
 
-  const now = new Date();
+    saveCurrentUser(user);
 
-  todayDate.textContent =
-    now.toLocaleDateString(
-      "en-IN",
-      {
+    showMessage(
+      message,
+      "Login successful.",
+      "success"
+    );
+
+    setTimeout(() => {
+      navigate("dashboard");
+    }, 400);
+  });
+
+  const forgotBtn =
+    document.getElementById("forgotPasswordBtn");
+
+  if (forgotBtn) {
+    forgotBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      alert(
+        "Password recovery will be connected to the backend later. For now, please contact the site administrator."
+      );
+    });
+  }
+}
+
+
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+function setupNavigation() {
+  document
+    .querySelectorAll("[data-page]")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+        const page = button.dataset.page;
+
+        if (page) {
+          navigate(page);
+        }
+      });
+
+    });
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function setupDashboard() {
+  const vehicleCount =
+    document.getElementById("dashboardVehicleCount");
+
+  if (!vehicleCount) return;
+
+  const user = getCurrentUser();
+
+  if (user) {
+    const welcomeName =
+      document.getElementById("welcomeName");
+
+    if (welcomeName) {
+      welcomeName.textContent =
+        `Welcome, ${user.name}`;
+    }
+  }
+
+  const dateElement =
+    document.getElementById("dashboardDate");
+
+  if (dateElement) {
+    dateElement.textContent =
+      new Date().toLocaleDateString("en-IN", {
         weekday: "long",
         day: "numeric",
         month: "long",
         year: "numeric"
-      }
-    );
-
-  function updateStats() {
-
-    const vehicles =
-      getVehicles();
-
-    const entries =
-      getEntries();
-
-    const today =
-      new Date()
-        .toISOString()
-        .split("T")[0];
-
-    const todayEntries =
-      entries.filter(
-        entry => entry.date === today
-      );
-
-    let totalMinutes = 0;
-
-    todayEntries.forEach(
-      entry => {
-        totalMinutes +=
-          Number(
-            entry.durationMinutes
-          ) || 0;
-      }
-    );
-
-    const hours =
-      Math.floor(
-        totalMinutes / 60
-      );
-
-    const minutes =
-      totalMinutes % 60;
-
-    const totalVehicles =
-      document.getElementById(
-        "totalVehicles"
-      );
-
-    const runningVehicles =
-      document.getElementById(
-        "runningVehicles"
-      );
-
-    const totalDuration =
-      document.getElementById(
-        "totalDuration"
-      );
-
-    const todayEntriesElement =
-      document.getElementById(
-        "todayEntries"
-      );
-
-    if (totalVehicles) {
-      totalVehicles.textContent =
-        vehicles.length;
-    }
-
-    if (runningVehicles) {
-      runningVehicles.textContent =
-        vehicles.filter(
-          v => v.status === "Active"
-        ).length;
-    }
-
-    if (totalDuration) {
-      totalDuration.textContent =
-        `${hours}h ${minutes}m`;
-    }
-
-    if (todayEntriesElement) {
-      todayEntriesElement.textContent =
-        todayEntries.length;
-    }
-
-    renderTodayActivity(
-      todayEntries
-    );
+      });
   }
 
-  function renderTodayActivity(
-    entries
-  ) {
+  const vehicles = getVehicles();
+  const entries = getEntries();
+  const today = todayString();
 
-    const list =
-      document.getElementById(
-        "activityList"
+  const todayEntries = entries.filter(
+    entry => entry.date === today
+  );
+
+  const completedEntries =
+    todayEntries.filter(entry => entry.exitTime);
+
+  const totalMinutes =
+    completedEntries.reduce(
+      (total, entry) =>
+        total + Number(entry.duration || 0),
+      0
+    );
+
+  const runningCount =
+    todayEntries.filter(
+      entry => !entry.exitTime
+    ).length;
+
+  document.getElementById(
+    "dashboardVehicleCount"
+  ).textContent = vehicles.length;
+
+  document.getElementById(
+    "dashboardRunningCount"
+  ).textContent = runningCount;
+
+  document.getElementById(
+    "dashboardEntryCount"
+  ).textContent = todayEntries.length;
+
+  document.getElementById(
+    "dashboardDuration"
+  ).textContent = formatDuration(totalMinutes);
+
+  renderDashboardActivity(todayEntries, vehicles);
+
+  const notificationBtn =
+    document.getElementById("notificationBtn");
+
+  if (notificationBtn) {
+    notificationBtn.addEventListener("click", () => {
+      alert(
+        runningCount > 0
+          ? `${runningCount} vehicle currently running.`
+          : "No running vehicle right now."
       );
+    });
+  }
+}
 
-    if (!list) return;
+function renderDashboardActivity(entries, vehicles) {
+  const list =
+    document.getElementById(
+      "dashboardActivityList"
+    );
 
-    if (entries.length === 0) {
+  if (!list) return;
 
-      list.innerHTML = `
-        <div class="activity-empty">
-          <div>📋</div>
-          <p>No vehicle activity today.</p>
-          <small>
-            Add an entry to see it here.
-          </small>
+  if (!entries.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🚚</div>
+        <h3>No Activity Today</h3>
+        <p>No vehicle entries have been recorded today.</p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const sorted =
+    [...entries].sort(
+      (a, b) =>
+        String(b.entryTime).localeCompare(
+          String(a.entryTime)
+        )
+    );
+
+  list.innerHTML = sorted
+    .slice(0, 10)
+    .map(entry => {
+
+      const vehicle =
+        vehicles.find(
+          item => item.id === entry.vehicleId
+        );
+
+      const vehicleNumber =
+        vehicle?.vehicleNumber ||
+        entry.vehicleNumber ||
+        "Unknown Vehicle";
+
+      const running =
+        !entry.exitTime;
+
+      return `
+        <div class="activity-card">
+
+          <div class="activity-card-top">
+
+            <div>
+              <h3>
+                ${escapeHtml(vehicleNumber)}
+              </h3>
+
+              <p>
+                ${escapeHtml(entry.entryTime || "-")}
+                →
+                ${escapeHtml(entry.exitTime || "Running")}
+              </p>
+
+              <p>
+                ${escapeHtml(entry.purpose || "Other")}
+              </p>
+            </div>
+
+            <span class="activity-status ${
+              running ? "running" : ""
+            }">
+              ${
+                running
+                  ? "Running"
+                  : formatDuration(entry.duration)
+              }
+            </span>
+
+          </div>
+
         </div>
       `;
-
-      return;
-    }
-
-    list.innerHTML =
-      entries
-        .slice()
-        .reverse()
-        .slice(0, 10)
-        .map(entry => {
-
-          const total =
-            Number(
-              entry.durationMinutes
-            ) || 0;
-
-          const hours =
-            Math.floor(
-              total / 60
-            );
-
-          const minutes =
-            total % 60;
-
-          return `
-            <div class="activity-item">
-
-              <div class="activity-icon">
-                🚚
-              </div>
-
-              <div class="activity-info">
-
-                <strong>
-                  ${escapeHtml(
-                    entry.vehicleNumber
-                  )}
-                </strong>
-
-                <span>
-                  ${escapeHtml(
-                    entry.vehicleType
-                  )}
-                </span>
-
-              </div>
-
-              <div class="activity-duration">
-
-                <strong>
-                  ${hours}h ${minutes}m
-                </strong>
-
-                <span>
-                  ${escapeHtml(
-                    entry.entryTime
-                  )}
-                  -
-                  ${escapeHtml(
-                    entry.exitTime ||
-                    "Running"
-                  )}
-                </span>
-
-              </div>
-
-            </div>
-          `;
-        })
-        .join("");
-  }
-
-  document.getElementById(
-    "quickAddBtn"
-  )?.addEventListener(
-    "click",
-    () => goTo("add-entry")
-  );
-
-  document.getElementById(
-    "viewAllBtn"
-  )?.addEventListener(
-    "click",
-    () => goTo("calendar")
-  );
-
-  updateStats();
+    })
+    .join("");
 }
 
 
-/* =========================
+/* =========================================================
    VEHICLES
-========================= */
+========================================================= */
 
 function setupVehicles() {
-
-  const search =
-    document.getElementById(
-      "vehicleSearch"
-    );
-
-  if (!search) return;
-
   const list =
-    document.getElementById(
-      "vehicleList"
-    );
+    document.getElementById("vehicleList");
 
-  const empty =
-    document.getElementById(
-      "vehicleEmpty"
-    );
-
-  const count =
-    document.getElementById(
-      "vehicleCount"
-    );
-
-  const activeCount =
-    document.getElementById(
-      "activeVehicleCount"
-    );
+  if (!list) return;
 
   const modal =
-    document.getElementById(
-      "vehicleModal"
-    );
+    document.getElementById("vehicleModal");
 
   const form =
+    document.getElementById("vehicleForm");
+
+  const addBtn =
+    document.getElementById("addVehicleBtn");
+
+  const emptyAddBtn =
     document.getElementById(
-      "vehicleForm"
+      "emptyAddVehicleBtn"
     );
+
+  const closeBtn =
+    document.getElementById(
+      "closeVehicleModal"
+    );
+
+  const search =
+    document.getElementById("vehicleSearch");
 
   const message =
     document.getElementById(
       "vehicleFormMessage"
     );
 
-  let currentFilter = "all";
+  let activeFilter = "all";
 
   function openModal() {
+    if (!modal) return;
 
-    modal?.classList.remove(
-      "hidden"
-    );
+    modal.classList.remove("hidden");
 
-    document.body.classList.add(
-      "modal-open"
-    );
+    document.body.classList.add("modal-open");
 
-    document.getElementById(
-      "vehicleNumber"
-    )?.focus();
+    setTimeout(() => {
+      document
+        .getElementById("vehicleNumber")
+        ?.focus();
+    }, 100);
   }
 
   function closeModal() {
+    if (!modal) return;
 
-    modal?.classList.add(
-      "hidden"
-    );
+    modal.classList.add("hidden");
 
     document.body.classList.remove(
       "modal-open"
@@ -701,247 +646,56 @@ function setupVehicles() {
 
     if (message) {
       message.textContent = "";
+      message.className = "form-message";
     }
   }
 
-  function render() {
-
-    const vehicles =
-      getVehicles();
-
-    const searchText =
-      search.value
-        .trim()
-        .toLowerCase();
-
-    const filtered =
-      vehicles.filter(vehicle => {
-
-        const matchesSearch =
-          !searchText ||
-          vehicle.vehicleNumber
-            .toLowerCase()
-            .includes(searchText) ||
-          (vehicle.driver || "")
-            .toLowerCase()
-            .includes(searchText) ||
-          (vehicle.contractor || "")
-            .toLowerCase()
-            .includes(searchText);
-
-        let matchesFilter = true;
-
-        if (
-          currentFilter === "tm"
-        ) {
-          matchesFilter =
-            vehicle.type === "TM";
-        }
-
-        if (
-          currentFilter === "truck"
-        ) {
-          matchesFilter =
-            vehicle.type === "Truck";
-        }
-
-        if (
-          currentFilter === "dumper"
-        ) {
-          matchesFilter =
-            vehicle.type === "Dumper";
-        }
-
-        if (
-          currentFilter === "other"
-        ) {
-          matchesFilter =
-            ![
-              "TM",
-              "Truck",
-              "Dumper"
-            ].includes(
-              vehicle.type
-            );
-        }
-
-        return (
-          matchesSearch &&
-          matchesFilter
-        );
-      });
-
-    if (count) {
-      count.textContent =
-        vehicles.length;
-    }
-
-    if (activeCount) {
-      activeCount.textContent =
-        vehicles.filter(
-          v => v.status === "Active"
-        ).length;
-    }
-
-    if (!list || !empty) return;
-
-    if (filtered.length === 0) {
-
-      list.innerHTML = "";
-
-      empty.style.display =
-        "block";
-
-      return;
-    }
-
-    empty.style.display =
-      "none";
-
-    list.innerHTML =
-      filtered.map(
-        vehicle => `
-          <article class="vehicle-card">
-
-            <div class="vehicle-card-top">
-
-              <div class="vehicle-icon">
-                🚚
-              </div>
-
-              <div class="vehicle-main">
-
-                <h3>
-                  ${escapeHtml(
-                    vehicle.vehicleNumber
-                  )}
-                </h3>
-
-                <p>
-                  ${escapeHtml(
-                    vehicle.type
-                  )}
-                </p>
-
-              </div>
-
-              <span
-                class="vehicle-status ${
-                  vehicle.status === "Active"
-                    ? "active"
-                    : "inactive"
-                }"
-              >
-                ${escapeHtml(
-                  vehicle.status
-                )}
-              </span>
-
-            </div>
-
-            <div class="vehicle-details">
-
-              <div>
-                <span>Driver</span>
-
-                <strong>
-                  ${escapeHtml(
-                    vehicle.driver ||
-                    "Not added"
-                  )}
-                </strong>
-              </div>
-
-              <div>
-                <span>Contractor</span>
-
-                <strong>
-                  ${escapeHtml(
-                    vehicle.contractor ||
-                    "Not added"
-                  )}
-                </strong>
-              </div>
-
-            </div>
-
-            <button
-              class="vehicle-delete-btn"
-              data-id="${vehicle.id}"
-              type="button"
-            >
-              Delete
-            </button>
-
-          </article>
-        `
-      ).join("");
-
-    document
-      .querySelectorAll(
-        ".vehicle-delete-btn"
-      )
-      .forEach(button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            if (
-              !confirm(
-                "Delete this vehicle?"
-              )
-            ) {
-              return;
-            }
-
-            const updated =
-              getVehicles()
-                .filter(
-                  vehicle =>
-                    vehicle.id !==
-                    button.dataset.id
-                );
-
-            saveVehicles(updated);
-
-            render();
-          }
-        );
-      });
-  }
-
-  document.getElementById(
-    "addVehicleBtn"
-  )?.addEventListener(
+  addBtn?.addEventListener(
     "click",
     openModal
   );
 
-  document.getElementById(
-    "emptyAddVehicleBtn"
-  )?.addEventListener(
+  emptyAddBtn?.addEventListener(
     "click",
     openModal
   );
 
-  document.getElementById(
-    "closeVehicleModal"
-  )?.addEventListener(
+  closeBtn?.addEventListener(
     "click",
     closeModal
   );
 
-  modal?.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target === modal
-      ) {
-        closeModal();
-      }
+  modal?.addEventListener("click", event => {
+    if (event.target === modal) {
+      closeModal();
     }
+  });
+
+  document
+    .querySelectorAll(".filter-btn")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach(item =>
+            item.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+        activeFilter =
+          button.dataset.filter || "all";
+
+        render();
+      });
+
+    });
+
+  search?.addEventListener(
+    "input",
+    render
   );
 
   form?.addEventListener(
@@ -951,150 +705,294 @@ function setupVehicles() {
       event.preventDefault();
 
       const vehicleNumber =
-        document.getElementById(
-          "vehicleNumber"
-        )?.value
+        document
+          .getElementById("vehicleNumber")
+          .value
           .trim()
           .toUpperCase();
 
-      const type =
-        document.getElementById(
-          "vehicleType"
-        )?.value;
+      const vehicleType =
+        document
+          .getElementById("vehicleType")
+          .value;
 
-      const driver =
-        document.getElementById(
-          "vehicleDriver"
-        )?.value.trim();
+      const driverName =
+        document
+          .getElementById("vehicleDriver")
+          .value
+          .trim();
 
       const contractor =
-        document.getElementById(
-          "vehicleContractor"
-        )?.value.trim();
+        document
+          .getElementById("vehicleContractor")
+          .value
+          .trim();
 
       const status =
-        document.getElementById(
-          "vehicleStatus"
-        )?.value ||
-        "Active";
+        document
+          .getElementById("vehicleStatus")
+          .value;
 
-      if (!vehicleNumber || !type) {
+      const vehicles = getVehicles();
 
-        if (message) {
-          message.textContent =
-            "Vehicle number and type are required.";
-        }
+      const duplicate = vehicles.some(
+        vehicle =>
+          vehicle.vehicleNumber.toUpperCase() ===
+          vehicleNumber
+      );
 
-        return;
-      }
-
-      const vehicles =
-        getVehicles();
-
-      if (
-        vehicles.some(
-          v =>
-            v.vehicleNumber ===
-            vehicleNumber
-        )
-      ) {
-
-        if (message) {
-          message.textContent =
-            "This vehicle is already added.";
-        }
-
+      if (duplicate) {
+        showMessage(
+          message,
+          "This vehicle already exists.",
+          "error"
+        );
         return;
       }
 
       vehicles.push({
-
-        id:
-          Date.now().toString() +
-          Math.random()
-            .toString(36)
-            .slice(2),
-
+        id: generateId("vehicle"),
         vehicleNumber,
-
-        type,
-
-        driver,
-
+        vehicleType,
+        driverName,
         contractor,
-
         status,
-
-        createdAt:
-          new Date().toISOString()
-
+        createdAt: new Date().toISOString()
       });
 
-      saveVehicles(
-        vehicles
+      saveVehicles(vehicles);
+
+      showMessage(
+        message,
+        "Vehicle saved successfully.",
+        "success"
       );
 
-      closeModal();
-
       render();
+
+      setTimeout(() => {
+        closeModal();
+      }, 500);
     }
   );
 
-  search.addEventListener(
-    "input",
-    render
-  );
+  function render() {
+    const vehicles = getVehicles();
 
-  document
-    .querySelectorAll(
-      ".filter-btn"
-    )
-    .forEach(button => {
+    const searchValue =
+      search?.value
+        .trim()
+        .toLowerCase() || "";
 
-      button.addEventListener(
-        "click",
-        () => {
+    let filtered = vehicles.filter(vehicle => {
 
-          document
-            .querySelectorAll(
-              ".filter-btn"
-            )
-            .forEach(
-              item =>
-                item.classList.remove(
-                  "active"
-                )
-            );
+      const matchesSearch =
+        !searchValue ||
+        vehicle.vehicleNumber
+          .toLowerCase()
+          .includes(searchValue) ||
+        vehicle.driverName
+          .toLowerCase()
+          .includes(searchValue) ||
+        vehicle.contractor
+          .toLowerCase()
+          .includes(searchValue);
 
-          button.classList.add(
-            "active"
-          );
+      let matchesFilter = true;
 
-          currentFilter =
-            button.dataset.filter ||
-            "all";
+      if (activeFilter === "tm") {
+        matchesFilter =
+          vehicle.vehicleType === "TM";
+      }
 
-          render();
-        }
-      );
+      if (activeFilter === "truck") {
+        matchesFilter =
+          vehicle.vehicleType === "Truck";
+      }
+
+      if (activeFilter === "dumper") {
+        matchesFilter =
+          vehicle.vehicleType === "Dumper";
+      }
+
+      if (activeFilter === "other") {
+        matchesFilter =
+          ![
+            "TM",
+            "Truck",
+            "Dumper"
+          ].includes(vehicle.vehicleType);
+      }
+
+      return matchesSearch && matchesFilter;
     });
+
+    const count =
+      document.getElementById(
+        "vehicleCount"
+      );
+
+    const activeCount =
+      document.getElementById(
+        "activeVehicleCount"
+      );
+
+    if (count) {
+      count.textContent = vehicles.length;
+    }
+
+    if (activeCount) {
+      activeCount.textContent =
+        vehicles.filter(
+          vehicle =>
+            vehicle.status === "Active"
+        ).length;
+    }
+
+    const empty =
+      document.getElementById(
+        "vehicleEmpty"
+      );
+
+    if (!filtered.length) {
+
+      list.innerHTML = "";
+
+      if (empty) {
+        empty.classList.remove("hidden");
+      }
+
+      return;
+    }
+
+    if (empty) {
+      empty.classList.add("hidden");
+    }
+
+    list.innerHTML =
+      filtered.map(vehicle => `
+
+        <article class="vehicle-card">
+
+          <div class="vehicle-card-top">
+
+            <div class="vehicle-icon">
+              🚚
+            </div>
+
+            <div class="vehicle-main">
+
+              <h3>
+                ${escapeHtml(
+                  vehicle.vehicleNumber
+                )}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  vehicle.vehicleType
+                )}
+              </p>
+
+            </div>
+
+            <span class="vehicle-status ${
+              vehicle.status === "Active"
+                ? "active"
+                : "inactive"
+            }">
+              ${escapeHtml(
+                vehicle.status
+              )}
+            </span>
+
+          </div>
+
+          <div class="vehicle-details">
+
+            <div>
+              <span>Driver</span>
+              <strong>
+                ${escapeHtml(
+                  vehicle.driverName || "-"
+                )}
+              </strong>
+            </div>
+
+            <div>
+              <span>Contractor</span>
+              <strong>
+                ${escapeHtml(
+                  vehicle.contractor || "-"
+                )}
+              </strong>
+            </div>
+
+          </div>
+
+          <button
+            class="vehicle-delete-btn"
+            data-delete-vehicle="${vehicle.id}"
+            type="button"
+          >
+            Delete Vehicle
+          </button>
+
+        </article>
+
+      `).join("");
+
+    list
+      .querySelectorAll(
+        "[data-delete-vehicle]"
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const id =
+              button.dataset.deleteVehicle;
+
+            const confirmed =
+              confirm(
+                "Delete this vehicle?"
+              );
+
+            if (!confirmed) return;
+
+            const updated =
+              getVehicles().filter(
+                vehicle =>
+                  vehicle.id !== id
+              );
+
+            saveVehicles(updated);
+
+            render();
+          }
+        );
+
+      });
+  }
 
   render();
 }
 
 
-/* =========================
+/* =========================================================
    ADD ENTRY
-========================= */
+========================================================= */
 
 function setupAddEntry() {
-
   const form =
-    document.getElementById(
-      "entryForm"
-    );
+    document.getElementById("entryForm");
 
   if (!form) return;
+
+  const dateInput =
+    document.getElementById("entryDate");
 
   const vehicleSelect =
     document.getElementById(
@@ -1111,16 +1009,6 @@ function setupAddEntry() {
       "driverName"
     );
 
-  const message =
-    document.getElementById(
-      "entryMessage"
-    );
-
-  const noVehicleMessage =
-    document.getElementById(
-      "noVehicleMessage"
-    );
-
   const entryTime =
     document.getElementById(
       "entryTime"
@@ -1131,171 +1019,108 @@ function setupAddEntry() {
       "exitTime"
     );
 
-  const duration =
+  const durationOutput =
     document.getElementById(
       "calculatedDuration"
     );
 
-  const dateInput =
+  const message =
     document.getElementById(
-      "entryDate"
+      "entryMessage"
     );
+
+  const noVehicleMessage =
+    document.getElementById(
+      "noVehicleMessage"
+    );
+
+  dateInput.value = todayString();
 
   function loadVehicles() {
-
-    if (!vehicleSelect) return;
-
-    const vehicles =
-      getVehicles();
+    const vehicles = getVehicles();
 
     vehicleSelect.innerHTML =
-      `<option value="">
-        Select vehicle
-      </option>`;
+      `<option value="">Select vehicle</option>`;
 
-    vehicles.forEach(
-      vehicle => {
+    vehicles.forEach(vehicle => {
 
-        const option =
-          document.createElement(
-            "option"
-          );
+      const option =
+        document.createElement("option");
 
-        option.value =
-          vehicle.id;
+      option.value = vehicle.id;
 
-        option.textContent =
-          `${vehicle.vehicleNumber} — ${vehicle.type}`;
+      option.textContent =
+        `${vehicle.vehicleNumber} — ${vehicle.vehicleType}`;
 
-        vehicleSelect.appendChild(
-          option
-        );
-      }
-    );
+      vehicleSelect.appendChild(option);
+    });
 
-    if (noVehicleMessage) {
+    if (!vehicles.length) {
 
-      noVehicleMessage.textContent =
-        vehicles.length === 0
-          ? "No vehicles added yet. Add a vehicle first."
-          : "";
+      showMessage(
+        noVehicleMessage,
+        "No vehicles available. Add a vehicle first.",
+        "error"
+      );
+
+    } else {
+
+      noVehicleMessage.textContent = "";
     }
   }
 
-  function updateVehicle() {
+  function updateVehicleInfo() {
+
+    const vehicles = getVehicles();
 
     const vehicle =
-      getVehicles().find(
-        v =>
-          v.id ===
-          vehicleSelect.value
+      vehicles.find(
+        item =>
+          item.id === vehicleSelect.value
       );
 
-    if (!vehicle) {
+    vehicleType.value =
+      vehicle?.vehicleType || "";
 
-      if (vehicleType) {
-        vehicleType.value = "";
-      }
+    driverName.value =
+      vehicle?.driverName || "";
+  }
 
-      if (driverName) {
-        driverName.value = "";
-      }
+  function updateDuration() {
+
+    if (!entryTime.value || !exitTime.value) {
+
+      durationOutput.textContent =
+        exitTime.value
+          ? "0h 0m"
+          : "Running";
 
       return;
     }
 
-    if (vehicleType) {
-      vehicleType.value =
-        vehicle.type || "";
-    }
-
-    if (driverName) {
-      driverName.value =
-        vehicle.driver || "";
-    }
-  }
-
-  function calculateDuration() {
-
-    if (
-      !entryTime?.value ||
-      !exitTime?.value
-    ) {
-
-      if (duration) {
-        duration.textContent =
-          "0h 0m";
-      }
-
-      return;
-    }
-
-    const [
-      entryHour,
-      entryMinute
-    ] =
-      entryTime.value
-        .split(":")
-        .map(Number);
-
-    const [
-      exitHour,
-      exitMinute
-    ] =
-      exitTime.value
-        .split(":")
-        .map(Number);
-
-    let start =
-      entryHour * 60 +
-      entryMinute;
-
-    let end =
-      exitHour * 60 +
-      exitMinute;
-
-    if (end < start) {
-      end += 1440;
-    }
-
-    const total =
-      end - start;
-
-    const hours =
-      Math.floor(
-        total / 60
+    const duration =
+      calculateDuration(
+        entryTime.value,
+        exitTime.value
       );
 
-    const minutes =
-      total % 60;
-
-    if (duration) {
-      duration.textContent =
-        `${hours}h ${minutes}m`;
-    }
+    durationOutput.textContent =
+      formatDuration(duration);
   }
 
-  if (dateInput) {
-
-    dateInput.value =
-      new Date()
-        .toISOString()
-        .split("T")[0];
-  }
-
-  vehicleSelect?.addEventListener(
+  vehicleSelect.addEventListener(
     "change",
-    updateVehicle
+    updateVehicleInfo
   );
 
-  entryTime?.addEventListener(
-    "change",
-    calculateDuration
+  entryTime.addEventListener(
+    "input",
+    updateDuration
   );
 
-  exitTime?.addEventListener(
-    "change",
-    calculateDuration
+  exitTime.addEventListener(
+    "input",
+    updateDuration
   );
 
   form.addEventListener(
@@ -1304,158 +1129,103 @@ function setupAddEntry() {
 
       event.preventDefault();
 
+      const vehicles = getVehicles();
+
       const vehicle =
-        getVehicles().find(
-          v =>
-            v.id ===
-            vehicleSelect.value
+        vehicles.find(
+          item =>
+            item.id === vehicleSelect.value
         );
 
       if (!vehicle) {
-
         showMessage(
           message,
           "Please select a vehicle.",
           "error"
         );
-
         return;
       }
 
-      if (!entryTime.value) {
+      const date =
+        dateInput.value;
 
-        showMessage(
-          message,
-          "Please enter entry time.",
-          "error"
+      const entry =
+        entryTime.value;
+
+      const exit =
+        exitTime.value;
+
+      const purpose =
+        document
+          .getElementById("entryPurpose")
+          .value;
+
+      const notes =
+        document
+          .getElementById("entryNotes")
+          .value
+          .trim();
+
+      const duration =
+        calculateDuration(
+          entry,
+          exit
         );
 
-        return;
-      }
+      const entries = getEntries();
 
-      let durationMinutes = 0;
-
-      if (exitTime.value) {
-
-        const [
-          eh,
-          em
-        ] =
-          entryTime.value
-            .split(":")
-            .map(Number);
-
-        const [
-          xh,
-          xm
-        ] =
-          exitTime.value
-            .split(":")
-            .map(Number);
-
-        let start =
-          eh * 60 + em;
-
-        let end =
-          xh * 60 + xm;
-
-        if (end < start) {
-          end += 1440;
-        }
-
-        durationMinutes =
-          end - start;
-      }
-
-      const entry = {
-
-        id:
-          Date.now().toString() +
-          Math.random()
-            .toString(36)
-            .slice(2),
-
-        date:
-          dateInput.value,
-
-        vehicleId:
-          vehicle.id,
-
-        vehicleNumber:
-          vehicle.vehicleNumber,
-
-        vehicleType:
-          vehicle.type,
-
-        driver:
-          vehicle.driver || "",
-
-        entryTime:
-          entryTime.value,
-
-        exitTime:
-          exitTime.value,
-
-        durationMinutes,
-
-        purpose:
-          document.getElementById(
-            "entryPurpose"
-          )?.value || "",
-
-        notes:
-          document.getElementById(
-            "entryNotes"
-          )?.value.trim() || "",
-
-        createdAt:
-          new Date().toISOString()
-      };
-
-      const entries =
-        getEntries();
-
-      entries.push(entry);
+      entries.push({
+        id: generateId("entry"),
+        vehicleId: vehicle.id,
+        vehicleNumber: vehicle.vehicleNumber,
+        vehicleType: vehicle.vehicleType,
+        driverName: vehicle.driverName,
+        date,
+        entryTime: entry,
+        exitTime: exit,
+        duration,
+        purpose,
+        notes,
+        createdAt: new Date().toISOString()
+      });
 
       saveEntries(entries);
 
       showMessage(
         message,
-        "Vehicle entry saved successfully.",
+        "Entry saved successfully.",
         "success"
       );
 
-      setTimeout(
-        () => goTo("dashboard"),
-        700
-      );
+      setTimeout(() => {
+        navigate("dashboard");
+      }, 600);
     }
   );
 
-  document.getElementById(
-    "closeEntryBtn"
-  )?.addEventListener(
-    "click",
-    () => goTo("dashboard")
-  );
+  document
+    .getElementById("cancelEntryBtn")
+    ?.addEventListener(
+      "click",
+      () => navigate("dashboard")
+    );
 
-  document.getElementById(
-    "cancelEntryBtn"
-  )?.addEventListener(
-    "click",
-    () => goTo("dashboard")
-  );
+  document
+    .getElementById("closeEntryBtn")
+    ?.addEventListener(
+      "click",
+      () => navigate("dashboard")
+    );
 
   loadVehicles();
 }
 
 
-/* =========================
+/* =========================================================
    CALENDAR
-========================= */
+========================================================= */
 
 function setupCalendar() {
-
   const grid =
     document.getElementById(
       "calendarGrid"
@@ -1463,56 +1233,62 @@ function setupCalendar() {
 
   if (!grid) return;
 
-  let currentDate =
-    new Date();
+  const monthTitle =
+    document.getElementById(
+      "currentMonth"
+    );
+
+  const selectedDateText =
+    document.getElementById(
+      "activityDateText"
+    );
+
+  const entryList =
+    document.getElementById(
+      "calendarEntryList"
+    );
+
+  const vehicleCount =
+    document.getElementById(
+      "calendarVehicleCount"
+    );
+
+  const entryCount =
+    document.getElementById(
+      "calendarEntryCount"
+    );
+
+  const durationText =
+    document.getElementById(
+      "calendarDuration"
+    );
+
+  const todayBtn =
+    document.getElementById(
+      "calendarTodayBtn"
+    );
+
+  let currentMonth = new Date();
 
   let selectedDate =
-    new Date();
-
-  function formatDate(date) {
-
-    const year =
-      date.getFullYear();
-
-    const month =
-      String(
-        date.getMonth() + 1
-      ).padStart(2, "0");
-
-    const day =
-      String(
-        date.getDate()
-      ).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  }
+    todayString();
 
   function renderCalendar() {
 
     const year =
-      currentDate.getFullYear();
+      currentMonth.getFullYear();
 
     const month =
-      currentDate.getMonth();
+      currentMonth.getMonth();
 
-    const title =
-      document.getElementById(
-        "currentMonth"
+    monthTitle.textContent =
+      currentMonth.toLocaleDateString(
+        "en-IN",
+        {
+          month: "long",
+          year: "numeric"
+        }
       );
-
-    if (title) {
-
-      title.textContent =
-        currentDate.toLocaleDateString(
-          "en-IN",
-          {
-            month: "long",
-            year: "numeric"
-          }
-        );
-    }
-
-    grid.innerHTML = "";
 
     const firstDay =
       new Date(
@@ -1528,25 +1304,32 @@ function setupCalendar() {
         0
       ).getDate();
 
+    const entries =
+      getEntries();
+
+    const activityDates =
+      new Set(
+        entries.map(
+          entry => entry.date
+        )
+      );
+
+    grid.innerHTML = "";
+
     for (
       let i = 0;
       i < firstDay;
       i++
     ) {
 
-      const blank =
-        document.createElement(
-          "div"
-        );
+      const empty =
+        document.createElement("div");
 
-      blank.className =
+      empty.className =
         "calendar-day empty";
 
-      grid.appendChild(blank);
+      grid.appendChild(empty);
     }
-
-    const entries =
-      getEntries();
 
     for (
       let day = 1;
@@ -1555,283 +1338,214 @@ function setupCalendar() {
     ) {
 
       const date =
-        new Date(
-          year,
-          month,
+        `${year}-${String(
+          month + 1
+        ).padStart(2, "0")}-${String(
           day
-        );
+        ).padStart(2, "0")}`;
 
-      const dateString =
-        formatDate(date);
+      const button =
+        document.createElement("button");
 
-      const dayEntries =
-        entries.filter(
-          entry =>
-            entry.date ===
-            dateString
-        );
+      button.type = "button";
 
-      const cell =
-        document.createElement(
-          "button"
-        );
-
-      cell.type = "button";
-
-      cell.className =
+      button.className =
         "calendar-day";
 
-      if (
-        formatDate(
-          new Date()
-        ) === dateString
-      ) {
-        cell.classList.add(
-          "today"
-        );
+      if (date === todayString()) {
+        button.classList.add("today");
       }
 
-      if (
-        formatDate(
-          selectedDate
-        ) === dateString
-      ) {
-        cell.classList.add(
-          "selected"
-        );
+      if (date === selectedDate) {
+        button.classList.add("selected");
       }
 
-      cell.innerHTML = `
-        <span>${day}</span>
-        ${
-          dayEntries.length
-            ? `<small>${dayEntries.length}</small>`
-            : ""
-        }
-      `;
+      if (activityDates.has(date)) {
+        button.classList.add("has-activity");
+      }
 
-      cell.addEventListener(
+      button.textContent = day;
+
+      button.addEventListener(
         "click",
         () => {
 
-          selectedDate =
-            date;
+          selectedDate = date;
 
           renderCalendar();
-
-          showSelectedDate(
-            dateString
-          );
+          renderSelectedDate();
         }
       );
 
-      grid.appendChild(cell);
+      grid.appendChild(button);
     }
 
-    showSelectedDate(
-      formatDate(selectedDate)
-    );
+    renderSelectedDate();
   }
 
-  function showSelectedDate(
-    dateString
-  ) {
+  function renderSelectedDate() {
+
+    selectedDateText.textContent =
+      formatDate(selectedDate);
 
     const entries =
       getEntries().filter(
         entry =>
-          entry.date ===
-          dateString
+          entry.date === selectedDate
       );
 
-    const vehicleCount =
-      document.getElementById(
-        "calendarVehicleCount"
-      );
-
-    const entryCount =
-      document.getElementById(
-        "calendarEntryCount"
+    const uniqueVehicles =
+      new Set(
+        entries.map(
+          entry => entry.vehicleId
+        )
       );
 
     const duration =
-      document.getElementById(
-        "calendarDuration"
+      entries.reduce(
+        (total, entry) =>
+          total +
+          Number(entry.duration || 0),
+        0
       );
 
-    const list =
-      document.getElementById(
-        "calendarEntryList"
-      );
+    vehicleCount.textContent =
+      uniqueVehicles.size;
 
-    const dateText =
-      document.getElementById(
-        "activityDateText"
-      );
+    entryCount.textContent =
+      entries.length;
 
-    if (vehicleCount) {
+    durationText.textContent =
+      formatDuration(duration);
 
-      vehicleCount.textContent =
-        new Set(
-          entries.map(
-            e => e.vehicleId
-          )
-        ).size;
-    }
+    if (!entries.length) {
 
-    if (entryCount) {
-      entryCount.textContent =
-        entries.length;
-    }
+      entryList.innerHTML = `
+        <div class="empty-state">
 
-    let total = 0;
+          <div class="empty-icon">
+            📅
+          </div>
 
-    entries.forEach(
-      entry => {
-        total +=
-          Number(
-            entry.durationMinutes
-          ) || 0;
-      }
-    );
+          <h3>No Activity</h3>
 
-    if (duration) {
+          <p>
+            No vehicle entries were recorded
+            on this date.
+          </p>
 
-      duration.textContent =
-        `${Math.floor(total / 60)}h ${
-          total % 60
-        }m`;
-    }
-
-    if (dateText) {
-
-      dateText.textContent =
-        new Date(
-          `${dateString}T00:00:00`
-        ).toLocaleDateString(
-          "en-IN",
-          {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-          }
-        );
-    }
-
-    if (!list) return;
-
-    if (entries.length === 0) {
-
-      list.innerHTML = `
-        <div class="activity-empty">
-          <div>📅</div>
-          <p>No entries for this date.</p>
         </div>
       `;
 
       return;
     }
 
-    list.innerHTML =
-      entries.map(
-        entry => {
+    entryList.innerHTML =
+      entries.map(entry => `
 
-          const total =
-            Number(
-              entry.durationMinutes
-            ) || 0;
+        <div class="activity-card">
 
-          return `
-            <div class="activity-item">
+          <div class="activity-card-top">
 
-              <div class="activity-icon">
-                🚚
-              </div>
+            <div>
 
-              <div class="activity-info">
+              <h3>
+                ${escapeHtml(
+                  entry.vehicleNumber ||
+                  "Vehicle"
+                )}
+              </h3>
 
-                <strong>
-                  ${escapeHtml(
-                    entry.vehicleNumber
-                  )}
-                </strong>
+              <p>
+                ${escapeHtml(
+                  entry.entryTime || "-"
+                )}
+                →
+                ${escapeHtml(
+                  entry.exitTime ||
+                  "Running"
+                )}
+              </p>
 
-                <span>
-                  ${escapeHtml(
-                    entry.driver ||
-                    "Driver not added"
-                  )}
-                </span>
-
-              </div>
-
-              <div class="activity-duration">
-
-                <strong>
-                  ${Math.floor(
-                    total / 60
-                  )}h ${total % 60}m
-                </strong>
-
-                <span>
-                  ${escapeHtml(
-                    entry.entryTime
-                  )}
-                  -
-                  ${escapeHtml(
-                    entry.exitTime ||
-                    "Running"
-                  )}
-                </span>
-
-              </div>
+              <p>
+                ${escapeHtml(
+                  entry.purpose || "-"
+                )}
+              </p>
 
             </div>
-          `;
-        }
-      ).join("");
+
+            <span class="activity-status ${
+              !entry.exitTime
+                ? "running"
+                : ""
+            }">
+
+              ${
+                entry.exitTime
+                  ? formatDuration(
+                      entry.duration
+                    )
+                  : "Running"
+              }
+
+            </span>
+
+          </div>
+
+        </div>
+
+      `).join("");
   }
 
-  document.getElementById(
-    "previousMonthBtn"
-  )?.addEventListener(
+  document
+    .getElementById(
+      "previousMonthBtn"
+    )
+    ?.addEventListener(
+      "click",
+      () => {
+
+        currentMonth.setMonth(
+          currentMonth.getMonth() - 1
+        );
+
+        renderCalendar();
+      }
+    );
+
+  document
+    .getElementById(
+      "nextMonthBtn"
+    )
+    ?.addEventListener(
+      "click",
+      () => {
+
+        currentMonth.setMonth(
+          currentMonth.getMonth() + 1
+        );
+
+        renderCalendar();
+      }
+    );
+
+  todayBtn?.addEventListener(
     "click",
     () => {
 
-      currentDate.setMonth(
-        currentDate.getMonth() - 1
-      );
-
-      renderCalendar();
-    }
-  );
-
-  document.getElementById(
-    "nextMonthBtn"
-  )?.addEventListener(
-    "click",
-    () => {
-
-      currentDate.setMonth(
-        currentDate.getMonth() + 1
-      );
-
-      renderCalendar();
-    }
-  );
-
-  document.getElementById(
-    "calendarTodayBtn"
-  )?.addEventListener(
-    "click",
-    () => {
-
-      currentDate =
+      const today =
         new Date();
+
+      currentMonth =
+        new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          1
+        );
 
       selectedDate =
-        new Date();
+        todayString();
 
       renderCalendar();
     }
@@ -1841,163 +1555,408 @@ function setupCalendar() {
 }
 
 
-/* =========================
+/* =========================================================
+   REPORTS
+========================================================= */
+
+function setupReports() {
+  const fromInput =
+    document.getElementById(
+      "reportFrom"
+    );
+
+  if (!fromInput) return;
+
+  const toInput =
+    document.getElementById(
+      "reportTo"
+    );
+
+  const todayBtn =
+    document.getElementById(
+      "reportTodayBtn"
+    );
+
+  function setToday() {
+    const today =
+      todayString();
+
+    fromInput.value = today;
+    toInput.value = today;
+
+    renderReports();
+  }
+
+  function renderReports() {
+
+    const from =
+      fromInput.value;
+
+    const to =
+      toInput.value;
+
+    const entries =
+      getEntries();
+
+    const vehicles =
+      getVehicles();
+
+    const filtered =
+      entries.filter(entry => {
+
+        if (from && entry.date < from) {
+          return false;
+        }
+
+        if (to && entry.date > to) {
+          return false;
+        }
+
+        return true;
+      });
+
+    const uniqueVehicles =
+      new Set(
+        filtered.map(
+          entry => entry.vehicleId
+        )
+      );
+
+    const completed =
+      filtered.filter(
+        entry => entry.exitTime
+      );
+
+    const totalDuration =
+      completed.reduce(
+        (total, entry) =>
+          total +
+          Number(entry.duration || 0),
+        0
+      );
+
+    document.getElementById(
+      "reportVehicleCount"
+    ).textContent =
+      uniqueVehicles.size;
+
+    document.getElementById(
+      "reportEntryCount"
+    ).textContent =
+      filtered.length;
+
+    document.getElementById(
+      "reportCompletedCount"
+    ).textContent =
+      completed.length;
+
+    document.getElementById(
+      "reportDuration"
+    ).textContent =
+      formatDuration(totalDuration);
+
+    renderVehicleReport(
+      filtered,
+      vehicles
+    );
+
+    renderEntryReport(
+      filtered
+    );
+  }
+
+  function renderVehicleReport(
+    entries,
+    vehicles
+  ) {
+
+    const list =
+      document.getElementById(
+        "vehicleReportList"
+      );
+
+    if (!entries.length) {
+
+      list.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📊</div>
+          <h3>No Report Data</h3>
+          <p>No entries found for this period.</p>
+        </div>
+      `;
+
+      return;
+    }
+
+    const grouped = {};
+
+    entries.forEach(entry => {
+
+      if (!grouped[entry.vehicleId]) {
+
+        grouped[entry.vehicleId] = {
+          count: 0,
+          duration: 0,
+          vehicleNumber:
+            entry.vehicleNumber ||
+            "Unknown"
+        };
+      }
+
+      grouped[entry.vehicleId].count++;
+
+      grouped[entry.vehicleId].duration +=
+        Number(entry.duration || 0);
+    });
+
+    list.innerHTML =
+      Object.values(grouped)
+        .map(item => `
+
+          <div class="activity-card">
+
+            <div class="activity-card-top">
+
+              <div>
+
+                <h3>
+                  ${escapeHtml(
+                    item.vehicleNumber
+                  )}
+                </h3>
+
+                <p>
+                  ${item.count} entr${
+                    item.count === 1
+                      ? "y"
+                      : "ies"
+                  }
+                </p>
+
+              </div>
+
+              <span class="activity-status">
+                ${formatDuration(
+                  item.duration
+                )}
+              </span>
+
+            </div>
+
+          </div>
+
+        `)
+        .join("");
+  }
+
+  function renderEntryReport(entries) {
+
+    const list =
+      document.getElementById(
+        "reportEntryList"
+      );
+
+    if (!entries.length) {
+      list.innerHTML = "";
+      return;
+    }
+
+    const sorted =
+      [...entries].sort(
+        (a, b) =>
+          `${b.date}${b.entryTime}`
+            .localeCompare(
+              `${a.date}${a.entryTime}`
+            )
+      );
+
+    list.innerHTML =
+      sorted.map(entry => `
+
+        <div class="activity-card">
+
+          <div class="activity-card-top">
+
+            <div>
+
+              <h3>
+                ${escapeHtml(
+                  entry.vehicleNumber ||
+                  "Vehicle"
+                )}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  formatDate(entry.date)
+                )}
+              </p>
+
+              <p>
+                ${escapeHtml(
+                  entry.entryTime || "-"
+                )}
+                →
+                ${escapeHtml(
+                  entry.exitTime ||
+                  "Running"
+                )}
+              </p>
+
+              <p>
+                ${escapeHtml(
+                  entry.purpose || "-"
+                )}
+              </p>
+
+            </div>
+
+            <span class="activity-status ${
+              !entry.exitTime
+                ? "running"
+                : ""
+            }">
+
+              ${
+                entry.exitTime
+                  ? formatDuration(
+                      entry.duration
+                    )
+                  : "Running"
+              }
+
+            </span>
+
+          </div>
+
+        </div>
+
+      `).join("");
+  }
+
+  fromInput.addEventListener(
+    "change",
+    renderReports
+  );
+
+  toInput.addEventListener(
+    "change",
+    renderReports
+  );
+
+  todayBtn?.addEventListener(
+    "click",
+    setToday
+  );
+
+  setToday();
+}
+
+
+/* =========================================================
    PROFILE
-========================= */
+========================================================= */
 
 function setupProfile() {
-
-  const profileName =
+  const nameElement =
     document.getElementById(
       "profileName"
     );
 
-  if (!profileName) return;
+  if (!nameElement) return;
 
-  let user = null;
+  const user =
+    getCurrentUser();
 
-  try {
-
-    user =
-      JSON.parse(
-        localStorage.getItem(
-          "hymaUser"
-        )
-      );
-
-  } catch {
-
-    user = null;
-  }
-
-  if (user) {
-
-    profileName.textContent =
-      user.name || "User";
-
-    const contact =
-      document.getElementById(
-        "profileContact"
-      );
-
-    const role =
-      document.getElementById(
-        "profileRole"
-      );
-
-    const company =
-      document.getElementById(
-        "profileCompany"
-      );
-
-    const avatar =
-      document.getElementById(
-        "profileAvatar"
-      );
-
-    if (contact) {
-      contact.textContent =
-        user.contact ||
-        "Not added";
-    }
-
-    if (role) {
-      role.textContent =
-        user.role ||
-        "Security Guard";
-    }
-
-    if (company) {
-      company.textContent =
-        user.company ||
-        "Hyma RMC Kokapet";
-    }
-
-    if (avatar) {
-
-      avatar.textContent =
-        (
-          user.name ||
-          "U"
-        )
-          .charAt(0)
-          .toUpperCase();
-    }
+  if (!user) {
+    navigate("login");
+    return;
   }
 
   document.getElementById(
-    "logoutBtn"
-  )?.addEventListener(
-    "click",
-    () => {
+    "profileName"
+  ).textContent =
+    user.name || "User";
 
-      localStorage.removeItem(
-        "hymaLoggedIn"
-      );
+  document.getElementById(
+    "profileEmail"
+  ).textContent =
+    user.email || "-";
 
-      localStorage.removeItem(
-        "hymaUser"
-      );
+  document.getElementById(
+    "profileNameValue"
+  ).textContent =
+    user.name || "-";
 
-      window.location.href = "/";
-    }
-  );
-}
+  document.getElementById(
+    "profileEmailValue"
+  ).textContent =
+    user.email || "-";
 
+  document.getElementById(
+    "profileMobileValue"
+  ).textContent =
+    user.mobile || "-";
 
-/* =========================
-   NAVIGATION BUTTONS
-========================= */
+  document.getElementById(
+    "profileRoleValue"
+  ).textContent =
+    user.role || "-";
 
-function setupNavigation() {
+  document.getElementById(
+    "profileCompanyValue"
+  ).textContent =
+    user.company || "-";
 
   document
-    .querySelectorAll(
-      ".bottom-nav .nav-item"
-    )
-    .forEach(item => {
+    .getElementById("logoutBtn")
+    ?.addEventListener(
+      "click",
+      () => {
 
-      item.addEventListener(
-        "click",
-        () => {
+        const confirmed =
+          confirm(
+            "Are you sure you want to logout?"
+          );
 
-          const page =
-            item.dataset.page;
+        if (!confirmed) return;
 
-          if (page) {
-            goTo(page);
-          }
-        }
-      );
-    });
+        removeCurrentUser();
+
+        navigate("login");
+      }
+    );
+
+  document
+    .getElementById("reportsProfileBtn")
+    ?.addEventListener(
+      "click",
+      () => navigate("reports")
+    );
 }
 
 
-/* =========================
-   APP START
-========================= */
+/* =========================================================
+   GLOBAL INITIALIZATION
+========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
 
+    requireLogin();
+
     setupWelcome();
-
-    setupLogin();
-
     setupRegister();
+    setupLogin();
+    setupNavigation();
 
     setupDashboard();
-
     setupVehicles();
-
     setupAddEntry();
-
     setupCalendar();
-
+    setupReports();
     setupProfile();
-
-    setupNavigation();
 
   }
 );
