@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>Vehicles - Hyma RMC Kokapet</title>
+
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+  <div class="vehicles-page">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+
+      <div>
+        <p class="header-small">Hyma RMC Kokapet</p>
+        <h1>Vehicles</h1>
+      </div>
+
+      <button
+        type="button"
+        id="addVehicleBtn"
+        class="header-add-btn"
+      >
+        + Add
+      </button>
+
+    </header>
+
+    <!-- Search -->
+    <section class="vehicle-search">
+
+      <div class="search-box">
+
+        <span>🔍</span>
+
+        <input
+          type="search"
+          id="vehicleSearch"
+          placeholder="Search vehicle number..."
+          autocomplete="off"
+        >
+
+      </div>
+
+    </section>
+
+    <!-- Filters -->
+    <section class="vehicle-filters">
+
+      <button
+        type="button"
+        class="filter-btn active"
+        data-filter="all"
+      >
+        All
+      </button>
+
+      <button
+        type="button"
+        class="filter-btn"
+        data-filter="tm"
+      >
+        TM
+      </button>
+
+      <button
+        type="button"
+        class="filter-btn"
+        data-filter="truck"
+      >
+        Truck
+      </button>
+
+      <button
+        type="button"
+        class="filter-btn"
+        data-filter="dumper"
+      >
+        Dumper
+      </button>
+
+      <button
+        type="button"
+        class="filter-btn"
+        data-filter="other"
+      >
+        Other
+      </button>
+
+    </section>
+
+    <!-- Vehicle Count -->
+    <section class="vehicle-summary">
+
+      <div>
+        <span>Total Vehicles</span>
+        <strong id="vehicleCount">0</strong>
+      </div>
+
+      <div>
+        <span>Active</span>
+        <strong id="activeVehicleCount">0</strong>
+      </div>
+
+    </section>
+
+    <!-- Vehicle List -->
+    <main
+      id="vehicleList"
+      class="vehicle-list"
+    >
+
+      <div class="empty-state">
+
+        <div class="empty-icon">🚚</div>
+
+        <h3>No vehicles added</h3>
+
+        <p>
+          Add your first vehicle to start tracking.
+        </p>
+
+        <button
+          type="button"
+          id="emptyAddVehicleBtn"
+          class="primary-btn"
+        >
+          + Add Vehicle
+        </button>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="dashboard"
+    >
+      <span>🏠</span>
+      <small>Home</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item active"
+      data-page="vehicles"
+    >
+      <span>🚚</span>
+      <small>Vehicles</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item add-nav"
+      data-page="add-entry"
+    >
+      <span>+</span>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="calendar"
+    >
+      <span>📅</span>
+      <small>Calendar</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="profile"
+    >
+      <span>👤</span>
+      <small>You</small>
+    </button>
+
+  </nav>
+
+  <script src="../app.js"></script>
+
+</body>
+</html>
