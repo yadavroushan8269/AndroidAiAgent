@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>Calendar - Hyma RMC Kokapet</title>
+
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+  <div class="calendar-page">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+
+      <div>
+        <p class="header-small">Hyma RMC Kokapet</p>
+        <h1>Calendar</h1>
+      </div>
+
+      <button
+        type="button"
+        id="calendarTodayBtn"
+        class="today-btn"
+      >
+        Today
+      </button>
+
+    </header>
+
+    <!-- Month Selector -->
+    <section class="month-selector">
+
+      <button
+        type="button"
+        id="previousMonthBtn"
+        class="month-arrow"
+        aria-label="Previous month"
+      >
+        ‹
+      </button>
+
+      <div class="month-title">
+        <strong id="currentMonth">October 2026</strong>
+      </div>
+
+      <button
+        type="button"
+        id="nextMonthBtn"
+        class="month-arrow"
+        aria-label="Next month"
+      >
+        ›
+      </button>
+
+    </section>
+
+    <!-- Calendar -->
+    <section class="calendar-card">
+
+      <div class="calendar-weekdays">
+
+        <span>Sun</span>
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+
+      </div>
+
+      <div
+        id="calendarGrid"
+        class="calendar-grid"
+      >
+        <!-- Calendar days will be generated here -->
+      </div>
+
+    </section>
+
+    <!-- Selected Date -->
+    <section class="selected-date-card">
+
+      <div>
+        <span class="card-label">Selected Date</span>
+
+        <strong id="selectedDate">
+          Select a date
+        </strong>
+      </div>
+
+      <span class="calendar-icon">📅</span>
+
+    </section>
+
+    <!-- Daily Summary -->
+    <section class="daily-summary">
+
+      <div class="summary-item">
+
+        <span>🚚</span>
+
+        <div>
+          <small>Vehicles</small>
+          <strong id="calendarVehicleCount">0</strong>
+        </div>
+
+      </div>
+
+      <div class="summary-item">
+
+        <span>📋</span>
+
+        <div>
+          <small>Entries</small>
+          <strong id="calendarEntryCount">0</strong>
+        </div>
+
+      </div>
+
+      <div class="summary-item">
+
+        <span>⏱️</span>
+
+        <div>
+          <small>Duration</small>
+          <strong id="calendarDuration">0h 0m</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Selected Date Entries -->
+    <section class="calendar-entries">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>Vehicle Activity</h2>
+          <p id="activityDateText">
+            Select a date to view activity
+          </p>
+        </div>
+
+      </div>
+
+      <div
+        id="calendarEntryList"
+        class="activity-list"
+      >
+
+        <div class="empty-state">
+
+          <div class="empty-icon">📅</div>
+
+          <h3>No entries</h3>
+
+          <p>
+            Vehicle activity for the selected date will appear here.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="dashboard"
+    >
+      <span>🏠</span>
+      <small>Home</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="vehicles"
+    >
+      <span>🚚</span>
+      <small>Vehicles</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item add-nav"
+      data-page="add-entry"
+    >
+      <span>+</span>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item active"
+      data-page="calendar"
+    >
+      <span>📅</span>
+      <small>Calendar</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="profile"
+    >
+      <span>👤</span>
+      <small>You</small>
+    </button>
+
+  </nav>
+
+  <script src="../app.js"></script>
+
+</body>
+</html>
