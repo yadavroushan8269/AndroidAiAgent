@@ -2,203 +2,118 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5a400">
   <title>Add Entry - Hyma RMC Kokapet</title>
-
   <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
-  <div class="entry-page">
+  <div class="app-page">
 
-    <!-- Header -->
-    <header class="dashboard-header">
-
+    <header class="top-header">
       <div>
-        <p class="header-small">Hyma RMC Kokapet</p>
         <h1>Add Entry</h1>
+        <p>Record vehicle entry and exit</p>
       </div>
 
       <button
-        type="button"
         id="closeEntryBtn"
-        class="icon-btn"
-        aria-label="Close"
+        class="header-action"
+        type="button"
       >
-        ✕
+        ×
       </button>
-
     </header>
 
-    <!-- Entry Form -->
-    <main class="entry-container">
+    <main class="page-content">
 
-      <form id="entryForm">
+      <form id="entryForm" class="entry-form">
 
-        <!-- Date -->
-        <div class="form-group">
+        <div class="form-section">
+
+          <h2>Vehicle Details</h2>
 
           <label for="entryDate">
             Date
           </label>
 
           <input
-            type="date"
             id="entryDate"
-            name="date"
+            type="date"
             required
           >
-
-        </div>
-
-        <!-- Vehicle -->
-        <div class="form-group">
 
           <label for="entryVehicle">
-            Vehicle Number
+            Vehicle
           </label>
 
-          <select
-            id="entryVehicle"
-            name="vehicle"
-            required
-          >
-
+          <select id="entryVehicle" required>
             <option value="">
-              Select Vehicle
+              Select vehicle
             </option>
-
           </select>
 
-        </div>
-
-        <!-- Vehicle Type -->
-        <div class="form-group">
+          <div id="noVehicleMessage" class="form-message"></div>
 
           <label for="vehicleType">
             Vehicle Type
           </label>
 
-          <select
+          <input
             id="vehicleType"
-            name="vehicleType"
-            required
+            type="text"
+            placeholder="Vehicle type"
+            readonly
           >
 
-            <option value="">
-              Select Vehicle Type
-            </option>
-
-            <option value="tm">
-              TM / Transit Mixer
-            </option>
-
-            <option value="truck">
-              Truck
-            </option>
-
-            <option value="dumper">
-              Dumper
-            </option>
-
-            <option value="excavator">
-              Excavator
-            </option>
-
-            <option value="jcb">
-              JCB
-            </option>
-
-            <option value="loader">
-              Loader
-            </option>
-
-            <option value="crane">
-              Crane
-            </option>
-
-            <option value="tractor">
-              Tractor
-            </option>
-
-            <option value="water-tanker">
-              Water Tanker
-            </option>
-
-            <option value="other">
-              Other
-            </option>
-
-          </select>
-
-        </div>
-
-        <!-- Driver -->
-        <div class="form-group">
-
           <label for="driverName">
-            Driver Name
+            Driver
           </label>
 
           <input
-            type="text"
             id="driverName"
-            name="driver"
-            placeholder="Enter driver name"
-            autocomplete="name"
-            required
+            type="text"
+            placeholder="Driver name"
+            readonly
           >
 
         </div>
 
-        <!-- Entry Time -->
-        <div class="form-row">
 
-          <div class="form-group">
+        <div class="form-section">
 
-            <label for="entryTime">
-              Entry Time
-            </label>
+          <h2>Entry & Exit Time</h2>
 
-            <input
-              type="time"
-              id="entryTime"
-              name="entryTime"
-              required
-            >
+          <div class="time-grid">
+
+            <div>
+              <label for="entryTime">
+                Entry Time
+              </label>
+
+              <input
+                id="entryTime"
+                type="time"
+                required
+              >
+            </div>
+
+            <div>
+              <label for="exitTime">
+                Exit Time
+              </label>
+
+              <input
+                id="exitTime"
+                type="time"
+              >
+            </div>
 
           </div>
 
-          <div class="form-group">
-
-            <label for="exitTime">
-              Exit Time
-            </label>
-
-            <input
-              type="time"
-              id="exitTime"
-              name="exitTime"
-            >
-
-          </div>
-
-        </div>
-
-        <!-- Duration -->
-        <div class="duration-card">
-
-          <div class="duration-icon">
-            ⏱️
-          </div>
-
-          <div>
+          <div class="duration-card">
 
             <span>Total Duration</span>
 
@@ -210,52 +125,46 @@
 
         </div>
 
-        <!-- Purpose -->
-        <div class="form-group">
+
+        <div class="form-section">
+
+          <h2>Purpose</h2>
 
           <label for="entryPurpose">
-            Purpose
+            Work Purpose
           </label>
 
-          <select
-            id="entryPurpose"
-            name="purpose"
-          >
+          <select id="entryPurpose" required>
 
             <option value="">
-              Select Purpose
+              Select purpose
             </option>
 
-            <option value="material">
-              Material Delivery
-            </option>
-
-            <option value="concrete">
+            <option value="Concrete">
               Concrete / RMC
             </option>
 
-            <option value="loading">
-              Loading
+            <option value="Material">
+              Material Delivery
             </option>
 
-            <option value="unloading">
-              Unloading
+            <option value="Earthwork">
+              Earthwork
             </option>
 
-            <option value="maintenance">
-              Maintenance
+            <option value="Equipment">
+              Equipment
             </option>
 
-            <option value="other">
+            <option value="Water">
+              Water Supply
+            </option>
+
+            <option value="Other">
               Other
             </option>
 
           </select>
-
-        </div>
-
-        <!-- Notes -->
-        <div class="form-group">
 
           <label for="entryNotes">
             Notes
@@ -263,89 +172,89 @@
 
           <textarea
             id="entryNotes"
-            name="notes"
             rows="3"
             placeholder="Optional notes..."
           ></textarea>
 
         </div>
 
-        <!-- Save -->
+
+        <div
+          id="entryMessage"
+          class="form-message"
+        ></div>
+
+
         <button
+          class="primary-btn full-width"
           type="submit"
-          class="primary-btn save-entry-btn"
         >
           Save Entry
         </button>
 
+
         <button
-          type="button"
           id="cancelEntryBtn"
-          class="secondary-btn"
+          class="secondary-btn full-width"
+          type="button"
         >
           Cancel
         </button>
 
       </form>
 
-      <div
-        id="entryMessage"
-        class="auth-message"
-        aria-live="polite"
-      ></div>
-
     </main>
 
+
+    <nav class="bottom-nav">
+
+      <button
+        class="nav-item"
+        data-page="dashboard"
+        type="button"
+      >
+        <span>⌂</span>
+        <small>Home</small>
+      </button>
+
+      <button
+        class="nav-item"
+        data-page="vehicles"
+        type="button"
+      >
+        <span>🚚</span>
+        <small>Vehicles</small>
+      </button>
+
+      <button
+        class="nav-item add-nav active"
+        data-page="add-entry"
+        type="button"
+      >
+        <span>+</span>
+      </button>
+
+      <button
+        class="nav-item"
+        data-page="calendar"
+        type="button"
+      >
+        <span>▣</span>
+        <small>Calendar</small>
+      </button>
+
+      <button
+        class="nav-item"
+        data-page="profile"
+        type="button"
+      >
+        <span>👤</span>
+        <small>You</small>
+      </button>
+
+    </nav>
+
   </div>
-
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="dashboard"
-    >
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="vehicles"
-    >
-      <span>🚚</span>
-      <small>Vehicles</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item add-nav active"
-      data-page="add-entry"
-    >
-      <span>+</span>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="calendar"
-    >
-      <span>📅</span>
-      <small>Calendar</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="profile"
-    >
-      <span>👤</span>
-      <small>You</small>
-    </button>
-
-  </nav>
 
   <script src="../app.js"></script>
 
