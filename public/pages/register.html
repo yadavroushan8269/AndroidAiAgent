@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>Register - Hyma RMC Kokapet</title>
+
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+  <div class="auth-page">
+
+    <div class="auth-container">
+
+      <div class="auth-logo">
+        🚧
+      </div>
+
+      <h1>Create Account</h1>
+
+      <p class="auth-subtitle">
+        Register for Hyma RMC Kokapet
+      </p>
+
+      <form id="registerForm">
+
+        <div class="form-group">
+          <label for="registerName">Full Name</label>
+
+          <input
+            type="text"
+            id="registerName"
+            name="name"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerContact">Email or Mobile</label>
+
+          <input
+            type="text"
+            id="registerContact"
+            name="contact"
+            placeholder="Enter email or mobile"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerCompany">Company / Site</label>
+
+          <input
+            type="text"
+            id="registerCompany"
+            name="company"
+            placeholder="Enter company or site name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerRole">Role</label>
+
+          <select
+            id="registerRole"
+            name="role"
+            required
+          >
+            <option value="">Select Role</option>
+            <option value="security">Security Guard</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+
+          <label for="registerPassword">
+            Password
+          </label>
+
+          <div class="password-wrapper">
+
+            <input
+              type="password"
+              id="registerPassword"
+              name="password"
+              placeholder="Create password"
+              autocomplete="new-password"
+              required
+            >
+
+            <button
+              type="button"
+              id="toggleRegisterPassword"
+              class="password-toggle"
+              aria-label="Show password"
+            >
+              👁️
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="confirmPassword">
+            Confirm Password
+          </label>
+
+          <div class="password-wrapper">
+
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm password"
+              autocomplete="new-password"
+              required
+            >
+
+            <button
+              type="button"
+              id="toggleConfirmPassword"
+              class="password-toggle"
+              aria-label="Show password"
+            >
+              👁️
+            </button>
+
+          </div>
+
+        </div>
+
+        <button
+          type="submit"
+          class="primary-btn auth-submit"
+        >
+          Create Account
+        </button>
+
+      </form>
+
+      <div class="auth-footer">
+
+        <span>Already have an account?</span>
+
+        <button
+          type="button"
+          id="loginBtn"
+          class="link-btn"
+        >
+          Login
+        </button>
+
+      </div>
+
+      <button
+        type="button"
+        id="backBtn"
+        class="back-btn"
+      >
+        ← Back
+      </button>
+
+      <div
+        id="registerMessage"
+        class="auth-message"
+        aria-live="polite"
+      ></div>
+
+    </div>
+
+  </div>
+
+  <script src="../app.js"></script>
+
+</body>
+</html>
