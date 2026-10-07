@@ -166,7 +166,6 @@ function navigate(page) {
 
 function requireLogin() {
   const user = getCurrentUser();
-
   const path = window.location.pathname;
 
   const publicPages = [
@@ -217,25 +216,29 @@ function setupRegister() {
 
   const message = document.getElementById("registerMessage");
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", event => {
     event.preventDefault();
 
     const name = document
       .getElementById("registerName")
-      .value.trim();
+      .value
+      .trim();
 
     const email = document
       .getElementById("registerEmail")
-      .value.trim()
+      .value
+      .trim()
       .toLowerCase();
 
     const mobile = document
       .getElementById("registerMobile")
-      .value.trim();
+      .value
+      .trim();
 
     const company = document
       .getElementById("registerCompany")
-      .value.trim();
+      .value
+      .trim();
 
     const role = document
       .getElementById("registerRole")
@@ -323,7 +326,7 @@ function setupLogin() {
 
   const message = document.getElementById("loginMessage");
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", event => {
     event.preventDefault();
 
     const identity = document
@@ -338,13 +341,12 @@ function setupLogin() {
 
     const users = getUsers();
 
-    const user = users.find(
-      item =>
-        (
-          item.email.toLowerCase() === identity ||
-          item.mobile.toLowerCase() === identity
-        ) &&
-        item.password === password
+    const user = users.find(item =>
+      (
+        String(item.email || "").toLowerCase() === identity ||
+        String(item.mobile || "").toLowerCase() === identity
+      ) &&
+      item.password === password
     );
 
     if (!user) {
@@ -373,7 +375,7 @@ function setupLogin() {
     document.getElementById("forgotPasswordBtn");
 
   if (forgotBtn) {
-    forgotBtn.addEventListener("click", (event) => {
+    forgotBtn.addEventListener("click", event => {
       event.preventDefault();
 
       alert(
@@ -444,9 +446,8 @@ function setupDashboard() {
   const entries = getEntries();
   const today = todayString();
 
-  const todayEntries = entries.filter(
-    entry => entry.date === today
-  );
+  const todayEntries =
+    entries.filter(entry => entry.date === today);
 
   const completedEntries =
     todayEntries.filter(entry => entry.exitTime);
@@ -479,7 +480,10 @@ function setupDashboard() {
     "dashboardDuration"
   ).textContent = formatDuration(totalMinutes);
 
-  renderDashboardActivity(todayEntries, vehicles);
+  renderDashboardActivity(
+    todayEntries,
+    vehicles
+  );
 
   const notificationBtn =
     document.getElementById("notificationBtn");
@@ -600,14 +604,10 @@ function setupVehicles() {
     document.getElementById("addVehicleBtn");
 
   const emptyAddBtn =
-    document.getElementById(
-      "emptyAddVehicleBtn"
-    );
+    document.getElementById("emptyAddVehicleBtn");
 
   const closeBtn =
-    document.getElementById(
-      "closeVehicleModal"
-    );
+    document.getElementById("closeVehicleModal");
 
   const search =
     document.getElementById("vehicleSearch");
@@ -618,13 +618,90 @@ function setupVehicles() {
     );
 
   let activeFilter = "all";
+  let editingVehicleId = null;
 
-  function openModal() {
+  function openModal(vehicle = null) {
     if (!modal) return;
 
     modal.classList.remove("hidden");
-
     document.body.classList.add("modal-open");
+
+    editingVehicleId =
+      vehicle ? vehicle.id : null;
+
+    const title =
+      modal.querySelector(".modal-header h2");
+
+    const subtitle =
+      modal.querySelector(".modal-header p");
+
+    const saveButton =
+      form?.querySelector(
+        'button[type="submit"]'
+      );
+
+    if (vehicle) {
+      if (title) {
+        title.textContent = "Edit Vehicle";
+      }
+
+      if (subtitle) {
+        subtitle.textContent =
+          "Update vehicle details";
+      }
+
+      if (saveButton) {
+        saveButton.textContent =
+          "Update Vehicle";
+      }
+
+      document.getElementById(
+        "vehicleNumber"
+      ).value =
+        vehicle.vehicleNumber || "";
+
+      document.getElementById(
+        "vehicleType"
+      ).value =
+        vehicle.vehicleType || "";
+
+      document.getElementById(
+        "vehicleDriver"
+      ).value =
+        vehicle.driverName || "";
+
+      document.getElementById(
+        "vehicleContractor"
+      ).value =
+        vehicle.contractor || "";
+
+      document.getElementById(
+        "vehicleStatus"
+      ).value =
+        vehicle.status || "Active";
+
+    } else {
+      if (title) {
+        title.textContent = "Add Vehicle";
+      }
+
+      if (subtitle) {
+        subtitle.textContent =
+          "Enter vehicle details";
+      }
+
+      if (saveButton) {
+        saveButton.textContent =
+          "Save Vehicle";
+      }
+
+      form?.reset();
+    }
+
+    if (message) {
+      message.textContent = "";
+      message.className = "form-message";
+    }
 
     setTimeout(() => {
       document
@@ -644,6 +721,33 @@ function setupVehicles() {
 
     form?.reset();
 
+    editingVehicleId = null;
+
+    const title =
+      modal.querySelector(".modal-header h2");
+
+    const subtitle =
+      modal.querySelector(".modal-header p");
+
+    const saveButton =
+      form?.querySelector(
+        'button[type="submit"]'
+      );
+
+    if (title) {
+      title.textContent = "Add Vehicle";
+    }
+
+    if (subtitle) {
+      subtitle.textContent =
+        "Enter vehicle details";
+    }
+
+    if (saveButton) {
+      saveButton.textContent =
+        "Save Vehicle";
+    }
+
     if (message) {
       message.textContent = "";
       message.className = "form-message";
@@ -652,12 +756,12 @@ function setupVehicles() {
 
   addBtn?.addEventListener(
     "click",
-    openModal
+    () => openModal()
   );
 
   emptyAddBtn?.addEventListener(
     "click",
-    openModal
+    () => openModal()
   );
 
   closeBtn?.addEventListener(
@@ -665,31 +769,37 @@ function setupVehicles() {
     closeModal
   );
 
-  modal?.addEventListener("click", event => {
-    if (event.target === modal) {
-      closeModal();
+  modal?.addEventListener(
+    "click",
+    event => {
+      if (event.target === modal) {
+        closeModal();
+      }
     }
-  });
+  );
 
   document
     .querySelectorAll(".filter-btn")
     .forEach(button => {
 
-      button.addEventListener("click", () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        document
-          .querySelectorAll(".filter-btn")
-          .forEach(item =>
-            item.classList.remove("active")
-          );
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach(item =>
+              item.classList.remove("active")
+            );
 
-        button.classList.add("active");
+          button.classList.add("active");
 
-        activeFilter =
-          button.dataset.filter || "all";
+          activeFilter =
+            button.dataset.filter || "all";
 
-        render();
-      });
+          render();
+        }
+      );
 
     });
 
@@ -733,12 +843,22 @@ function setupVehicles() {
           .getElementById("vehicleStatus")
           .value;
 
+      if (!vehicleNumber || !vehicleType) {
+        showMessage(
+          message,
+          "Please enter vehicle number and type.",
+          "error"
+        );
+        return;
+      }
+
       const vehicles = getVehicles();
 
       const duplicate = vehicles.some(
         vehicle =>
-          vehicle.vehicleNumber.toUpperCase() ===
-          vehicleNumber
+          vehicle.id !== editingVehicleId &&
+          String(vehicle.vehicleNumber || "")
+            .toUpperCase() === vehicleNumber
       );
 
       if (duplicate) {
@@ -750,23 +870,63 @@ function setupVehicles() {
         return;
       }
 
-      vehicles.push({
-        id: generateId("vehicle"),
-        vehicleNumber,
-        vehicleType,
-        driverName,
-        contractor,
-        status,
-        createdAt: new Date().toISOString()
-      });
+      if (editingVehicleId) {
 
-      saveVehicles(vehicles);
+        const index =
+          vehicles.findIndex(
+            vehicle =>
+              vehicle.id === editingVehicleId
+          );
 
-      showMessage(
-        message,
-        "Vehicle saved successfully.",
-        "success"
-      );
+        if (index === -1) {
+          showMessage(
+            message,
+            "Vehicle could not be found.",
+            "error"
+          );
+          return;
+        }
+
+        vehicles[index] = {
+          ...vehicles[index],
+          vehicleNumber,
+          vehicleType,
+          driverName,
+          contractor,
+          status,
+          updatedAt:
+            new Date().toISOString()
+        };
+
+        saveVehicles(vehicles);
+
+        showMessage(
+          message,
+          "Vehicle updated successfully.",
+          "success"
+        );
+
+      } else {
+
+        vehicles.push({
+          id: generateId("vehicle"),
+          vehicleNumber,
+          vehicleType,
+          driverName,
+          contractor,
+          status,
+          createdAt:
+            new Date().toISOString()
+        });
+
+        saveVehicles(vehicles);
+
+        showMessage(
+          message,
+          "Vehicle saved successfully.",
+          "success"
+        );
+      }
 
       render();
 
@@ -776,6 +936,292 @@ function setupVehicles() {
     }
   );
 
+  function getVehicleStats(vehicleId) {
+    const entries =
+      getEntries().filter(
+        entry =>
+          entry.vehicleId === vehicleId
+      );
+
+    const totalDuration =
+      entries.reduce(
+        (total, entry) =>
+          total + Number(entry.duration || 0),
+        0
+      );
+
+    const running =
+      entries.filter(
+        entry => !entry.exitTime
+      ).length;
+
+    return {
+      entries,
+      totalDuration,
+      running
+    };
+  }
+
+  function openHistory(vehicleId) {
+    const vehicle =
+      getVehicles().find(
+        item => item.id === vehicleId
+      );
+
+    if (!vehicle) return;
+
+    const stats =
+      getVehicleStats(vehicleId);
+
+    const existing =
+      document.getElementById(
+        "vehicleHistoryModal"
+      );
+
+    if (existing) {
+      existing.remove();
+    }
+
+    const historyModal =
+      document.createElement("div");
+
+    historyModal.id =
+      "vehicleHistoryModal";
+
+    historyModal.className =
+      "modal-overlay";
+
+    const sortedEntries =
+      [...stats.entries].sort(
+        (a, b) =>
+          `${b.date}${b.entryTime}`
+            .localeCompare(
+              `${a.date}${a.entryTime}`
+            )
+      );
+
+    historyModal.innerHTML = `
+      <div class="modal-card vehicle-history-modal">
+
+        <div class="modal-header">
+
+          <div>
+            <h2>Vehicle History</h2>
+            <p>
+              ${escapeHtml(vehicle.vehicleNumber)}
+            </p>
+          </div>
+
+          <button
+            class="modal-close"
+            id="closeHistoryModal"
+            type="button"
+          >
+            ×
+          </button>
+
+        </div>
+
+        <div class="vehicle-history-summary">
+
+          <div>
+            <strong>${stats.entries.length}</strong>
+            <span>Entries</span>
+          </div>
+
+          <div>
+            <strong>
+              ${formatDuration(stats.totalDuration)}
+            </strong>
+            <span>Total Duration</span>
+          </div>
+
+          <div>
+            <strong>${stats.running}</strong>
+            <span>Running</span>
+          </div>
+
+        </div>
+
+        <div class="vehicle-history-info">
+
+          <div>
+            <span>Vehicle Type</span>
+            <strong>
+              ${escapeHtml(vehicle.vehicleType || "-")}
+            </strong>
+          </div>
+
+          <div>
+            <span>Driver</span>
+            <strong>
+              ${escapeHtml(vehicle.driverName || "-")}
+            </strong>
+          </div>
+
+          <div>
+            <span>Contractor</span>
+            <strong>
+              ${escapeHtml(vehicle.contractor || "-")}
+            </strong>
+          </div>
+
+          <div>
+            <span>Status</span>
+            <strong>
+              ${escapeHtml(vehicle.status || "-")}
+            </strong>
+          </div>
+
+        </div>
+
+        <div class="vehicle-history-list">
+
+          ${
+            sortedEntries.length
+              ? sortedEntries.map(entry => `
+                <div class="vehicle-history-entry">
+
+                  <div>
+                    <strong>
+                      ${escapeHtml(
+                        formatDate(entry.date)
+                      )}
+                    </strong>
+
+                    <span>
+                      ${escapeHtml(
+                        entry.entryTime || "-"
+                      )}
+                      →
+                      ${escapeHtml(
+                        entry.exitTime ||
+                        "Running"
+                      )}
+                    </span>
+
+                    <small>
+                      ${escapeHtml(
+                        entry.purpose || "Other"
+                      )}
+                    </small>
+
+                  </div>
+
+                  <strong class="${
+                    !entry.exitTime
+                      ? "history-running"
+                      : ""
+                  }">
+                    ${
+                      entry.exitTime
+                        ? formatDuration(
+                            entry.duration
+                          )
+                        : "Running"
+                    }
+                  </strong>
+
+                </div>
+              `).join("")
+              : `
+                <div class="empty-state">
+                  <div class="empty-icon">📋</div>
+                  <h3>No History</h3>
+                  <p>
+                    No entries have been recorded
+                    for this vehicle.
+                  </p>
+                </div>
+              `
+          }
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(historyModal);
+
+    document.body.classList.add(
+      "modal-open"
+    );
+
+    document
+      .getElementById("closeHistoryModal")
+      ?.addEventListener(
+        "click",
+        () => {
+          historyModal.remove();
+          document.body.classList.remove(
+            "modal-open"
+          );
+        }
+      );
+
+    historyModal.addEventListener(
+      "click",
+      event => {
+        if (event.target === historyModal) {
+          historyModal.remove();
+          document.body.classList.remove(
+            "modal-open"
+          );
+        }
+      }
+    );
+  }
+
+  function deleteVehicle(vehicleId) {
+    const vehicle =
+      getVehicles().find(
+        item => item.id === vehicleId
+      );
+
+    if (!vehicle) return;
+
+    const entries =
+      getEntries().filter(
+        entry =>
+          entry.vehicleId === vehicleId
+      );
+
+    let messageText =
+      `Delete ${vehicle.vehicleNumber}?`;
+
+    if (entries.length) {
+      messageText +=
+        `\n\nThis vehicle has ${entries.length} recorded ${
+          entries.length === 1
+            ? "entry"
+            : "entries"
+        }. The history will also be deleted.`;
+    }
+
+    const confirmed =
+      confirm(messageText);
+
+    if (!confirmed) return;
+
+    const updatedVehicles =
+      getVehicles().filter(
+        item =>
+          item.id !== vehicleId
+      );
+
+    saveVehicles(updatedVehicles);
+
+    const updatedEntries =
+      getEntries().filter(
+        entry =>
+          entry.vehicleId !== vehicleId
+      );
+
+    saveEntries(updatedEntries);
+
+    render();
+  }
+
   function render() {
     const vehicles = getVehicles();
 
@@ -784,48 +1230,67 @@ function setupVehicles() {
         .trim()
         .toLowerCase() || "";
 
-    let filtered = vehicles.filter(vehicle => {
+    const filtered =
+      vehicles.filter(vehicle => {
 
-      const matchesSearch =
-        !searchValue ||
-        vehicle.vehicleNumber
-          .toLowerCase()
-          .includes(searchValue) ||
-        vehicle.driverName
-          .toLowerCase()
-          .includes(searchValue) ||
-        vehicle.contractor
-          .toLowerCase()
-          .includes(searchValue);
+        const number =
+          String(
+            vehicle.vehicleNumber || ""
+          ).toLowerCase();
 
-      let matchesFilter = true;
+        const driver =
+          String(
+            vehicle.driverName || ""
+          ).toLowerCase();
 
-      if (activeFilter === "tm") {
-        matchesFilter =
-          vehicle.vehicleType === "TM";
-      }
+        const contractor =
+          String(
+            vehicle.contractor || ""
+          ).toLowerCase();
 
-      if (activeFilter === "truck") {
-        matchesFilter =
-          vehicle.vehicleType === "Truck";
-      }
+        const type =
+          String(
+            vehicle.vehicleType || ""
+          ).toLowerCase();
 
-      if (activeFilter === "dumper") {
-        matchesFilter =
-          vehicle.vehicleType === "Dumper";
-      }
+        const matchesSearch =
+          !searchValue ||
+          number.includes(searchValue) ||
+          driver.includes(searchValue) ||
+          contractor.includes(searchValue) ||
+          type.includes(searchValue);
 
-      if (activeFilter === "other") {
-        matchesFilter =
-          ![
-            "TM",
-            "Truck",
-            "Dumper"
-          ].includes(vehicle.vehicleType);
-      }
+        let matchesFilter = true;
 
-      return matchesSearch && matchesFilter;
-    });
+        if (activeFilter === "tm") {
+          matchesFilter =
+            vehicle.vehicleType === "TM";
+        }
+
+        if (activeFilter === "truck") {
+          matchesFilter =
+            vehicle.vehicleType === "Truck";
+        }
+
+        if (activeFilter === "dumper") {
+          matchesFilter =
+            vehicle.vehicleType === "Dumper";
+        }
+
+        if (activeFilter === "other") {
+          matchesFilter =
+            ![
+              "TM",
+              "Truck",
+              "Dumper"
+            ].includes(vehicle.vehicleType);
+        }
+
+        return (
+          matchesSearch &&
+          matchesFilter
+        );
+      });
 
     const count =
       document.getElementById(
@@ -838,7 +1303,8 @@ function setupVehicles() {
       );
 
     if (count) {
-      count.textContent = vehicles.length;
+      count.textContent =
+        vehicles.length;
     }
 
     if (activeCount) {
@@ -860,6 +1326,37 @@ function setupVehicles() {
 
       if (empty) {
         empty.classList.remove("hidden");
+
+        const emptyTitle =
+          empty.querySelector("h3");
+
+        const emptyText =
+          empty.querySelector("p");
+
+        if (searchValue || activeFilter !== "all") {
+
+          if (emptyTitle) {
+            emptyTitle.textContent =
+              "No Vehicles Found";
+          }
+
+          if (emptyText) {
+            emptyText.textContent =
+              "Try another search or filter.";
+          }
+
+        } else {
+
+          if (emptyTitle) {
+            emptyTitle.textContent =
+              "No Vehicles Yet";
+          }
+
+          if (emptyText) {
+            emptyText.textContent =
+              "Add your first vehicle to start tracking duration.";
+          }
+        }
       }
 
       return;
@@ -870,77 +1367,172 @@ function setupVehicles() {
     }
 
     list.innerHTML =
-      filtered.map(vehicle => `
+      filtered.map(vehicle => {
 
-        <article class="vehicle-card">
+        const stats =
+          getVehicleStats(vehicle.id);
 
-          <div class="vehicle-card-top">
+        return `
 
-            <div class="vehicle-icon">
-              🚚
+          <article class="vehicle-card">
+
+            <div class="vehicle-card-top">
+
+              <div class="vehicle-icon">
+                🚚
+              </div>
+
+              <div class="vehicle-main">
+
+                <h3>
+                  ${escapeHtml(
+                    vehicle.vehicleNumber
+                  )}
+                </h3>
+
+                <p>
+                  ${escapeHtml(
+                    vehicle.vehicleType
+                  )}
+                </p>
+
+              </div>
+
+              <span class="vehicle-status ${
+                vehicle.status === "Active"
+                  ? "active"
+                  : "inactive"
+              }">
+                ${escapeHtml(
+                  vehicle.status || "Inactive"
+                )}
+              </span>
+
             </div>
 
-            <div class="vehicle-main">
+            <div class="vehicle-details">
 
-              <h3>
-                ${escapeHtml(
-                  vehicle.vehicleNumber
-                )}
-              </h3>
+              <div>
+                <span>Driver</span>
+                <strong>
+                  ${escapeHtml(
+                    vehicle.driverName || "-"
+                  )}
+                </strong>
+              </div>
 
-              <p>
-                ${escapeHtml(
-                  vehicle.vehicleType
-                )}
-              </p>
+              <div>
+                <span>Contractor</span>
+                <strong>
+                  ${escapeHtml(
+                    vehicle.contractor || "-"
+                  )}
+                </strong>
+              </div>
 
             </div>
 
-            <span class="vehicle-status ${
-              vehicle.status === "Active"
-                ? "active"
-                : "inactive"
-            }">
-              ${escapeHtml(
-                vehicle.status
-              )}
-            </span>
+            <div class="vehicle-mini-stats">
 
-          </div>
+              <div>
+                <strong>
+                  ${stats.entries.length}
+                </strong>
+                <span>Entries</span>
+              </div>
 
-          <div class="vehicle-details">
+              <div>
+                <strong>
+                  ${formatDuration(
+                    stats.totalDuration
+                  )}
+                </strong>
+                <span>Duration</span>
+              </div>
 
-            <div>
-              <span>Driver</span>
-              <strong>
-                ${escapeHtml(
-                  vehicle.driverName || "-"
-                )}
-              </strong>
+              <div>
+                <strong>
+                  ${stats.running}
+                </strong>
+                <span>Running</span>
+              </div>
+
             </div>
 
-            <div>
-              <span>Contractor</span>
-              <strong>
-                ${escapeHtml(
-                  vehicle.contractor || "-"
-                )}
-              </strong>
+            <div class="vehicle-actions">
+
+              <button
+                class="vehicle-history-btn"
+                data-history-vehicle="${vehicle.id}"
+                type="button"
+              >
+                📋 History
+              </button>
+
+              <button
+                class="vehicle-edit-btn"
+                data-edit-vehicle="${vehicle.id}"
+                type="button"
+              >
+                ✏️ Edit
+              </button>
+
+              <button
+                class="vehicle-delete-btn"
+                data-delete-vehicle="${vehicle.id}"
+                type="button"
+              >
+                🗑️ Delete
+              </button>
+
             </div>
 
-          </div>
+          </article>
 
-          <button
-            class="vehicle-delete-btn"
-            data-delete-vehicle="${vehicle.id}"
-            type="button"
-          >
-            Delete Vehicle
-          </button>
+        `;
+      }).join("");
 
-        </article>
+    list
+      .querySelectorAll(
+        "[data-history-vehicle]"
+      )
+      .forEach(button => {
 
-      `).join("");
+        button.addEventListener(
+          "click",
+          () => {
+            openHistory(
+              button.dataset.historyVehicle
+            );
+          }
+        );
+
+      });
+
+    list
+      .querySelectorAll(
+        "[data-edit-vehicle]"
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const vehicle =
+              getVehicles().find(
+                item =>
+                  item.id ===
+                  button.dataset.editVehicle
+              );
+
+            if (vehicle) {
+              openModal(vehicle);
+            }
+          }
+        );
+
+      });
 
     list
       .querySelectorAll(
@@ -951,26 +1543,9 @@ function setupVehicles() {
         button.addEventListener(
           "click",
           () => {
-
-            const id =
-              button.dataset.deleteVehicle;
-
-            const confirmed =
-              confirm(
-                "Delete this vehicle?"
-              );
-
-            if (!confirmed) return;
-
-            const updated =
-              getVehicles().filter(
-                vehicle =>
-                  vehicle.id !== id
-              );
-
-            saveVehicles(updated);
-
-            render();
+            deleteVehicle(
+              button.dataset.deleteVehicle
+            );
           }
         );
 
@@ -1034,7 +1609,8 @@ function setupAddEntry() {
       "noVehicleMessage"
     );
 
-  dateInput.value = todayString();
+  dateInput.value =
+    todayString();
 
   function loadVehicles() {
     const vehicles = getVehicles();
@@ -1047,12 +1623,15 @@ function setupAddEntry() {
       const option =
         document.createElement("option");
 
-      option.value = vehicle.id;
+      option.value =
+        vehicle.id;
 
       option.textContent =
         `${vehicle.vehicleNumber} — ${vehicle.vehicleType}`;
 
-      vehicleSelect.appendChild(option);
+      vehicleSelect.appendChild(
+        option
+      );
     });
 
     if (!vehicles.length) {
@@ -1071,12 +1650,14 @@ function setupAddEntry() {
 
   function updateVehicleInfo() {
 
-    const vehicles = getVehicles();
+    const vehicles =
+      getVehicles();
 
     const vehicle =
       vehicles.find(
         item =>
-          item.id === vehicleSelect.value
+          item.id ===
+          vehicleSelect.value
       );
 
     vehicleType.value =
@@ -1088,7 +1669,10 @@ function setupAddEntry() {
 
   function updateDuration() {
 
-    if (!entryTime.value || !exitTime.value) {
+    if (
+      !entryTime.value ||
+      !exitTime.value
+    ) {
 
       durationOutput.textContent =
         exitTime.value
@@ -1129,12 +1713,14 @@ function setupAddEntry() {
 
       event.preventDefault();
 
-      const vehicles = getVehicles();
+      const vehicles =
+        getVehicles();
 
       const vehicle =
         vehicles.find(
           item =>
-            item.id === vehicleSelect.value
+            item.id ===
+            vehicleSelect.value
         );
 
       if (!vehicle) {
@@ -1157,12 +1743,16 @@ function setupAddEntry() {
 
       const purpose =
         document
-          .getElementById("entryPurpose")
+          .getElementById(
+            "entryPurpose"
+          )
           .value;
 
       const notes =
         document
-          .getElementById("entryNotes")
+          .getElementById(
+            "entryNotes"
+          )
           .value
           .trim();
 
@@ -1172,21 +1762,26 @@ function setupAddEntry() {
           exit
         );
 
-      const entries = getEntries();
+      const entries =
+        getEntries();
 
       entries.push({
         id: generateId("entry"),
         vehicleId: vehicle.id,
-        vehicleNumber: vehicle.vehicleNumber,
-        vehicleType: vehicle.vehicleType,
-        driverName: vehicle.driverName,
+        vehicleNumber:
+          vehicle.vehicleNumber,
+        vehicleType:
+          vehicle.vehicleType,
+        driverName:
+          vehicle.driverName,
         date,
         entryTime: entry,
         exitTime: exit,
         duration,
         purpose,
         notes,
-        createdAt: new Date().toISOString()
+        createdAt:
+          new Date().toISOString()
       });
 
       saveEntries(entries);
@@ -1268,7 +1863,8 @@ function setupCalendar() {
       "calendarTodayBtn"
     );
 
-  let currentMonth = new Date();
+  let currentMonth =
+    new Date();
 
   let selectedDate =
     todayString();
@@ -1323,7 +1919,9 @@ function setupCalendar() {
     ) {
 
       const empty =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       empty.className =
         "calendar-day empty";
@@ -1345,39 +1943,59 @@ function setupCalendar() {
         ).padStart(2, "0")}`;
 
       const button =
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
       button.type = "button";
 
       button.className =
         "calendar-day";
 
-      if (date === todayString()) {
-        button.classList.add("today");
+      if (
+        date ===
+        todayString()
+      ) {
+        button.classList.add(
+          "today"
+        );
       }
 
-      if (date === selectedDate) {
-        button.classList.add("selected");
+      if (
+        date ===
+        selectedDate
+      ) {
+        button.classList.add(
+          "selected"
+        );
       }
 
-      if (activityDates.has(date)) {
-        button.classList.add("has-activity");
+      if (
+        activityDates.has(date)
+      ) {
+        button.classList.add(
+          "has-activity"
+        );
       }
 
-      button.textContent = day;
+      button.textContent =
+        day;
 
       button.addEventListener(
         "click",
         () => {
 
-          selectedDate = date;
+          selectedDate =
+            date;
 
           renderCalendar();
           renderSelectedDate();
         }
       );
 
-      grid.appendChild(button);
+      grid.appendChild(
+        button
+      );
     }
 
     renderSelectedDate();
@@ -1386,18 +2004,22 @@ function setupCalendar() {
   function renderSelectedDate() {
 
     selectedDateText.textContent =
-      formatDate(selectedDate);
+      formatDate(
+        selectedDate
+      );
 
     const entries =
       getEntries().filter(
         entry =>
-          entry.date === selectedDate
+          entry.date ===
+          selectedDate
       );
 
     const uniqueVehicles =
       new Set(
         entries.map(
-          entry => entry.vehicleId
+          entry =>
+            entry.vehicleId
         )
       );
 
@@ -1405,7 +2027,9 @@ function setupCalendar() {
       entries.reduce(
         (total, entry) =>
           total +
-          Number(entry.duration || 0),
+          Number(
+            entry.duration || 0
+          ),
         0
       );
 
@@ -1416,7 +2040,9 @@ function setupCalendar() {
       entries.length;
 
     durationText.textContent =
-      formatDuration(duration);
+      formatDuration(
+        duration
+      );
 
     if (!entries.length) {
 
@@ -1458,7 +2084,8 @@ function setupCalendar() {
 
               <p>
                 ${escapeHtml(
-                  entry.entryTime || "-"
+                  entry.entryTime ||
+                  "-"
                 )}
                 →
                 ${escapeHtml(
@@ -1469,7 +2096,8 @@ function setupCalendar() {
 
               <p>
                 ${escapeHtml(
-                  entry.purpose || "-"
+                  entry.purpose ||
+                  "-"
                 )}
               </p>
 
@@ -1507,7 +2135,8 @@ function setupCalendar() {
       () => {
 
         currentMonth.setMonth(
-          currentMonth.getMonth() - 1
+          currentMonth.getMonth() -
+          1
         );
 
         renderCalendar();
@@ -1523,7 +2152,8 @@ function setupCalendar() {
       () => {
 
         currentMonth.setMonth(
-          currentMonth.getMonth() + 1
+          currentMonth.getMonth() +
+          1
         );
 
         renderCalendar();
@@ -1578,11 +2208,15 @@ function setupReports() {
     );
 
   function setToday() {
+
     const today =
       todayString();
 
-    fromInput.value = today;
-    toInput.value = today;
+    fromInput.value =
+      today;
+
+    toInput.value =
+      today;
 
     renderReports();
   }
@@ -1604,11 +2238,17 @@ function setupReports() {
     const filtered =
       entries.filter(entry => {
 
-        if (from && entry.date < from) {
+        if (
+          from &&
+          entry.date < from
+        ) {
           return false;
         }
 
-        if (to && entry.date > to) {
+        if (
+          to &&
+          entry.date > to
+        ) {
           return false;
         }
 
@@ -1618,20 +2258,24 @@ function setupReports() {
     const uniqueVehicles =
       new Set(
         filtered.map(
-          entry => entry.vehicleId
+          entry =>
+            entry.vehicleId
         )
       );
 
     const completed =
       filtered.filter(
-        entry => entry.exitTime
+        entry =>
+          entry.exitTime
       );
 
     const totalDuration =
       completed.reduce(
         (total, entry) =>
           total +
-          Number(entry.duration || 0),
+          Number(
+            entry.duration || 0
+          ),
         0
       );
 
@@ -1653,7 +2297,9 @@ function setupReports() {
     document.getElementById(
       "reportDuration"
     ).textContent =
-      formatDuration(totalDuration);
+      formatDuration(
+        totalDuration
+      );
 
     renderVehicleReport(
       filtered,
@@ -1675,13 +2321,23 @@ function setupReports() {
         "vehicleReportList"
       );
 
+    if (!list) return;
+
     if (!entries.length) {
 
       list.innerHTML = `
         <div class="empty-state">
-          <div class="empty-icon">📊</div>
+
+          <div class="empty-icon">
+            📊
+          </div>
+
           <h3>No Report Data</h3>
-          <p>No entries found for this period.</p>
+
+          <p>
+            No entries found for this period.
+          </p>
+
         </div>
       `;
 
@@ -1692,9 +2348,15 @@ function setupReports() {
 
     entries.forEach(entry => {
 
-      if (!grouped[entry.vehicleId]) {
+      if (
+        !grouped[
+          entry.vehicleId
+        ]
+      ) {
 
-        grouped[entry.vehicleId] = {
+        grouped[
+          entry.vehicleId
+        ] = {
           count: 0,
           duration: 0,
           vehicleNumber:
@@ -1703,10 +2365,16 @@ function setupReports() {
         };
       }
 
-      grouped[entry.vehicleId].count++;
+      grouped[
+        entry.vehicleId
+      ].count++;
 
-      grouped[entry.vehicleId].duration +=
-        Number(entry.duration || 0);
+      grouped[
+        entry.vehicleId
+      ].duration +=
+        Number(
+          entry.duration || 0
+        );
     });
 
     list.innerHTML =
@@ -1726,7 +2394,8 @@ function setupReports() {
                 </h3>
 
                 <p>
-                  ${item.count} entr${
+                  ${item.count}
+                  entr${
                     item.count === 1
                       ? "y"
                       : "ies"
@@ -1749,12 +2418,16 @@ function setupReports() {
         .join("");
   }
 
-  function renderEntryReport(entries) {
+  function renderEntryReport(
+    entries
+  ) {
 
     const list =
       document.getElementById(
         "reportEntryList"
       );
+
+    if (!list) return;
 
     if (!entries.length) {
       list.innerHTML = "";
@@ -1788,13 +2461,16 @@ function setupReports() {
 
               <p>
                 ${escapeHtml(
-                  formatDate(entry.date)
+                  formatDate(
+                    entry.date
+                  )
                 )}
               </p>
 
               <p>
                 ${escapeHtml(
-                  entry.entryTime || "-"
+                  entry.entryTime ||
+                  "-"
                 )}
                 →
                 ${escapeHtml(
@@ -1805,7 +2481,8 @@ function setupReports() {
 
               <p>
                 ${escapeHtml(
-                  entry.purpose || "-"
+                  entry.purpose ||
+                  "-"
                 )}
               </p>
 
@@ -1909,7 +2586,9 @@ function setupProfile() {
     user.company || "-";
 
   document
-    .getElementById("logoutBtn")
+    .getElementById(
+      "logoutBtn"
+    )
     ?.addEventListener(
       "click",
       () => {
@@ -1928,10 +2607,13 @@ function setupProfile() {
     );
 
   document
-    .getElementById("reportsProfileBtn")
+    .getElementById(
+      "reportsProfileBtn"
+    )
     ?.addEventListener(
       "click",
-      () => navigate("reports")
+      () =>
+        navigate("reports")
     );
 }
 
