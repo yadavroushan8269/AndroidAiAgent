@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f5a400">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#f5a400"
+  >
+
   <title>Dashboard - Hyma RMC Kokapet</title>
-  <link rel="stylesheet" href="../style.css">
+
+  <link
+    rel="stylesheet"
+    href="../style.css"
+  >
 </head>
 
 <body>
@@ -15,6 +29,7 @@
     <header class="top-header">
 
       <div>
+
         <h1 id="dashboardTitle">
           Dashboard
         </h1>
@@ -22,6 +37,7 @@
         <p id="dashboardDate">
           Today
         </p>
+
       </div>
 
       <button
@@ -34,7 +50,9 @@
 
     </header>
 
+
     <main class="page-content">
+
 
       <section class="dashboard-welcome">
 
@@ -48,97 +66,192 @@
 
       </section>
 
+
       <section class="stats-grid">
 
         <div class="stat-card">
-          <strong id="dashboardVehicleCount">0</strong>
-          <span>Vehicles</span>
+
+          <strong id="dashboardVehicleCount">
+            0
+          </strong>
+
+          <span>
+            Vehicles
+          </span>
+
         </div>
+
 
         <div class="stat-card green">
-          <strong id="dashboardRunningCount">0</strong>
-          <span>Running</span>
+
+          <strong id="dashboardRunningCount">
+            0
+          </strong>
+
+          <span>
+            Running
+          </span>
+
         </div>
+
 
         <div class="stat-card orange">
-          <strong id="dashboardEntryCount">0</strong>
-          <span>Today's Entries</span>
+
+          <strong id="dashboardEntryCount">
+            0
+          </strong>
+
+          <span>
+            Today's Entries
+          </span>
+
         </div>
 
+
         <div class="stat-card blue">
-          <strong id="dashboardDuration">0h 0m</strong>
-          <span>Total Duration</span>
+
+          <strong id="dashboardDuration">
+            0h 0m
+          </strong>
+
+          <span>
+            Total Duration
+          </span>
+
         </div>
 
       </section>
+
 
       <section>
 
         <div class="section-heading">
 
           <div>
-            <h2>Quick Actions</h2>
-            <p>Frequently used options</p>
+
+            <h2>
+              Quick Actions
+            </h2>
+
+            <p>
+              Frequently used options
+            </p>
+
           </div>
 
         </div>
+
 
         <div class="quick-actions">
 
-          <button
-            class="quick-action"
-            data-page="add-entry"
-            type="button"
-          >
-            <span>➕</span>
-            <strong>Add Entry</strong>
-            <span>Record vehicle entry</span>
-          </button>
 
           <button
             class="quick-action"
-            data-page="vehicles"
             type="button"
+            onclick="window.location.href='/pages/add-entry.html'"
           >
-            <span>🚚</span>
-            <strong>Vehicles</strong>
-            <span>Manage vehicles</span>
+
+            <span>
+              ➕
+            </span>
+
+            <strong>
+              Add Entry
+            </strong>
+
+            <span>
+              Record vehicle entry
+            </span>
+
           </button>
+
 
           <button
             class="quick-action"
-            data-page="calendar"
             type="button"
+            onclick="window.location.href='/pages/vehicles.html'"
           >
-            <span>📅</span>
-            <strong>Calendar</strong>
-            <span>View daily activity</span>
+
+            <span>
+              🚚
+            </span>
+
+            <strong>
+              Vehicles
+            </strong>
+
+            <span>
+              Manage vehicles
+            </span>
+
           </button>
+
 
           <button
             class="quick-action"
-            data-page="reports"
             type="button"
+            onclick="window.location.href='/pages/calendar.html'"
           >
-            <span>📊</span>
-            <strong>Reports</strong>
-            <span>View duration reports</span>
+
+            <span>
+              📅
+            </span>
+
+            <strong>
+              Calendar
+            </strong>
+
+            <span>
+              View daily activity
+            </span>
+
           </button>
+
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/reports.html'"
+          >
+
+            <span>
+              📊
+            </span>
+
+            <strong>
+              Reports
+            </strong>
+
+            <span>
+              View duration reports
+            </span>
+
+          </button>
+
 
         </div>
 
       </section>
+
 
       <section>
 
         <div class="section-heading">
 
           <div>
-            <h2>Today's Activity</h2>
-            <p>Latest vehicle entries</p>
+
+            <h2>
+              Today's Activity
+            </h2>
+
+            <p>
+              Latest vehicle entries
+            </p>
+
           </div>
 
         </div>
+
 
         <div
           id="dashboardActivityList"
@@ -149,57 +262,103 @@
 
     </main>
 
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+    ====================================================== -->
+
     <nav class="bottom-nav">
+
 
       <button
         class="nav-item active"
-        data-page="dashboard"
         type="button"
+        onclick="window.location.href='/pages/dashboard.html'"
       >
-        <span>⌂</span>
-        <small>Home</small>
+
+        <span>
+          ⌂
+        </span>
+
+        <small>
+          Home
+        </small>
+
       </button>
+
 
       <button
         class="nav-item"
-        data-page="vehicles"
         type="button"
+        onclick="window.location.href='/pages/vehicles.html'"
       >
-        <span>🚚</span>
-        <small>Vehicles</small>
+
+        <span>
+          🚚
+        </span>
+
+        <small>
+          Vehicles
+        </small>
+
       </button>
+
 
       <button
         class="nav-item add-nav"
-        data-page="add-entry"
         type="button"
+        onclick="window.location.href='/pages/add-entry.html'"
+        aria-label="Add Entry"
       >
-        <span>+</span>
+
+        <span>
+          +
+        </span>
+
       </button>
+
 
       <button
         class="nav-item"
-        data-page="calendar"
         type="button"
+        onclick="window.location.href='/pages/calendar.html'"
       >
-        <span>▣</span>
-        <small>Calendar</small>
+
+        <span>
+          ▣
+        </span>
+
+        <small>
+          Calendar
+        </small>
+
       </button>
+
 
       <button
         class="nav-item"
-        data-page="profile"
         type="button"
+        onclick="window.location.href='/pages/profile.html'"
       >
-        <span>👤</span>
-        <small>You</small>
+
+        <span>
+          👤
+        </span>
+
+        <small>
+          You
+        </small>
+
       </button>
+
 
     </nav>
 
   </div>
 
+
   <script src="../app.js"></script>
 
 </body>
+
 </html>
