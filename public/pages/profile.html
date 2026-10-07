@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>Profile - Hyma RMC Kokapet</title>
+
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+  <div class="profile-page">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+
+      <div>
+        <p class="header-small">Hyma RMC Kokapet</p>
+        <h1>Profile</h1>
+      </div>
+
+      <button
+        type="button"
+        id="settingsBtn"
+        class="icon-btn"
+        aria-label="Settings"
+      >
+        ⚙️
+      </button>
+
+    </header>
+
+    <!-- Profile Card -->
+    <section class="profile-card">
+
+      <div class="profile-avatar" id="profileAvatar">
+        U
+      </div>
+
+      <div class="profile-main-info">
+
+        <h2 id="profileName">
+          User Name
+        </h2>
+
+        <p id="profileContact">
+          user@example.com
+        </p>
+
+        <span
+          id="profileRole"
+          class="role-badge"
+        >
+          Security Guard
+        </span>
+
+      </div>
+
+    </section>
+
+    <!-- Company / Site -->
+    <section class="profile-info-card">
+
+      <div class="info-row">
+
+        <span class="info-icon">🏢</span>
+
+        <div>
+          <small>Company / Site</small>
+          <strong id="profileCompany">
+            Hyma RMC Kokapet
+          </strong>
+        </div>
+
+      </div>
+
+      <div class="info-row">
+
+        <span class="info-icon">📱</span>
+
+        <div>
+          <small>Mobile</small>
+          <strong id="profileMobile">
+            Not added
+          </strong>
+        </div>
+
+      </div>
+
+      <div class="info-row">
+
+        <span class="info-icon">✉️</span>
+
+        <div>
+          <small>Email</small>
+          <strong id="profileEmail">
+            Not added
+          </strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Account Actions -->
+    <section class="profile-actions">
+
+      <button
+        type="button"
+        id="editProfileBtn"
+        class="profile-action"
+      >
+
+        <span>✏️</span>
+
+        <div>
+          <strong>Edit Profile</strong>
+          <small>Update your personal information</small>
+        </div>
+
+        <span>›</span>
+
+      </button>
+
+      <button
+        type="button"
+        id="changePasswordBtn"
+        class="profile-action"
+      >
+
+        <span>🔐</span>
+
+        <div>
+          <strong>Change Password</strong>
+          <small>Update your account password</small>
+        </div>
+
+        <span>›</span>
+
+      </button>
+
+      <button
+        type="button"
+        id="notificationsSettingsBtn"
+        class="profile-action"
+      >
+
+        <span>🔔</span>
+
+        <div>
+          <strong>Notifications</strong>
+          <small>Manage notification settings</small>
+        </div>
+
+        <span>›</span>
+
+      </button>
+
+    </section>
+
+    <!-- Logout -->
+    <section class="logout-section">
+
+      <button
+        type="button"
+        id="logoutBtn"
+        class="logout-btn"
+      >
+        🚪 Logout
+      </button>
+
+    </section>
+
+    <p class="app-version">
+      Hyma RMC Kokapet · Vehicle Duration Management
+    </p>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="dashboard"
+    >
+      <span>🏠</span>
+      <small>Home</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="vehicles"
+    >
+      <span>🚚</span>
+      <small>Vehicles</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item add-nav"
+      data-page="add-entry"
+    >
+      <span>+</span>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="calendar"
+    >
+      <span>📅</span>
+      <small>Calendar</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item active"
+      data-page="profile"
+    >
+      <span>👤</span>
+      <small>You</small>
+    </button>
+
+  </nav>
+
+  <script src="../app.js"></script>
+
+</body>
+</html>
