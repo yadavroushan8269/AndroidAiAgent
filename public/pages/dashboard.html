@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>Dashboard - Hyma RMC Kokapet</title>
+
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+  <div class="dashboard-page">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+
+      <div>
+        <p class="header-small">Hyma RMC Kokapet</p>
+        <h1>Dashboard</h1>
+      </div>
+
+      <button
+        type="button"
+        id="notificationBtn"
+        class="icon-btn"
+        aria-label="Notifications"
+      >
+        🔔
+      </button>
+
+    </header>
+
+    <!-- Date -->
+    <section class="date-card">
+
+      <div>
+        <span class="card-label">Today</span>
+        <strong id="todayDate">Loading...</strong>
+      </div>
+
+      <span class="calendar-icon">📅</span>
+
+    </section>
+
+    <!-- Statistics -->
+    <section class="stats-grid">
+
+      <div class="stat-card">
+
+        <span class="stat-icon">🚚</span>
+
+        <div>
+          <span>Total Vehicles</span>
+          <strong id="totalVehicles">0</strong>
+        </div>
+
+      </div>
+
+      <div class="stat-card">
+
+        <span class="stat-icon">🟢</span>
+
+        <div>
+          <span>Running</span>
+          <strong id="runningVehicles">0</strong>
+        </div>
+
+      </div>
+
+      <div class="stat-card">
+
+        <span class="stat-icon">⏱️</span>
+
+        <div>
+          <span>Total Duration</span>
+          <strong id="totalDuration">0h 0m</strong>
+        </div>
+
+      </div>
+
+      <div class="stat-card">
+
+        <span class="stat-icon">📋</span>
+
+        <div>
+          <span>Today's Entries</span>
+          <strong id="todayEntries">0</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Quick Add -->
+    <section class="quick-section">
+
+      <button
+        type="button"
+        id="quickAddBtn"
+        class="quick-add-btn"
+      >
+
+        <span class="quick-add-icon">+</span>
+
+        <span>
+          <strong>Quick Add Entry</strong>
+          <small>Record vehicle entry / exit</small>
+        </span>
+
+        <span class="arrow">→</span>
+
+      </button>
+
+    </section>
+
+    <!-- Today's Activity -->
+    <section class="activity-section">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>Today's Activity</h2>
+          <p>Latest vehicle movements</p>
+        </div>
+
+        <button
+          type="button"
+          id="viewAllBtn"
+          class="link-btn"
+        >
+          View All
+        </button>
+
+      </div>
+
+      <div
+        id="activityList"
+        class="activity-list"
+      >
+
+        <div class="empty-state">
+
+          <div class="empty-icon">🚚</div>
+
+          <h3>No activity yet</h3>
+
+          <p>
+            Vehicle entries will appear here.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+
+    <button
+      type="button"
+      class="nav-item active"
+      data-page="dashboard"
+    >
+      <span>🏠</span>
+      <small>Home</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="vehicles"
+    >
+      <span>🚚</span>
+      <small>Vehicles</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item add-nav"
+      data-page="add-entry"
+    >
+      <span>+</span>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="calendar"
+    >
+      <span>📅</span>
+      <small>Calendar</small>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-page="profile"
+    >
+      <span>👤</span>
+      <small>You</small>
+    </button>
+
+  </nav>
+
+  <script src="../app.js"></script>
+
+</body>
+</html>
