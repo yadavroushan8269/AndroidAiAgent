@@ -222,17 +222,358 @@ function setupVehicles() {
 
   if (!search) return;
 
-  const addVehicleAction = () => {
-    alert(
-      "Vehicle management will be connected to the database next."
+  const vehicleList = document.getElementById("vehicleList");
+  const vehicleEmpty = document.getElementById("vehicleEmpty");
+  const vehicleCount = document.getElementById("vehicleCount");
+  const activeVehicleCount = document.getElementById("activeVehicleCount");
+
+  const modal = document.getElementById("vehicleModal");
+  const form = document.getElementById("vehicleForm");
+  const closeModal = document.getElementById("closeVehicleModal");
+
+  const addVehicleBtn = document.getElementById("addVehicleBtn");
+  const emptyAddVehicleBtn =
+    document.getElementById("emptyAddVehicleBtn");
+
+  const message = document.getElementById("vehicleFormMessage");
+
+  let currentFilter = "all";
+
+  function getVehicles() {
+    try {
+      return JSON.parse(
+        localStorage.getItem("hymaVehicles")
+      ) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveVehicles(vehicles) {
+    localStorage.setItem(
+      "hymaVehicles",
+      JSON.stringify(vehicles)
     );
-  };
+  }
 
-  document.getElementById("addVehicleBtn")
-    ?.addEventListener("click", addVehicleAction);
+  function openModal() {
+    if (!modal) return;
 
-  document.getElementById("emptyAddVehicleBtn")
-    ?.addEventListener("click", addVehicleAction);
+    modal.classList.remove("hidden");
+
+    document.body.classList.add("modal-open");
+
+    document.getElementById("vehicleNumber")?.focus();
+  }
+
+  function closeVehicleModal() {
+    if (!modal) return;
+
+    modal.classList.add("hidden");
+
+    document.body.classList.remove("modal-open");
+
+    form?.reset();
+
+    if (message) {
+      message.textContent = "";
+    }
+  }
+
+  function renderVehicles() {
+    const vehicles = getVehicles();
+
+    const searchText = search.value
+      .trim()
+      .toLowerCase();
+
+    let filteredVehicles = vehicles.filter((vehicle) => {
+
+      const matchesSearch =
+        !searchText ||
+        vehicle.vehicleNumber
+          .toLowerCase()
+          .includes(searchText) ||
+        vehicle.driver
+          .toLowerCase()
+          .includes(searchText) ||
+        vehicle.contractor
+          .toLowerCase()
+          .includes(searchText);
+
+      let matchesFilter = true;
+
+      if (currentFilter === "tm") {
+        matchesFilter = vehicle.type === "TM";
+      }
+
+      if (currentFilter === "truck") {
+        matchesFilter = vehicle.type === "Truck";
+      }
+
+      if (currentFilter === "dumper") {
+        matchesFilter = vehicle.type === "Dumper";
+      }
+
+      if (currentFilter === "other") {
+        matchesFilter =
+          !["TM", "Truck", "Dumper"].includes(vehicle.type);
+      }
+
+      return matchesSearch && matchesFilter;
+    });
+
+    if (vehicleCount) {
+      vehicleCount.textContent = vehicles.length;
+    }
+
+    if (activeVehicleCount) {
+      activeVehicleCount.textContent =
+        vehicles.filter(
+          (vehicle) => vehicle.status === "Active"
+        ).length;
+    }
+
+    if (!vehicleList || !vehicleEmpty) return;
+
+    if (filteredVehicles.length === 0) {
+      vehicleList.innerHTML = "";
+      vehicleEmpty.style.display = "block";
+      return;
+    }
+
+    vehicleEmpty.style.display = "none";
+
+    vehicleList.innerHTML = filteredVehicles
+      .map((vehicle) => {
+
+        const statusClass =
+          vehicle.status === "Active"
+            ? "active"
+            : "inactive";
+
+        return `
+          <article class="vehicle-card">
+
+            <div class="vehicle-card-top">
+
+              <div class="vehicle-icon">
+                🚚
+              </div>
+
+              <div class="vehicle-main">
+
+                <h3>
+                  ${escapeHtml(vehicle.vehicleNumber)}
+                </h3>
+
+                <p>
+                  ${escapeHtml(vehicle.type)}
+                </p>
+
+              </div>
+
+              <span class="vehicle-status ${statusClass}">
+                ${escapeHtml(vehicle.status)}
+              </span>
+
+            </div>
+
+            <div class="vehicle-details">
+
+              <div>
+                <span>Driver</span>
+                <strong>
+                  ${escapeHtml(vehicle.driver || "Not added")}
+                </strong>
+              </div>
+
+              <div>
+                <span>Contractor</span>
+                <strong>
+                  ${escapeHtml(
+                    vehicle.contractor || "Not added"
+                  )}
+                </strong>
+              </div>
+
+            </div>
+
+            <button
+              class="vehicle-delete-btn"
+              data-id="${vehicle.id}"
+              type="button"
+            >
+              Delete
+            </button>
+
+          </article>
+        `;
+      })
+      .join("");
+
+    document
+      .querySelectorAll(".vehicle-delete-btn")
+      .forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+          const id = button.dataset.id;
+
+          const confirmed = confirm(
+            "Delete this vehicle?"
+          );
+
+          if (!confirmed) return;
+
+          const updatedVehicles = getVehicles()
+            .filter((vehicle) => vehicle.id !== id);
+
+          saveVehicles(updatedVehicles);
+
+          renderVehicles();
+        });
+      });
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  addVehicleBtn?.addEventListener(
+    "click",
+    openModal
+  );
+
+  emptyAddVehicleBtn?.addEventListener(
+    "click",
+    openModal
+  );
+
+  closeModal?.addEventListener(
+    "click",
+    closeVehicleModal
+  );
+
+  modal?.addEventListener("click", (event) => {
+
+    if (event.target === modal) {
+      closeVehicleModal();
+    }
+
+  });
+
+  form?.addEventListener("submit", (event) => {
+
+    event.preventDefault();
+
+    const vehicleNumber =
+      document.getElementById("vehicleNumber")
+        ?.value
+        .trim()
+        .toUpperCase();
+
+    const type =
+      document.getElementById("vehicleType")
+        ?.value;
+
+    const driver =
+      document.getElementById("vehicleDriver")
+        ?.value
+        .trim();
+
+    const contractor =
+      document.getElementById("vehicleContractor")
+        ?.value
+        .trim();
+
+    const status =
+      document.getElementById("vehicleStatus")
+        ?.value || "Active";
+
+    if (!vehicleNumber || !type) {
+
+      if (message) {
+        message.textContent =
+          "Vehicle number and type are required.";
+      }
+
+      return;
+    }
+
+    const vehicles = getVehicles();
+
+    const alreadyExists = vehicles.some(
+      (vehicle) =>
+        vehicle.vehicleNumber === vehicleNumber
+    );
+
+    if (alreadyExists) {
+
+      if (message) {
+        message.textContent =
+          "This vehicle is already added.";
+      }
+
+      return;
+    }
+
+    const newVehicle = {
+      id:
+        Date.now().toString() +
+        Math.random().toString(36).slice(2),
+
+      vehicleNumber,
+      type,
+      driver,
+      contractor,
+      status,
+
+      createdAt:
+        new Date().toISOString()
+    };
+
+    vehicles.push(newVehicle);
+
+    saveVehicles(vehicles);
+
+    closeVehicleModal();
+
+    renderVehicles();
+  });
+
+  search.addEventListener(
+    "input",
+    renderVehicles
+  );
+
+  document
+    .querySelectorAll(".filter-btn")
+    .forEach((button) => {
+
+      button.addEventListener("click", () => {
+
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((item) =>
+            item.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+        currentFilter =
+          button.dataset.filter || "all";
+
+        renderVehicles();
+      });
+    });
+
+  renderVehicles();
 }
 
 function setupAddEntry() {
