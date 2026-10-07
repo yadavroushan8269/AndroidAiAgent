@@ -1,0 +1,297 @@
+/* =========================================
+   HYMA RMC KOKAPET
+   Vehicle Duration Management System
+   ========================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #f5a400;
+  --primary-dark: #d98c00;
+
+  --background: #f5f6f8;
+  --white: #ffffff;
+
+  --text: #171717;
+  --muted: #737373;
+
+  --border: #e5e7eb;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+
+  --shadow:
+    0 12px 35px rgba(0, 0, 0, 0.08);
+
+  --radius: 18px;
+}
+
+/* =========================================
+   BASE
+   ========================================= */
+
+html {
+  width: 100%;
+  min-height: 100%;
+  background: var(--background);
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background: var(--background);
+  color: var(--text);
+
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  border: 0;
+  outline: none;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(245, 164, 0, 0.25);
+}
+
+/* =========================================
+   APP
+   ========================================= */
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* =========================================
+   WELCOME SCREEN
+   ========================================= */
+
+.welcome-screen {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px 22px;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fffaf0 0%,
+      var(--background) 55%,
+      var(--background) 100%
+    );
+}
+
+/* =========================================
+   APP LOGO
+   ========================================= */
+
+.app-logo {
+  width: 96px;
+  height: 96px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--white);
+
+  border: 1px solid rgba(245, 164, 0, 0.15);
+
+  border-radius: 26px;
+
+  font-size: 50px;
+
+  box-shadow: var(--shadow);
+
+  margin-bottom: 24px;
+
+  animation: logoAppear 0.5s ease;
+}
+
+@keyframes logoAppear {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================
+   HEADING
+   ========================================= */
+
+.welcome-screen h1 {
+  font-size: 29px;
+  line-height: 1.2;
+
+  font-weight: 800;
+
+  letter-spacing: -0.5px;
+
+  margin-bottom: 9px;
+}
+
+/* =========================================
+   SUBTITLE
+   ========================================= */
+
+.subtitle {
+  max-width: 300px;
+
+  color: var(--muted);
+
+  font-size: 15px;
+  line-height: 1.5;
+
+  margin-bottom: 30px;
+}
+
+/* =========================================
+   PRIMARY BUTTON
+   ========================================= */
+
+.primary-btn {
+  width: 100%;
+  max-width: 330px;
+
+  min-height: 52px;
+
+  padding: 14px 22px;
+
+  border-radius: 14px;
+
+  background: var(--primary);
+  color: #111111;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  box-shadow:
+    0 7px 18px rgba(245, 164, 0, 0.22);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.primary-btn:hover {
+  background: var(--primary-dark);
+
+  box-shadow:
+    0 9px 22px rgba(245, 164, 0, 0.28);
+}
+
+.primary-btn:active {
+  transform: scale(0.97);
+}
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (min-width: 600px) {
+
+  .welcome-screen {
+    padding: 50px 30px;
+  }
+
+  .app-logo {
+    width: 110px;
+    height: 110px;
+
+    font-size: 58px;
+
+    border-radius: 30px;
+  }
+
+  .welcome-screen h1 {
+    font-size: 34px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .primary-btn {
+    max-width: 340px;
+  }
+}
+
+/* =========================================
+   DESKTOP
+   ========================================= */
+
+@media (min-width: 900px) {
+
+  body {
+    display: flex;
+    justify-content: center;
+  }
+
+  #app {
+    max-width: 500px;
+
+    min-height: 100vh;
+
+    background: var(--background);
+
+    box-shadow:
+      0 0 50px rgba(0, 0, 0, 0.06);
+  }
+
+  .welcome-screen {
+    min-height: 100vh;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
