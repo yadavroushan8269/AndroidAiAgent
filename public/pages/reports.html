@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5a400">
   <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    name="description"
+    content="Hyma RMC Kokapet Vehicle Reports"
   >
-
   <title>Reports - Hyma RMC Kokapet</title>
 
   <link rel="stylesheet" href="../style.css">
@@ -15,329 +15,195 @@
 
 <body>
 
-  <div class="reports-page">
+  <div class="app-page">
 
-    <!-- Header -->
-    <header class="dashboard-header">
+    <header class="top-header">
 
       <div>
-        <p class="header-small">Hyma RMC Kokapet</p>
         <h1>Reports</h1>
+        <p>Vehicle duration reports</p>
       </div>
 
       <button
+        id="reportTodayBtn"
+        class="header-action"
         type="button"
-        id="exportReportBtn"
-        class="header-add-btn"
       >
-        Export
+        Today
       </button>
 
     </header>
 
-    <!-- Report Type -->
-    <section class="report-tabs">
+    <main class="page-content">
 
-      <button
-        type="button"
-        class="report-tab active"
-        data-report="daily"
-      >
-        Daily
-      </button>
+      <!-- Report Filters -->
 
-      <button
-        type="button"
-        class="report-tab"
-        data-report="weekly"
-      >
-        Weekly
-      </button>
+      <section class="report-card">
 
-      <button
-        type="button"
-        class="report-tab"
-        data-report="monthly"
-      >
-        Monthly
-      </button>
+        <h2>Report Period</h2>
 
-    </section>
+        <p>
+          Select the period you want to analyse.
+        </p>
 
-    <!-- Date Range -->
-    <section class="report-filter-card">
+        <div class="report-filters">
 
-      <div class="form-row">
+          <div>
+            <label for="reportFrom">
+              From
+            </label>
 
-        <div class="form-group">
+            <input
+              id="reportFrom"
+              type="date"
+            >
+          </div>
 
-          <label for="reportFrom">
-            From
-          </label>
+          <div>
+            <label for="reportTo">
+              To
+            </label>
 
-          <input
-            type="date"
-            id="reportFrom"
-            required
-          >
+            <input
+              id="reportTo"
+              type="date"
+            >
+          </div>
 
         </div>
 
-        <div class="form-group">
+      </section>
 
-          <label for="reportTo">
-            To
-          </label>
+      <!-- Report Summary -->
 
-          <input
-            type="date"
-            id="reportTo"
-            required
-          >
+      <section class="stats-grid">
 
-        </div>
-
-      </div>
-
-      <div class="form-group">
-
-        <label for="reportVehicle">
-          Vehicle
-        </label>
-
-        <select id="reportVehicle">
-
-          <option value="all">
-            All Vehicles
-          </option>
-
-        </select>
-
-      </div>
-
-      <div class="form-group">
-
-        <label for="reportType">
-          Vehicle Type
-        </label>
-
-        <select id="reportType">
-
-          <option value="all">
-            All Types
-          </option>
-
-          <option value="tm">
-            TM / Transit Mixer
-          </option>
-
-          <option value="truck">
-            Truck
-          </option>
-
-          <option value="dumper">
-            Dumper
-          </option>
-
-          <option value="excavator">
-            Excavator
-          </option>
-
-          <option value="jcb">
-            JCB
-          </option>
-
-          <option value="loader">
-            Loader
-          </option>
-
-          <option value="crane">
-            Crane
-          </option>
-
-          <option value="tractor">
-            Tractor
-          </option>
-
-          <option value="water-tanker">
-            Water Tanker
-          </option>
-
-          <option value="other">
-            Other
-          </option>
-
-        </select>
-
-      </div>
-
-      <button
-        type="button"
-        id="generateReportBtn"
-        class="primary-btn"
-      >
-        Generate Report
-      </button>
-
-    </section>
-
-    <!-- Report Summary -->
-    <section class="report-summary">
-
-      <div class="report-stat">
-
-        <span>🚚</span>
-
-        <div>
-          <small>Vehicles</small>
+        <div class="stat-card">
           <strong id="reportVehicleCount">0</strong>
+          <span>Vehicles</span>
         </div>
 
-      </div>
-
-      <div class="report-stat">
-
-        <span>📋</span>
-
-        <div>
-          <small>Entries</small>
+        <div class="stat-card orange">
           <strong id="reportEntryCount">0</strong>
+          <span>Total Entries</span>
         </div>
 
-      </div>
+        <div class="stat-card green">
+          <strong id="reportCompletedCount">0</strong>
+          <span>Completed</span>
+        </div>
 
-      <div class="report-stat">
-
-        <span>⏱️</span>
-
-        <div>
-          <small>Total Duration</small>
+        <div class="stat-card blue">
           <strong id="reportDuration">0h 0m</strong>
+          <span>Total Duration</span>
         </div>
 
-      </div>
+      </section>
 
-    </section>
+      <!-- Vehicle Report -->
 
-    <!-- Report Table -->
-    <section class="report-results">
+      <section class="report-card">
 
-      <div class="section-heading">
+        <div class="section-heading">
 
-        <div>
-          <h2>Report Details</h2>
-          <p>Vehicle duration records</p>
+          <div>
+            <h2>Vehicle-wise Report</h2>
+
+            <p>
+              Duration recorded for each vehicle.
+            </p>
+          </div>
+
         </div>
 
-      </div>
+        <div
+          id="vehicleReportList"
+          class="activity-list"
+        ></div>
 
-      <div class="table-wrapper">
+      </section>
 
-        <table>
+      <!-- Entry Report -->
 
-          <thead>
+      <section class="report-card">
 
-            <tr>
-              <th>Date</th>
-              <th>Vehicle</th>
-              <th>Type</th>
-              <th>Driver</th>
-              <th>Entry</th>
-              <th>Exit</th>
-              <th>Duration</th>
-            </tr>
+        <div class="section-heading">
 
-          </thead>
+          <div>
+            <h2>Entries</h2>
 
-          <tbody id="reportTableBody">
+            <p>
+              Detailed entries for selected period.
+            </p>
+          </div>
 
-            <tr>
+        </div>
 
-              <td colspan="7">
+        <div
+          id="reportEntryList"
+          class="activity-list"
+        ></div>
 
-                <div class="empty-state">
+      </section>
 
-                  <div class="empty-icon">📊</div>
+      <div
+        id="reportMessage"
+        class="form-message"
+      ></div>
 
-                  <h3>No report data</h3>
+    </main>
 
-                  <p>
-                    Generate a report to see vehicle records.
-                  </p>
+    <!-- Bottom Navigation -->
 
-                </div>
+    <nav class="bottom-nav">
 
-              </td>
+      <button
+        class="nav-item"
+        data-page="dashboard"
+        type="button"
+      >
+        <span>⌂</span>
+        <small>Home</small>
+      </button>
 
-            </tr>
+      <button
+        class="nav-item"
+        data-page="vehicles"
+        type="button"
+      >
+        <span>🚚</span>
+        <small>Vehicles</small>
+      </button>
 
-          </tbody>
+      <button
+        class="nav-item add-nav"
+        data-page="add-entry"
+        type="button"
+      >
+        <span>+</span>
+      </button>
 
-        </table>
+      <button
+        class="nav-item"
+        data-page="calendar"
+        type="button"
+      >
+        <span>▣</span>
+        <small>Calendar</small>
+      </button>
 
-      </div>
+      <button
+        class="nav-item"
+        data-page="profile"
+        type="button"
+      >
+        <span>👤</span>
+        <small>You</small>
+      </button>
 
-    </section>
+    </nav>
 
   </div>
-
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="dashboard"
-    >
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="vehicles"
-    >
-      <span>🚚</span>
-      <small>Vehicles</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item add-nav"
-      data-page="add-entry"
-    >
-      <span>+</span>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="calendar"
-    >
-      <span>📅</span>
-      <small>Calendar</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item active"
-      data-page="reports"
-    >
-      <span>📊</span>
-      <small>Reports</small>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-page="profile"
-    >
-      <span>👤</span>
-      <small>You</small>
-    </button>
-
-  </nav>
 
   <script src="../app.js"></script>
 
