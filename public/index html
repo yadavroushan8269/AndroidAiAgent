@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <meta
+    name="theme-color"
+    content="#f5a400"
+  >
+
+  <meta
+    name="description"
+    content="Hyma RMC Kokapet Vehicle Duration Management System"
+  >
+
+  <title>Hyma RMC Kokapet</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- ============================= -->
+    <!-- LOGIN / REGISTER WILL BE HERE -->
+    <!-- ============================= -->
+
+    <main class="welcome-screen">
+
+      <div class="app-logo">
+        🚧
+      </div>
+
+      <h1>Hyma RMC Kokapet</h1>
+
+      <p class="subtitle">
+        Vehicle Duration Management
+      </p>
+
+      <button
+        id="startBtn"
+        class="primary-btn"
+        type="button"
+      >
+        Get Started
+      </button>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
