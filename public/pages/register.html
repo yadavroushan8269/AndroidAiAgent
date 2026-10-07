@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f5a400">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#f5a400"
+  >
+
   <title>Register - Hyma RMC Kokapet</title>
-  <link rel="stylesheet" href="../style.css">
+
+  <link
+    rel="stylesheet"
+    href="../style.css"
+  >
 </head>
 
 <body>
@@ -14,15 +28,27 @@
 
     <section class="auth-card">
 
-      <div class="auth-logo">🚧</div>
+      <div class="auth-logo">
+        🚧
+      </div>
 
-      <h1>Create Account</h1>
+      <h1>
+        Create Account
+      </h1>
 
       <p class="auth-subtitle">
         Register for vehicle management
       </p>
 
-      <form id="registerForm" class="auth-form">
+
+      <form
+        id="registerForm"
+        class="auth-form"
+        novalidate
+      >
+
+
+        <!-- NAME -->
 
         <label for="registerName">
           Full Name
@@ -30,11 +56,14 @@
 
         <input
           id="registerName"
+          name="name"
           type="text"
           placeholder="Enter your name"
           autocomplete="name"
-          required
         >
+
+
+        <!-- EMAIL -->
 
         <label for="registerEmail">
           Email
@@ -42,11 +71,14 @@
 
         <input
           id="registerEmail"
+          name="email"
           type="email"
           placeholder="Enter email"
           autocomplete="email"
-          required
         >
+
+
+        <!-- MOBILE -->
 
         <label for="registerMobile">
           Mobile
@@ -54,11 +86,14 @@
 
         <input
           id="registerMobile"
+          name="mobile"
           type="tel"
           placeholder="Enter mobile number"
           autocomplete="tel"
-          required
         >
+
+
+        <!-- COMPANY -->
 
         <label for="registerCompany">
           Company / Site
@@ -66,23 +101,37 @@
 
         <input
           id="registerCompany"
+          name="company"
           type="text"
           placeholder="Hyma RMC Kokapet"
-          required
         >
+
+
+        <!-- ROLE -->
 
         <label for="registerRole">
           Role
         </label>
 
-        <select id="registerRole" required>
+        <select
+          id="registerRole"
+          name="role"
+        >
+          <option value="">
+            Select role
+          </option>
+
           <option value="Security Guard">
             Security Guard
           </option>
+
           <option value="Admin">
             Admin
           </option>
         </select>
+
+
+        <!-- PASSWORD -->
 
         <label for="registerPassword">
           Password
@@ -90,11 +139,14 @@
 
         <input
           id="registerPassword"
+          name="password"
           type="password"
           placeholder="Create password"
           autocomplete="new-password"
-          required
         >
+
+
+        <!-- CONFIRM PASSWORD -->
 
         <label for="registerConfirmPassword">
           Confirm Password
@@ -102,16 +154,22 @@
 
         <input
           id="registerConfirmPassword"
+          name="confirmPassword"
           type="password"
           placeholder="Confirm password"
           autocomplete="new-password"
-          required
         >
+
+
+        <!-- MESSAGE -->
 
         <div
           id="registerMessage"
           class="form-message"
         ></div>
+
+
+        <!-- SUBMIT -->
 
         <button
           class="primary-btn full-width"
@@ -121,6 +179,9 @@
         </button>
 
       </form>
+
+
+      <!-- LOGIN -->
 
       <div class="auth-footer">
 
@@ -136,7 +197,9 @@
 
   </main>
 
+
   <script src="../app.js"></script>
 
 </body>
+
 </html>
