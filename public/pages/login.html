@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>Login - Hyma RMC Kokapet</title>
+
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+  <div class="auth-page">
+
+    <div class="auth-container">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        🚧
+      </div>
+
+      <!-- Heading -->
+      <h1>Welcome Back</h1>
+
+      <p class="auth-subtitle">
+        Login to Hyma RMC Kokapet
+      </p>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+
+        <!-- Email / Mobile -->
+        <div class="form-group">
+          <label for="loginUser">
+            Email or Mobile
+          </label>
+
+          <input
+            type="text"
+            id="loginUser"
+            name="loginUser"
+            placeholder="Enter email or mobile"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+
+          <label for="loginPassword">
+            Password
+          </label>
+
+          <div class="password-wrapper">
+
+            <input
+              type="password"
+              id="loginPassword"
+              name="loginPassword"
+              placeholder="Enter password"
+              autocomplete="current-password"
+              required
+            >
+
+            <button
+              type="button"
+              id="toggleLoginPassword"
+              class="password-toggle"
+              aria-label="Show password"
+            >
+              👁️
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- Forgot Password -->
+        <div class="forgot-row">
+          <button
+            type="button"
+            id="forgotPasswordBtn"
+            class="link-btn"
+          >
+            Forgot Password?
+          </button>
+        </div>
+
+        <!-- Login Button -->
+        <button
+          type="submit"
+          class="primary-btn auth-submit"
+        >
+          Login
+        </button>
+
+      </form>
+
+      <!-- Register -->
+      <div class="auth-footer">
+
+        <span>Don't have an account?</span>
+
+        <button
+          type="button"
+          id="registerBtn"
+          class="link-btn"
+        >
+          Register
+        </button>
+
+      </div>
+
+      <!-- Back -->
+      <button
+        type="button"
+        id="backBtn"
+        class="back-btn"
+      >
+        ← Back
+      </button>
+
+      <!-- Message -->
+      <div
+        id="loginMessage"
+        class="auth-message"
+        aria-live="polite"
+      ></div>
+
+    </div>
+
+  </div>
+
+  <script src="../app.js"></script>
+
+</body>
+</html>
