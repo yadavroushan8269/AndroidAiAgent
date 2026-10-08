@@ -1,249 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Profile - My Home Group</title>
+  <meta
+    name="theme-color"
+    content="#f5a400"
+  >
 
-  <link rel="stylesheet" href="../style.css">
+  <title>Profile - My-Home-Group</title>
+
+  <link
+    rel="stylesheet"
+    href="../style.css"
+  >
 
   <style>
-    .page-wrap{
-      max-width:900px;
-      margin:0 auto;
-      padding:20px;
-      padding-bottom:105px;
+    .profile-page {
+      min-height: 100vh;
+      padding: 20px 16px 100px;
+      background: #f5f7fa;
     }
 
-    .page-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:15px;
-      margin-bottom:20px;
+    .profile-container {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
-    .page-header h1{
-      margin:0;
-      font-size:26px;
+    .profile-header {
+      margin-bottom: 18px;
     }
 
-    .page-header p{
-      margin:5px 0 0;
-      font-size:13px;
-      opacity:.65;
+    .profile-header h1 {
+      margin: 0 0 6px;
+      font-size: 26px;
     }
 
-    .back-btn{
-      border:0;
-      background:#eef1f4;
-      border-radius:10px;
-      padding:10px 13px;
-      cursor:pointer;
-      font-weight:700;
+    .profile-header p {
+      margin: 0;
+      color: #6b7280;
     }
 
-    .card{
-      background:#fff;
-      border:1px solid #e3e7eb;
-      border-radius:16px;
-      padding:20px;
-      margin-bottom:18px;
-      box-shadow:0 3px 12px rgba(0,0,0,.04);
+    .profile-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
     }
 
-    .profile-top{
-      display:flex;
-      align-items:center;
-      gap:15px;
-      margin-bottom:20px;
+    .profile-top {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eceff2;
+      margin-bottom: 18px;
     }
 
-    .avatar{
-      width:65px;
-      height:65px;
-      border-radius:50%;
-      background:#fff1bd;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:27px;
-      font-weight:800;
+    .profile-avatar {
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff3d5;
+      border: 3px solid #f5a400;
+      font-size: 35px;
     }
 
-    .profile-top h2{
-      margin:0;
-      font-size:20px;
+    .profile-name {
+      font-size: 21px;
+      font-weight: 800;
+      color: #222;
     }
 
-    .profile-top p{
-      margin:4px 0 0;
-      font-size:12px;
-      opacity:.65;
+    .profile-role {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #f3f4f6;
+      color: #666;
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    .role-badge{
-      display:inline-block;
-      margin-top:7px;
-      padding:4px 8px;
-      border-radius:20px;
-      background:#edf7ef;
-      color:#19733a;
-      font-size:11px;
-      font-weight:800;
+    .field-group {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
     }
 
-    .card h2{
-      margin:0 0 15px;
-      font-size:18px;
+    .field-group label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
     }
 
-    .form-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
+    .field-group input,
+    .field-group select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px 12px;
+      border: 1px solid #d5dbe0;
+      border-radius: 11px;
+      background: #fff;
+      color: #222;
+      font-size: 15px;
+      outline: none;
     }
 
-    .field label{
-      display:block;
-      font-size:12px;
-      font-weight:700;
-      margin-bottom:6px;
+    .field-group input:focus,
+    .field-group select:focus {
+      border-color: #f5a400;
+      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
     }
 
-    .field input{
-      width:100%;
-      box-sizing:border-box;
-      padding:12px;
-      border:1px solid #d8dde2;
-      border-radius:10px;
-      background:#fff;
+    .field-group input[readonly] {
+      background: #f3f4f6;
+      color: #777;
     }
 
-    .field input:disabled{
-      background:#f5f6f7;
-      color:#777;
+    .section-title {
+      margin: 0 0 15px;
+      font-size: 18px;
     }
 
-    .full{
-      grid-column:1 / -1;
+    .profile-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
-    .form-actions{
-      margin-top:15px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+    .secondary-btn {
+      border: 1px solid #d5d9df;
+      background: #fff;
+      color: #333;
+      border-radius: 11px;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    .info-row{
-      display:flex;
-      justify-content:space-between;
-      gap:15px;
-      padding:11px 0;
-      border-bottom:1px solid #edf0f2;
-      font-size:13px;
+    .danger-btn {
+      width: 100%;
+      border: 1px solid #e1a6a6;
+      background: #fff;
+      color: #c62828;
+      border-radius: 11px;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
-    .info-row:last-child{
-      border-bottom:0;
+    .form-message {
+      min-height: 20px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    .info-label{
-      opacity:.6;
+    .form-message.success {
+      color: #16803c;
     }
 
-    .danger-card{
-      border-color:#f0cfd2;
+    .form-message.error {
+      color: #c62828;
     }
 
-    .danger-btn{
-      border:0;
-      background:#ffe5e7;
-      color:#b42332;
-      padding:11px 16px;
-      border-radius:10px;
-      font-weight:800;
-      cursor:pointer;
+    .account-info {
+      display: grid;
+      gap: 10px;
     }
 
-    .message{
-      display:none;
-      margin-top:12px;
-      padding:10px 12px;
-      border-radius:9px;
-      font-size:13px;
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid #edf0f2;
+      font-size: 14px;
     }
 
-    .message.success{
-      display:block;
-      background:#eaf7ee;
-      color:#176b35;
+    .info-row:last-child {
+      border-bottom: none;
     }
 
-    .message.error{
-      display:block;
-      background:#ffe9eb;
-      color:#a51d2d;
+    .info-label {
+      color: #777;
+      font-weight: 600;
     }
 
-    .loading{
-      text-align:center;
-      padding:25px;
-      opacity:.65;
+    .info-value {
+      color: #222;
+      font-weight: 700;
+      text-align: right;
+      word-break: break-word;
     }
 
-    .bottom-nav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:5000;
-      display:flex;
-      justify-content:space-around;
-      background:#fff;
-      border-top:1px solid #ddd;
-      padding:8px 5px calc(8px + env(safe-area-inset-bottom));
-      box-shadow:0 -3px 12px rgba(0,0,0,.06);
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      background: #fff;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
     }
 
-    .bottom-nav a{
-      text-decoration:none;
-      color:#555;
-      font-size:11px;
-      text-align:center;
-      padding:6px 8px;
+    .bottom-nav a {
+      text-decoration: none;
+      color: #555;
+      text-align: center;
+      padding: 9px 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
     }
 
-    .bottom-nav a.active{
-      color:#111;
-      font-weight:800;
+    .bottom-nav a span {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px;
     }
 
-    @media(max-width:650px){
-      .page-wrap{
-        padding:15px;
-        padding-bottom:100px;
+    .bottom-nav a.active {
+      color: #d88900;
+    }
+
+    .add-main-btn {
+      width: 46px;
+      height: 46px;
+      margin: -16px auto 0;
+      border-radius: 50%;
+      background: #f5a400;
+      color: #fff !important;
+      border: 4px solid #fff;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+
+    .add-main-btn span {
+      margin: 0 !important;
+      font-size: 26px !important;
+    }
+
+    @media (max-width: 500px) {
+      .profile-page {
+        padding: 16px 12px 100px;
       }
 
-      .page-header h1{
-        font-size:22px;
+      .profile-header h1 {
+        font-size: 23px;
       }
 
-      .form-grid{
-        grid-template-columns:1fr;
+      .profile-card {
+        padding: 16px;
       }
 
-      .full{
-        grid-column:auto;
+      .profile-buttons {
+        grid-template-columns: 1fr;
       }
 
-      .profile-top{
-        align-items:flex-start;
+      .info-row {
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .info-value {
+        text-align: left;
       }
     }
   </style>
@@ -251,233 +291,232 @@
 
 <body>
 
-  <main class="page-wrap">
+  <main class="profile-page">
 
-    <!-- HEADER -->
+    <div class="profile-container">
 
-    <header class="page-header">
+      <header class="profile-header">
 
-      <div>
-        <h1>👤 My Profile</h1>
-        <p>Manage your account details</p>
-      </div>
+        <h1>👤 Profile</h1>
 
-      <button
-        class="back-btn"
-        type="button"
-        onclick="window.location.href='dashboard.html'"
-      >
-        ← Dashboard
-      </button>
+        <p>
+          Manage your My-Home-Group account
+        </p>
 
-    </header>
+      </header>
 
 
-    <!-- PROFILE -->
+      <!-- PROFILE -->
 
-    <section class="card">
+      <section class="profile-card">
 
-      <div class="profile-top">
+        <div class="profile-top">
 
-        <div
-          id="avatar"
-          class="avatar"
-        >
-          U
-        </div>
+          <div class="profile-avatar">
+            👤
+          </div>
 
-        <div>
-
-          <h2 id="displayName">
-            Loading...
-          </h2>
-
-          <p id="displayEmail">
-            Loading...
-          </p>
-
-          <span
-            id="roleBadge"
-            class="role-badge"
+          <div
+            id="profileName"
+            class="profile-name"
           >
             User
-          </span>
+          </div>
+
+          <div
+            id="profileRole"
+            class="profile-role"
+          >
+            User
+          </div>
 
         </div>
 
-      </div>
+
+        <h2 class="section-title">
+          Personal Information
+        </h2>
 
 
-      <h2>
-        Personal Information
-      </h2>
+        <form
+          id="profileForm"
+          novalidate
+        >
 
+          <div class="field-group">
 
-      <form id="profileForm">
-
-        <div class="form-grid">
-
-          <div class="field">
-
-            <label for="name">
-              Name
+            <label for="profileNameInput">
+              Full Name
             </label>
 
             <input
-              id="name"
+              id="profileNameInput"
               type="text"
-              required
-              autocomplete="name"
+              placeholder="Your name"
             >
 
           </div>
 
 
-          <div class="field">
+          <div class="field-group">
 
-            <label for="email">
+            <label for="profileEmail">
               Email
             </label>
 
             <input
-              id="email"
+              id="profileEmail"
               type="email"
-              disabled
+              placeholder="Your email"
+              readonly
             >
 
           </div>
 
 
-          <div class="field">
+          <div class="field-group">
 
-            <label for="mobile">
+            <label for="profileMobile">
               Mobile
             </label>
 
             <input
-              id="mobile"
+              id="profileMobile"
               type="tel"
-              autocomplete="tel"
+              placeholder="Your mobile"
             >
 
           </div>
 
 
-          <div class="field">
+          <div class="field-group">
 
-            <label for="company">
+            <label for="profileCompany">
               Company / Site
             </label>
 
             <input
-              id="company"
+              id="profileCompany"
               type="text"
+              placeholder="Company or site"
             >
+
+          </div>
+
+
+          <div class="field-group">
+
+            <label for="profileRoleInput">
+              Role
+            </label>
+
+            <select
+              id="profileRoleInput"
+            >
+
+              <option value="Security Guard">
+                Security Guard
+              </option>
+
+              <option value="Admin">
+                Admin
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div
+            id="profileMessage"
+            class="form-message"
+          ></div>
+
+
+          <div class="profile-buttons">
+
+            <button
+              type="submit"
+              class="primary-btn"
+            >
+              Save Profile
+            </button>
+
+            <button
+              type="button"
+              class="secondary-btn"
+              id="resetProfile"
+            >
+              Reset
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+
+
+      <!-- ACCOUNT INFO -->
+
+      <section class="profile-card">
+
+        <h2 class="section-title">
+          Account Information
+        </h2>
+
+        <div class="account-info">
+
+          <div class="info-row">
+
+            <span class="info-label">
+              Account ID
+            </span>
+
+            <span
+              id="accountId"
+              class="info-value"
+            >
+              -
+            </span>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <span class="info-label">
+              Account Created
+            </span>
+
+            <span
+              id="accountCreated"
+              class="info-value"
+            >
+              -
+            </span>
 
           </div>
 
         </div>
 
-
-        <div class="form-actions">
-
-          <button
-            class="btn btn-primary"
-            type="submit"
-          >
-            Save Changes
-          </button>
-
-        </div>
+      </section>
 
 
-        <div
-          id="profileMessage"
-          class="message"
-        ></div>
+      <!-- CHANGE PASSWORD -->
 
-      </form>
+      <section class="profile-card">
 
-    </section>
+        <h2 class="section-title">
+          🔐 Change Password
+        </h2>
 
+        <form
+          id="passwordForm"
+          novalidate
+        >
 
-    <!-- ACCOUNT INFO -->
-
-    <section class="card">
-
-      <h2>
-        Account Information
-      </h2>
-
-
-      <div class="info-row">
-
-        <span class="info-label">
-          Account Role
-        </span>
-
-        <strong id="accountRole">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-row">
-
-        <span class="info-label">
-          Email
-        </span>
-
-        <strong id="accountEmail">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-row">
-
-        <span class="info-label">
-          Mobile
-        </span>
-
-        <strong id="accountMobile">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-row">
-
-        <span class="info-label">
-          Company / Site
-        </span>
-
-        <strong id="accountCompany">
-          -
-        </strong>
-
-      </div>
-
-    </section>
-
-
-    <!-- PASSWORD -->
-
-    <section class="card">
-
-      <h2>
-        🔐 Change Password
-      </h2>
-
-
-      <form id="passwordForm">
-
-        <div class="form-grid">
-
-          <div class="field">
+          <div class="field-group">
 
             <label for="currentPassword">
               Current Password
@@ -486,14 +525,14 @@
             <input
               id="currentPassword"
               type="password"
-              required
+              placeholder="Current password"
               autocomplete="current-password"
             >
 
           </div>
 
 
-          <div class="field">
+          <div class="field-group">
 
             <label for="newPassword">
               New Password
@@ -502,614 +541,682 @@
             <input
               id="newPassword"
               type="password"
-              required
-              minlength="6"
+              placeholder="New password"
               autocomplete="new-password"
             >
 
           </div>
 
 
-          <div class="field full">
+          <div class="field-group">
 
-            <label for="confirmPassword">
+            <label for="confirmNewPassword">
               Confirm New Password
             </label>
 
             <input
-              id="confirmPassword"
+              id="confirmNewPassword"
               type="password"
-              required
-              minlength="6"
+              placeholder="Confirm new password"
               autocomplete="new-password"
             >
 
           </div>
 
-        </div>
 
+          <div
+            id="passwordMessage"
+            class="form-message"
+          ></div>
 
-        <div class="form-actions">
 
           <button
-            class="btn btn-primary"
             type="submit"
+            class="primary-btn"
           >
             Change Password
           </button>
 
-        </div>
+        </form>
+
+      </section>
 
 
-        <div
-          id="passwordMessage"
-          class="message"
-        ></div>
+      <!-- LOGOUT -->
 
-      </form>
+      <section class="profile-card">
 
-    </section>
+        <button
+          id="logoutBtn"
+          type="button"
+          class="danger-btn"
+        >
+          🚪 Logout
+        </button>
 
+      </section>
 
-    <!-- LOGOUT -->
-
-    <section class="card danger-card">
-
-      <h2>
-        Account Actions
-      </h2>
-
-      <p style="font-size:13px;opacity:.65;">
-        Logout from this device.
-      </p>
-
-      <button
-        id="logoutButton"
-        class="danger-btn"
-        type="button"
-      >
-        Logout
-      </button>
-
-    </section>
+    </div>
 
   </main>
 
 
-  <!-- MOBILE NAV -->
+  <!-- BOTTOM NAV -->
 
   <nav class="bottom-nav">
 
-    <a href="dashboard.html">
-      🏠<br>
+    <a href="/pages/dashboard.html">
+      <span>🏠</span>
       Home
     </a>
 
-    <a href="vehicles.html">
-      🚚<br>
+    <a href="/pages/vehicles.html">
+      <span>🚛</span>
       Vehicles
     </a>
 
-    <a href="add-entry.html">
-      ➕<br>
-      Entry
+    <a
+      href="/pages/add-entry.html"
+      class="add-main-btn"
+    >
+      <span>+</span>
     </a>
 
-    <a href="calendar.html">
-      📅<br>
+    <a href="/pages/calendar.html">
+      <span>📅</span>
       Calendar
     </a>
 
     <a
-      href="profile.html"
+      href="/pages/profile.html"
       class="active"
     >
-      👤<br>
+      <span>👤</span>
       You
     </a>
 
   </nav>
 
 
-  <script src="../app.js"></script>
-
-
   <script>
-    "use strict";
+
+    const STORAGE = {
+      users: "hyma_users",
+      currentUser: "hyma_current_user"
+    };
 
 
-    let currentUser = null;
+    function readJSON(
+      key,
+      fallback
+    ) {
 
+      try {
 
-    /* =====================================================
-       HELPERS
-    ===================================================== */
+        const value =
+          localStorage.getItem(key);
 
-    function showMessage(
-      elementId,
-      message,
-      type
-    ){
+        return value
+          ? JSON.parse(value)
+          : fallback;
 
-      const element =
-        document.getElementById(
-          elementId
-        );
+      } catch (error) {
 
-
-      element.textContent =
-        message;
-
-
-      element.className =
-        "message " +
-        type;
-
-    }
-
-
-    function clearMessage(
-      elementId
-    ){
-
-      const element =
-        document.getElementById(
-          elementId
-        );
-
-
-      element.textContent =
-        "";
-
-
-      element.className =
-        "message";
-
-    }
-
-
-    /* =====================================================
-       LOAD PROFILE
-    ===================================================== */
-
-    async function loadProfile(){
-
-      try{
-
-        currentUser =
-          await window.MyHomeGroup
-            .getMe();
-
-
-        if(
-          !currentUser
-        ){
-
-          throw new Error(
-            "Unable to load profile."
-          );
-
-        }
-
-
-        renderProfile();
-
-      }catch(error){
-
-        console.error(
-          "Profile:",
-          error
-        );
-
-
-        showMessage(
-          "profileMessage",
-          error.message ||
-          "Unable to load profile.",
-          "error"
-        );
+        return fallback;
 
       }
 
     }
 
 
-    /* =====================================================
-       RENDER PROFILE
-    ===================================================== */
+    function writeJSON(
+      key,
+      value
+    ) {
 
-    function renderProfile(){
-
-      const name =
-        currentUser.name ||
-        "User";
-
-
-      const email =
-        currentUser.email ||
-        "-";
-
-
-      const mobile =
-        currentUser.mobile ||
-        "-";
-
-
-      const company =
-        currentUser.company ||
-        "-";
-
-
-      const role =
-        currentUser.role ||
-        "Security Guard";
-
-
-      document.getElementById(
-        "displayName"
-      ).textContent =
-        name;
-
-
-      document.getElementById(
-        "displayEmail"
-      ).textContent =
-        email;
-
-
-      document.getElementById(
-        "roleBadge"
-      ).textContent =
-        role;
-
-
-      document.getElementById(
-        "avatar"
-      ).textContent =
-        name
-          .trim()
-          .charAt(0)
-          .toUpperCase() ||
-        "U";
-
-
-      document.getElementById(
-        "name"
-      ).value =
-        name;
-
-
-      document.getElementById(
-        "email"
-      ).value =
-        email;
-
-
-      document.getElementById(
-        "mobile"
-      ).value =
-        mobile === "-"
-          ? ""
-          : mobile;
-
-
-      document.getElementById(
-        "company"
-      ).value =
-        company === "-"
-          ? ""
-          : company;
-
-
-      document.getElementById(
-        "accountRole"
-      ).textContent =
-        role;
-
-
-      document.getElementById(
-        "accountEmail"
-      ).textContent =
-        email;
-
-
-      document.getElementById(
-        "accountMobile"
-      ).textContent =
-        mobile;
-
-
-      document.getElementById(
-        "accountCompany"
-      ).textContent =
-        company;
+      localStorage.setItem(
+        key,
+        JSON.stringify(value)
+      );
 
     }
 
 
-    /* =====================================================
-       UPDATE PROFILE
-    ===================================================== */
+    function getUsers() {
 
-    document
-      .getElementById(
-        "profileForm"
+      return readJSON(
+        STORAGE.users,
+        []
+      );
+
+    }
+
+
+    function getCurrentUser() {
+
+      return readJSON(
+        STORAGE.currentUser,
+        null
+      );
+
+    }
+
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(
+        value || ""
       )
-      .addEventListener(
-        "submit",
-        async event => {
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
 
-          event.preventDefault();
-
-
-          clearMessage(
-            "profileMessage"
-          );
-
-
-          const name =
-            document.getElementById(
-              "name"
-            ).value.trim();
-
-
-          const mobile =
-            document.getElementById(
-              "mobile"
-            ).value.trim();
-
-
-          const company =
-            document.getElementById(
-              "company"
-            ).value.trim();
+    }
 
 
-          if(
-            !name
-          ){
+    function showMessage(
+      elementId,
+      message,
+      type
+    ) {
 
-            showMessage(
-              "profileMessage",
-              "Name is required.",
-              "error"
+      const element =
+        document.getElementById(
+          elementId
+        );
+
+      element.textContent =
+        message;
+
+      element.className =
+        "form-message " +
+        (type || "");
+
+    }
+
+
+    function fillProfile(
+      user
+    ) {
+
+      document.getElementById(
+        "profileName"
+      ).textContent =
+        user.name ||
+        "User";
+
+
+      document.getElementById(
+        "profileRole"
+      ).textContent =
+        user.role ||
+        "User";
+
+
+      document.getElementById(
+        "profileNameInput"
+      ).value =
+        user.name ||
+        "";
+
+
+      document.getElementById(
+        "profileEmail"
+      ).value =
+        user.email ||
+        "";
+
+
+      document.getElementById(
+        "profileMobile"
+      ).value =
+        user.mobile ||
+        "";
+
+
+      document.getElementById(
+        "profileCompany"
+      ).value =
+        user.company ||
+        "";
+
+
+      document.getElementById(
+        "profileRoleInput"
+      ).value =
+        user.role ||
+        "Security Guard";
+
+
+      document.getElementById(
+        "accountId"
+      ).textContent =
+        user.id ||
+        "-";
+
+
+      document.getElementById(
+        "accountCreated"
+      ).textContent =
+        user.createdAt
+          ? new Date(
+              user.createdAt
+            ).toLocaleDateString()
+          : "-";
+
+    }
+
+
+    function saveProfile(
+      event
+    ) {
+
+      event.preventDefault();
+
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      const name =
+        document.getElementById(
+          "profileNameInput"
+        ).value.trim();
+
+
+      const mobile =
+        document.getElementById(
+          "profileMobile"
+        ).value.trim();
+
+
+      const company =
+        document.getElementById(
+          "profileCompany"
+        ).value.trim();
+
+
+      const role =
+        document.getElementById(
+          "profileRoleInput"
+        ).value;
+
+
+      if (!name) {
+
+        showMessage(
+          "profileMessage",
+          "Please enter your name.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const users =
+        getUsers();
+
+
+      const index =
+        users.findIndex(
+          function (user) {
+
+            return (
+              user.id ===
+              currentUser.id
             );
-
-            return;
 
           }
+        );
 
 
-          const button =
-            event.submitter;
+      if (index === -1) {
+
+        showMessage(
+          "profileMessage",
+          "User account not found.",
+          "error"
+        );
+
+        return;
+
+      }
 
 
-          const oldText =
-            button.textContent;
+      users[index] = {
+        ...users[index],
+        name: name,
+        mobile: mobile,
+        company: company,
+        role: role
+      };
 
 
-          button.disabled =
-            true;
-
-          button.textContent =
-            "Saving...";
-
-
-          try{
-
-            const updated =
-              await window.MyHomeGroup
-                .updateProfile({
-                  name,
-                  mobile,
-                  company
-                });
-
-
-            currentUser =
-              updated ||
-              currentUser;
-
-
-            renderProfile();
-
-
-            showMessage(
-              "profileMessage",
-              "Profile updated successfully.",
-              "success"
-            );
-
-
-          }catch(error){
-
-            console.error(
-              "Update profile:",
-              error
-            );
-
-
-            showMessage(
-              "profileMessage",
-              error.message ||
-              "Unable to update profile.",
-              "error"
-            );
-
-          }finally{
-
-            button.disabled =
-              false;
-
-            button.textContent =
-              oldText;
-
-          }
-
-        }
+      writeJSON(
+        STORAGE.users,
+        users
       );
 
 
-    /* =====================================================
-       CHANGE PASSWORD
-    ===================================================== */
+      writeJSON(
+        STORAGE.currentUser,
+        users[index]
+      );
 
-    document
-      .getElementById(
+
+      fillProfile(
+        users[index]
+      );
+
+
+      showMessage(
+        "profileMessage",
+        "Profile updated successfully.",
+        "success"
+      );
+
+    }
+
+
+    function resetProfile() {
+
+      const user =
+        getCurrentUser();
+
+      if (user) {
+
+        fillProfile(
+          user
+        );
+
+      }
+
+      showMessage(
+        "profileMessage",
+        "",
+        ""
+      );
+
+    }
+
+
+    function changePassword(
+      event
+    ) {
+
+      event.preventDefault();
+
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      const currentPassword =
+        document.getElementById(
+          "currentPassword"
+        ).value;
+
+
+      const newPassword =
+        document.getElementById(
+          "newPassword"
+        ).value;
+
+
+      const confirmPassword =
+        document.getElementById(
+          "confirmNewPassword"
+        ).value;
+
+
+      if (!currentPassword) {
+
+        showMessage(
+          "passwordMessage",
+          "Enter your current password.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (!newPassword) {
+
+        showMessage(
+          "passwordMessage",
+          "Enter a new password.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        newPassword.length < 6
+      ) {
+
+        showMessage(
+          "passwordMessage",
+          "New password must be at least 6 characters.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        newPassword !==
+        confirmPassword
+      ) {
+
+        showMessage(
+          "passwordMessage",
+          "New passwords do not match.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const users =
+        getUsers();
+
+
+      const index =
+        users.findIndex(
+          function (user) {
+
+            return (
+              user.id ===
+              currentUser.id
+            );
+
+          }
+        );
+
+
+      if (index === -1) {
+
+        showMessage(
+          "passwordMessage",
+          "User account not found.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        users[index].password !==
+        currentPassword
+      ) {
+
+        showMessage(
+          "passwordMessage",
+          "Current password is incorrect.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      users[index].password =
+        newPassword;
+
+
+      writeJSON(
+        STORAGE.users,
+        users
+      );
+
+
+      writeJSON(
+        STORAGE.currentUser,
+        users[index]
+      );
+
+
+      document.getElementById(
         "passwordForm"
-      )
-      .addEventListener(
+      ).reset();
+
+
+      showMessage(
+        "passwordMessage",
+        "Password changed successfully.",
+        "success"
+      );
+
+    }
+
+
+    function logout() {
+
+      localStorage.removeItem(
+        STORAGE.currentUser
+      );
+
+      window.location.href =
+        "/pages/login.html";
+
+    }
+
+
+    function initializeProfile() {
+
+      const user =
+        getCurrentUser();
+
+
+      if (!user) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      fillProfile(
+        user
+      );
+
+
+      document.getElementById(
+        "profileForm"
+      ).addEventListener(
         "submit",
-        async event => {
-
-          event.preventDefault();
-
-
-          clearMessage(
-            "passwordMessage"
-          );
-
-
-          const currentPassword =
-            document.getElementById(
-              "currentPassword"
-            ).value;
-
-
-          const newPassword =
-            document.getElementById(
-              "newPassword"
-            ).value;
-
-
-          const confirmPassword =
-            document.getElementById(
-              "confirmPassword"
-            ).value;
-
-
-          if(
-            newPassword.length < 6
-          ){
-
-            showMessage(
-              "passwordMessage",
-              "New password must be at least 6 characters.",
-              "error"
-            );
-
-            return;
-
-          }
-
-
-          if(
-            newPassword !==
-            confirmPassword
-          ){
-
-            showMessage(
-              "passwordMessage",
-              "New password and confirmation do not match.",
-              "error"
-            );
-
-            return;
-
-          }
-
-
-          const button =
-            event.submitter;
-
-
-          const oldText =
-            button.textContent;
-
-
-          button.disabled =
-            true;
-
-          button.textContent =
-            "Changing...";
-
-
-          try{
-
-            await window.MyHomeGroup
-              .changePassword(
-                currentPassword,
-                newPassword
-              );
-
-
-            document.getElementById(
-              "passwordForm"
-            ).reset();
-
-
-            showMessage(
-              "passwordMessage",
-              "Password changed successfully.",
-              "success"
-            );
-
-
-          }catch(error){
-
-            console.error(
-              "Password:",
-              error
-            );
-
-
-            showMessage(
-              "passwordMessage",
-              error.message ||
-              "Unable to change password.",
-              "error"
-            );
-
-          }finally{
-
-            button.disabled =
-              false;
-
-            button.textContent =
-              oldText;
-
-          }
-
-        }
+        saveProfile
       );
 
 
-    /* =====================================================
-       LOGOUT
-    ===================================================== */
-
-    document
-      .getElementById(
-        "logoutButton"
-      )
-      .addEventListener(
+      document.getElementById(
+        "resetProfile"
+      ).addEventListener(
         "click",
-        () => {
-
-          window.MyHomeGroup
-            .logout();
-
-        }
+        resetProfile
       );
 
 
-    /* =====================================================
-       INIT
-    ===================================================== */
+      document.getElementById(
+        "passwordForm"
+      ).addEventListener(
+        "submit",
+        changePassword
+      );
 
-    loadProfile();
+
+      document.getElementById(
+        "logoutBtn"
+      ).addEventListener(
+        "click",
+        logout
+      );
+
+    }
+
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeProfile
+    );
 
   </script>
 
 </body>
+
 </html>
