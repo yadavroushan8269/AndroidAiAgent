@@ -9,7 +9,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Reports — MY HOME GROUP</title>
+  <title>My Profile — MY HOME GROUP</title>
 
   <link
     rel="stylesheet"
@@ -33,7 +33,7 @@
 
           <div>
             <strong>MY HOME GROUP</strong>
-            <span>Reports</span>
+            <span>My Profile</span>
           </div>
         </a>
 
@@ -51,13 +51,6 @@
             </span>
           </a>
 
-          <a
-            href="/pages/profile.html"
-            class="icon-btn"
-          >
-            👤
-          </a>
-
         </div>
 
       </div>
@@ -68,294 +61,111 @@
 
       <div class="page-title">
 
-        <h1>REPORTS</h1>
+        <h1>MY PROFILE</h1>
 
         <p>
-          Generate vehicle duration reports.
+          Your account information.
         </p>
 
       </div>
 
-      <section class="card">
+      <section class="card profile-card">
 
-        <div class="report-filters">
+        <div class="profile-avatar">
+          👤
+        </div>
 
-          <div class="form-group">
+        <div class="profile-details">
 
-            <label for="reportPeriod">
-              Period
-            </label>
+          <div class="profile-row">
 
-            <select
-              id="reportPeriod"
-              class="form-control"
-            >
-              <option value="daily">
-                Daily
-              </option>
+            <span>Name</span>
 
-              <option value="weekly">
-                Weekly
-              </option>
-
-              <option value="monthly">
-                Monthly
-              </option>
-            </select>
+            <strong id="profileName">
+              Loading...
+            </strong>
 
           </div>
 
-          <div class="form-group">
+          <div class="profile-row">
 
-            <label for="reportFrom">
-              From
-            </label>
+            <span>Email</span>
 
-            <input
-              id="reportFrom"
-              class="form-control"
-              type="date"
-            >
+            <strong id="profileEmail">
+              Loading...
+            </strong>
 
           </div>
 
-          <div class="form-group">
+          <div class="profile-row">
 
-            <label for="reportTo">
-              To
-            </label>
+            <span>Mobile</span>
 
-            <input
-              id="reportTo"
-              class="form-control"
-              type="date"
-            >
+            <strong id="profileMobile">
+              Loading...
+            </strong>
 
           </div>
 
-          <div class="form-group">
+          <div class="profile-row">
 
-            <label for="reportVehicle">
-              Vehicle
-            </label>
+            <span>Role</span>
 
-            <select
-              id="reportVehicle"
-              class="form-control"
-            >
-              <option value="">
-                All
-              </option>
-            </select>
+            <strong id="profileRole">
+              Loading...
+            </strong>
 
           </div>
 
-          <div class="form-group">
+          <div class="profile-row">
 
-            <label for="reportDriver">
-              Driver
-            </label>
+            <span>Company / Site</span>
 
-            <select
-              id="reportDriver"
-              class="form-control"
-            >
-              <option value="">
-                All
-              </option>
-            </select>
+            <strong id="profileCompany">
+              Loading...
+            </strong>
 
           </div>
 
-          <div class="form-group">
+        </div>
 
-            <label for="reportContractor">
-              Contractor
-            </label>
+        <div class="profile-actions">
 
-            <select
-              id="reportContractor"
-              class="form-control"
-            >
-              <option value="">
-                All
-              </option>
-            </select>
+          <button
+            class="btn btn-secondary"
+            type="button"
+            onclick="alert('Profile editing will be connected next.')"
+          >
+            Edit Profile
+          </button>
 
-          </div>
+          <button
+            class="btn btn-secondary"
+            type="button"
+            onclick="alert('Change password page will be connected next.')"
+          >
+            Change Password
+          </button>
 
-          <div class="full">
+          <button
+            class="btn btn-secondary"
+            type="button"
+            onclick="alert('Settings will be connected next.')"
+          >
+            Settings
+          </button>
 
-            <button
-              class="btn btn-primary"
-              type="button"
-              onclick="generateReport()"
-            >
-              Generate Report
-            </button>
-
-          </div>
+          <button
+            class="btn btn-danger"
+            type="button"
+            data-logout
+          >
+            Logout
+          </button>
 
         </div>
 
       </section>
-
-      <section
-        class="stats-grid report-summary"
-      >
-
-        <div class="stat-card">
-
-          <div class="stat-label">
-            TOTAL VEHICLES
-          </div>
-
-          <div
-            id="reportVehicles"
-            class="stat-value primary"
-          >
-            0
-          </div>
-
-        </div>
-
-        <div class="stat-card">
-
-          <div class="stat-label">
-            TOTAL ENTRIES
-          </div>
-
-          <div
-            id="reportEntries"
-            class="stat-value"
-          >
-            0
-          </div>
-
-        </div>
-
-        <div class="stat-card">
-
-          <div class="stat-label">
-            TOTAL DURATION
-          </div>
-
-          <div
-            id="reportDuration"
-            class="stat-value success"
-          >
-            0h 0m
-          </div>
-
-        </div>
-
-      </section>
-
-      <div class="report-tabs">
-
-        <button
-          class="report-tab active"
-          type="button"
-        >
-          Vehicle-wise
-        </button>
-
-        <button
-          class="report-tab"
-          type="button"
-        >
-          Driver-wise
-        </button>
-
-        <button
-          class="report-tab"
-          type="button"
-        >
-          Contractor-wise
-        </button>
-
-        <button
-          class="report-tab"
-          type="button"
-        >
-          Daily
-        </button>
-
-        <button
-          class="report-tab"
-          type="button"
-        >
-          Weekly
-        </button>
-
-        <button
-          class="report-tab"
-          type="button"
-        >
-          Monthly
-        </button>
-
-      </div>
-
-      <section
-        class="card"
-        style="margin-top: 14px;"
-      >
-
-        <div class="table-wrap">
-
-          <table class="data-table">
-
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Vehicle</th>
-                <th>Type</th>
-                <th>Driver</th>
-                <th>Contractor</th>
-                <th>Entry</th>
-                <th>Exit</th>
-                <th>Duration</th>
-              </tr>
-            </thead>
-
-            <tbody
-              id="reportTableBody"
-            >
-              <tr>
-                <td colspan="8">
-                  <div class="loading">
-                    Loading...
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </section>
-
-      <div class="export-actions">
-
-        <button
-          class="btn btn-secondary"
-          type="button"
-          onclick="window.print()"
-        >
-          Export PDF
-        </button>
-
-        <button
-          class="btn btn-primary"
-          type="button"
-          onclick="exportReportCSV()"
-        >
-          Export Excel
-        </button>
-
-      </div>
 
     </main>
 
@@ -386,7 +196,10 @@
           <span>Calendar</span>
         </a>
 
-        <a href="/pages/profile.html">
+        <a
+          href="/pages/profile.html"
+          class="active"
+        >
           <span>👤</span>
           <span>You</span>
         </a>
