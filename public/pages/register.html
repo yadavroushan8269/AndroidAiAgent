@@ -2,271 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
-  <title>Register - My Home Group</title>
-  <link rel="stylesheet" href="../style.css">
+
+  <title>Create Account — MY HOME GROUP</title>
+
+  <link
+    rel="stylesheet"
+    href="/style.css"
+  >
 </head>
 
 <body>
 
-<div class="auth-page">
+  <main class="auth-page">
 
-  <div class="auth-card">
+    <section class="auth-card">
 
-    <div class="auth-logo">MH</div>
+      <div class="auth-brand">
+        <div class="brand-logo">MH</div>
 
-    <h1 class="auth-title">
-      Create Account
-    </h1>
+        <h1>MY HOME GROUP</h1>
 
-    <p class="auth-subtitle">
-      Register for My Home Group
-    </p>
-
-    <div id="registerMessage"></div>
-
-    <form id="registerForm" class="auth-form">
-
-      <div class="form-group">
-        <label class="form-label">
-          Full Name
-        </label>
-
-        <input
-          id="name"
-          type="text"
-          class="form-control"
-          placeholder="Enter your full name"
-          required
-        >
+        <p>
+          Vehicle Duration Management
+        </p>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">
-          Email
-        </label>
+      <h2>Create Account</h2>
 
-        <input
-          id="email"
-          type="email"
-          class="form-control"
-          placeholder="Enter email address"
-          required
-        >
+      <form id="registerForm">
+
+        <div class="form-group">
+          <label for="registerName">
+            Full Name
+          </label>
+
+          <input
+            id="registerName"
+            class="form-control"
+            type="text"
+            placeholder="Full Name"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerMobile">
+            Mobile
+          </label>
+
+          <input
+            id="registerMobile"
+            class="form-control"
+            type="tel"
+            placeholder="Mobile"
+            autocomplete="tel"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerEmail">
+            Email
+          </label>
+
+          <input
+            id="registerEmail"
+            class="form-control"
+            type="email"
+            placeholder="Email"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerPassword">
+            Password
+          </label>
+
+          <input
+            id="registerPassword"
+            class="form-control"
+            type="password"
+            placeholder="Password"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerCompany">
+            Company / Site
+          </label>
+
+          <input
+            id="registerCompany"
+            class="form-control"
+            type="text"
+            placeholder="Company / Site"
+          >
+        </div>
+
+        <div class="form-actions">
+
+          <button
+            id="registerButton"
+            class="btn btn-primary"
+            type="submit"
+          >
+            Create Account
+          </button>
+
+        </div>
+
+      </form>
+
+      <div class="auth-links">
+        Already have account?
+        <a href="/login">
+          Login
+        </a>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">
-          Mobile
-        </label>
+    </section>
 
-        <input
-          id="mobile"
-          type="tel"
-          class="form-control"
-          placeholder="Enter mobile number"
-        >
-      </div>
+  </main>
 
-      <div class="form-group">
-        <label class="form-label">
-          Company / Site
-        </label>
-
-        <input
-          id="company"
-          type="text"
-          class="form-control"
-          placeholder="Enter company or site"
-          required
-        >
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">
-          Password
-        </label>
-
-        <input
-          id="password"
-          type="password"
-          class="form-control"
-          placeholder="Minimum 6 characters"
-          autocomplete="new-password"
-          required
-        >
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">
-          Confirm Password
-        </label>
-
-        <input
-          id="confirmPassword"
-          type="password"
-          class="form-control"
-          placeholder="Confirm password"
-          autocomplete="new-password"
-          required
-        >
-      </div>
-
-      <button
-        id="registerButton"
-        type="submit"
-        class="btn btn-primary btn-block"
-      >
-        Create Account
-      </button>
-
-    </form>
-
-    <div class="auth-bottom">
-
-      Already have an account?
-
-      <a href="/pages/login.html">
-        Login
-      </a>
-
-    </div>
-
-  </div>
-
-</div>
-
-<script src="../app.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const form =
-    document.getElementById("registerForm");
-
-  const button =
-    document.getElementById("registerButton");
-
-  const message =
-    document.getElementById("registerMessage");
-
-  form.addEventListener(
-    "submit",
-    async (event) => {
-
-      event.preventDefault();
-
-      message.innerHTML = "";
-
-      const name =
-        document.getElementById("name")
-          .value.trim();
-
-      const email =
-        document.getElementById("email")
-          .value.trim();
-
-      const mobile =
-        document.getElementById("mobile")
-          .value.trim();
-
-      const company =
-        document.getElementById("company")
-          .value.trim();
-
-      const password =
-        document.getElementById("password")
-          .value;
-
-      const confirmPassword =
-        document.getElementById("confirmPassword")
-          .value;
-
-      if (
-        password.length < 6
-      ) {
-
-        MyHomeGroup.setFormMessage(
-          message,
-          "Password must contain at least 6 characters.",
-          "error"
-        );
-
-        return;
-      }
-
-      if (
-        password !== confirmPassword
-      ) {
-
-        MyHomeGroup.setFormMessage(
-          message,
-          "Passwords do not match.",
-          "error"
-        );
-
-        return;
-      }
-
-      try {
-
-        MyHomeGroup.setButtonLoading(
-          button,
-          true,
-          "Creating account..."
-        );
-
-        const result =
-          await MyHomeGroup.registerUser({
-            name,
-            email,
-            mobile,
-            company,
-            password
-          });
-
-        if (result.token) {
-
-          window.location.href =
-            "/pages/dashboard.html";
-
-          return;
-        }
-
-        MyHomeGroup.setFormMessage(
-          message,
-          "Account created. Please login.",
-          "success"
-        );
-
-        setTimeout(() => {
-          window.location.href =
-            "/pages/login.html";
-        }, 1000);
-
-      } catch (error) {
-
-        MyHomeGroup.setFormMessage(
-          message,
-          error.message ||
-            "Registration failed.",
-          "error"
-        );
-
-        MyHomeGroup.setButtonLoading(
-          button,
-          false
-        );
-      }
-
-    }
-  );
-
-});
-</script>
+  <script src="/app.js"></script>
 
 </body>
 </html>
