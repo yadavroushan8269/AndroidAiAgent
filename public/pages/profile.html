@@ -1,147 +1,1222 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f5a400">
-  <title>Profile - Hyma RMC Kokapet</title>
-  <link rel="stylesheet" href="../style.css">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#f5a400"
+  >
+
+  <title>Profile - My-Home-Group</title>
+
+  <link
+    rel="stylesheet"
+    href="../style.css"
+  >
+
+  <style>
+    .profile-page {
+      min-height: 100vh;
+      padding: 20px 16px 100px;
+      background: #f5f7fa;
+    }
+
+    .profile-container {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .profile-header {
+      margin-bottom: 18px;
+    }
+
+    .profile-header h1 {
+      margin: 0 0 6px;
+      font-size: 26px;
+    }
+
+    .profile-header p {
+      margin: 0;
+      color: #6b7280;
+    }
+
+    .profile-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .profile-top {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eceff2;
+      margin-bottom: 18px;
+    }
+
+    .profile-avatar {
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff3d5;
+      border: 3px solid #f5a400;
+      font-size: 35px;
+    }
+
+    .profile-name {
+      font-size: 21px;
+      font-weight: 800;
+      color: #222;
+    }
+
+    .profile-role {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #f3f4f6;
+      color: #666;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .field-group {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    .field-group label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .field-group input,
+    .field-group select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px 12px;
+      border: 1px solid #d5dbe0;
+      border-radius: 11px;
+      background: #fff;
+      color: #222;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .field-group input:focus,
+    .field-group select:focus {
+      border-color: #f5a400;
+      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
+    }
+
+    .field-group input[readonly] {
+      background: #f3f4f6;
+      color: #777;
+    }
+
+    .section-title {
+      margin: 0 0 15px;
+      font-size: 18px;
+    }
+
+    .profile-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .secondary-btn {
+      border: 1px solid #d5d9df;
+      background: #fff;
+      color: #333;
+      border-radius: 11px;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .danger-btn {
+      width: 100%;
+      border: 1px solid #e1a6a6;
+      background: #fff;
+      color: #c62828;
+      border-radius: 11px;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .form-message {
+      min-height: 20px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .form-message.success {
+      color: #16803c;
+    }
+
+    .form-message.error {
+      color: #c62828;
+    }
+
+    .account-info {
+      display: grid;
+      gap: 10px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid #edf0f2;
+      font-size: 14px;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #777;
+      font-weight: 600;
+    }
+
+    .info-value {
+      color: #222;
+      font-weight: 700;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      background: #fff;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #555;
+      text-align: center;
+      padding: 9px 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .bottom-nav a span {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+
+    .bottom-nav a.active {
+      color: #d88900;
+    }
+
+    .add-main-btn {
+      width: 46px;
+      height: 46px;
+      margin: -16px auto 0;
+      border-radius: 50%;
+      background: #f5a400;
+      color: #fff !important;
+      border: 4px solid #fff;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+
+    .add-main-btn span {
+      margin: 0 !important;
+      font-size: 26px !important;
+    }
+
+    @media (max-width: 500px) {
+      .profile-page {
+        padding: 16px 12px 100px;
+      }
+
+      .profile-header h1 {
+        font-size: 23px;
+      }
+
+      .profile-card {
+        padding: 16px;
+      }
+
+      .profile-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .info-value {
+        text-align: left;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <div class="app-page">
+  <main class="profile-page">
 
-    <header class="top-header">
+    <div class="profile-container">
 
-      <div>
-        <h1>You</h1>
-        <p>Your profile</p>
-      </div>
+      <header class="profile-header">
 
-    </header>
+        <h1>👤 Profile</h1>
 
-    <main class="page-content">
+        <p>
+          Manage your My-Home-Group account
+        </p>
+
+      </header>
+
+
+      <!-- PROFILE -->
 
       <section class="profile-card">
 
-        <div
-          id="profileAvatar"
-          class="profile-avatar"
-        >
-          👤
+        <div class="profile-top">
+
+          <div class="profile-avatar">
+            👤
+          </div>
+
+          <div
+            id="profileName"
+            class="profile-name"
+          >
+            User
+          </div>
+
+          <div
+            id="profileRole"
+            class="profile-role"
+          >
+            User
+          </div>
+
         </div>
 
-        <h2 id="profileName">
-          User
+
+        <h2 class="section-title">
+          Personal Information
         </h2>
 
-        <p id="profileEmail">
-          -
-        </p>
+
+        <form
+          id="profileForm"
+          novalidate
+        >
+
+          <div class="field-group">
+
+            <label for="profileNameInput">
+              Full Name
+            </label>
+
+            <input
+              id="profileNameInput"
+              type="text"
+              placeholder="Your name"
+            >
+
+          </div>
+
+
+          <div class="field-group">
+
+            <label for="profileEmail">
+              Email
+            </label>
+
+            <input
+              id="profileEmail"
+              type="email"
+              placeholder="Your email"
+              readonly
+            >
+
+          </div>
+
+
+          <div class="field-group">
+
+            <label for="profileMobile">
+              Mobile
+            </label>
+
+            <input
+              id="profileMobile"
+              type="tel"
+              placeholder="Your mobile"
+            >
+
+          </div>
+
+
+          <div class="field-group">
+
+            <label for="profileCompany">
+              Company / Site
+            </label>
+
+            <input
+              id="profileCompany"
+              type="text"
+              placeholder="Company or site"
+            >
+
+          </div>
+
+
+          <div class="field-group">
+
+            <label for="profileRoleInput">
+              Role
+            </label>
+
+            <select
+              id="profileRoleInput"
+            >
+
+              <option value="Security Guard">
+                Security Guard
+              </option>
+
+              <option value="Admin">
+                Admin
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div
+            id="profileMessage"
+            class="form-message"
+          ></div>
+
+
+          <div class="profile-buttons">
+
+            <button
+              type="submit"
+              class="primary-btn"
+            >
+              Save Profile
+            </button>
+
+            <button
+              type="button"
+              class="secondary-btn"
+              id="resetProfile"
+            >
+              Reset
+            </button>
+
+          </div>
+
+        </form>
 
       </section>
 
-      <section class="profile-info">
 
-        <div class="profile-row">
-          <span>Name</span>
-          <strong id="profileNameValue">-</strong>
-        </div>
+      <!-- ACCOUNT INFO -->
 
-        <div class="profile-row">
-          <span>Email</span>
-          <strong id="profileEmailValue">-</strong>
-        </div>
+      <section class="profile-card">
 
-        <div class="profile-row">
-          <span>Mobile</span>
-          <strong id="profileMobileValue">-</strong>
-        </div>
+        <h2 class="section-title">
+          Account Information
+        </h2>
 
-        <div class="profile-row">
-          <span>Role</span>
-          <strong id="profileRoleValue">-</strong>
-        </div>
+        <div class="account-info">
 
-        <div class="profile-row">
-          <span>Company / Site</span>
-          <strong id="profileCompanyValue">-</strong>
+          <div class="info-row">
+
+            <span class="info-label">
+              Account ID
+            </span>
+
+            <span
+              id="accountId"
+              class="info-value"
+            >
+              -
+            </span>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <span class="info-label">
+              Account Created
+            </span>
+
+            <span
+              id="accountCreated"
+              class="info-value"
+            >
+              -
+            </span>
+
+          </div>
+
         </div>
 
       </section>
 
-      <button
-        id="reportsProfileBtn"
-        class="secondary-btn full-width"
-        type="button"
-      >
-        📊 Reports
-      </button>
 
-      <br>
+      <!-- CHANGE PASSWORD -->
 
-      <button
-        id="logoutBtn"
-        class="primary-btn full-width"
-        type="button"
-      >
-        Logout
-      </button>
+      <section class="profile-card">
 
-    </main>
+        <h2 class="section-title">
+          🔐 Change Password
+        </h2>
 
-    <nav class="bottom-nav">
+        <form
+          id="passwordForm"
+          novalidate
+        >
 
-      <button
-        class="nav-item"
-        data-page="dashboard"
-        type="button"
-      >
-        <span>⌂</span>
-        <small>Home</small>
-      </button>
+          <div class="field-group">
 
-      <button
-        class="nav-item"
-        data-page="vehicles"
-        type="button"
-      >
-        <span>🚚</span>
-        <small>Vehicles</small>
-      </button>
+            <label for="currentPassword">
+              Current Password
+            </label>
 
-      <button
-        class="nav-item add-nav"
-        data-page="add-entry"
-        type="button"
-      >
-        <span>+</span>
-      </button>
+            <input
+              id="currentPassword"
+              type="password"
+              placeholder="Current password"
+              autocomplete="current-password"
+            >
 
-      <button
-        class="nav-item"
-        data-page="calendar"
-        type="button"
-      >
-        <span>▣</span>
-        <small>Calendar</small>
-      </button>
+          </div>
 
-      <button
-        class="nav-item active"
-        data-page="profile"
-        type="button"
-      >
-        <span>👤</span>
-        <small>You</small>
-      </button>
 
-    </nav>
+          <div class="field-group">
 
-  </div>
+            <label for="newPassword">
+              New Password
+            </label>
 
-  <script src="../app.js"></script>
+            <input
+              id="newPassword"
+              type="password"
+              placeholder="New password"
+              autocomplete="new-password"
+            >
+
+          </div>
+
+
+          <div class="field-group">
+
+            <label for="confirmNewPassword">
+              Confirm New Password
+            </label>
+
+            <input
+              id="confirmNewPassword"
+              type="password"
+              placeholder="Confirm new password"
+              autocomplete="new-password"
+            >
+
+          </div>
+
+
+          <div
+            id="passwordMessage"
+            class="form-message"
+          ></div>
+
+
+          <button
+            type="submit"
+            class="primary-btn"
+          >
+            Change Password
+          </button>
+
+        </form>
+
+      </section>
+
+
+      <!-- LOGOUT -->
+
+      <section class="profile-card">
+
+        <button
+          id="logoutBtn"
+          type="button"
+          class="danger-btn"
+        >
+          🚪 Logout
+        </button>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottom-nav">
+
+    <a href="/pages/dashboard.html">
+      <span>🏠</span>
+      Home
+    </a>
+
+    <a href="/pages/vehicles.html">
+      <span>🚛</span>
+      Vehicles
+    </a>
+
+    <a
+      href="/pages/add-entry.html"
+      class="add-main-btn"
+    >
+      <span>+</span>
+    </a>
+
+    <a href="/pages/calendar.html">
+      <span>📅</span>
+      Calendar
+    </a>
+
+    <a
+      href="/pages/profile.html"
+      class="active"
+    >
+      <span>👤</span>
+      You
+    </a>
+
+  </nav>
+
+
+  <script>
+
+    const STORAGE = {
+      users: "hyma_users",
+      currentUser: "hyma_current_user"
+    };
+
+
+    function readJSON(
+      key,
+      fallback
+    ) {
+
+      try {
+
+        const value =
+          localStorage.getItem(key);
+
+        return value
+          ? JSON.parse(value)
+          : fallback;
+
+      } catch (error) {
+
+        return fallback;
+
+      }
+
+    }
+
+
+    function writeJSON(
+      key,
+      value
+    ) {
+
+      localStorage.setItem(
+        key,
+        JSON.stringify(value)
+      );
+
+    }
+
+
+    function getUsers() {
+
+      return readJSON(
+        STORAGE.users,
+        []
+      );
+
+    }
+
+
+    function getCurrentUser() {
+
+      return readJSON(
+        STORAGE.currentUser,
+        null
+      );
+
+    }
+
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(
+        value || ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    function showMessage(
+      elementId,
+      message,
+      type
+    ) {
+
+      const element =
+        document.getElementById(
+          elementId
+        );
+
+      element.textContent =
+        message;
+
+      element.className =
+        "form-message " +
+        (type || "");
+
+    }
+
+
+    function fillProfile(
+      user
+    ) {
+
+      document.getElementById(
+        "profileName"
+      ).textContent =
+        user.name ||
+        "User";
+
+
+      document.getElementById(
+        "profileRole"
+      ).textContent =
+        user.role ||
+        "User";
+
+
+      document.getElementById(
+        "profileNameInput"
+      ).value =
+        user.name ||
+        "";
+
+
+      document.getElementById(
+        "profileEmail"
+      ).value =
+        user.email ||
+        "";
+
+
+      document.getElementById(
+        "profileMobile"
+      ).value =
+        user.mobile ||
+        "";
+
+
+      document.getElementById(
+        "profileCompany"
+      ).value =
+        user.company ||
+        "";
+
+
+      document.getElementById(
+        "profileRoleInput"
+      ).value =
+        user.role ||
+        "Security Guard";
+
+
+      document.getElementById(
+        "accountId"
+      ).textContent =
+        user.id ||
+        "-";
+
+
+      document.getElementById(
+        "accountCreated"
+      ).textContent =
+        user.createdAt
+          ? new Date(
+              user.createdAt
+            ).toLocaleDateString()
+          : "-";
+
+    }
+
+
+    function saveProfile(
+      event
+    ) {
+
+      event.preventDefault();
+
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      const name =
+        document.getElementById(
+          "profileNameInput"
+        ).value.trim();
+
+
+      const mobile =
+        document.getElementById(
+          "profileMobile"
+        ).value.trim();
+
+
+      const company =
+        document.getElementById(
+          "profileCompany"
+        ).value.trim();
+
+
+      const role =
+        document.getElementById(
+          "profileRoleInput"
+        ).value;
+
+
+      if (!name) {
+
+        showMessage(
+          "profileMessage",
+          "Please enter your name.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const users =
+        getUsers();
+
+
+      const index =
+        users.findIndex(
+          function (user) {
+
+            return (
+              user.id ===
+              currentUser.id
+            );
+
+          }
+        );
+
+
+      if (index === -1) {
+
+        showMessage(
+          "profileMessage",
+          "User account not found.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      users[index] = {
+        ...users[index],
+        name: name,
+        mobile: mobile,
+        company: company,
+        role: role
+      };
+
+
+      writeJSON(
+        STORAGE.users,
+        users
+      );
+
+
+      writeJSON(
+        STORAGE.currentUser,
+        users[index]
+      );
+
+
+      fillProfile(
+        users[index]
+      );
+
+
+      showMessage(
+        "profileMessage",
+        "Profile updated successfully.",
+        "success"
+      );
+
+    }
+
+
+    function resetProfile() {
+
+      const user =
+        getCurrentUser();
+
+      if (user) {
+
+        fillProfile(
+          user
+        );
+
+      }
+
+      showMessage(
+        "profileMessage",
+        "",
+        ""
+      );
+
+    }
+
+
+    function changePassword(
+      event
+    ) {
+
+      event.preventDefault();
+
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      const currentPassword =
+        document.getElementById(
+          "currentPassword"
+        ).value;
+
+
+      const newPassword =
+        document.getElementById(
+          "newPassword"
+        ).value;
+
+
+      const confirmPassword =
+        document.getElementById(
+          "confirmNewPassword"
+        ).value;
+
+
+      if (!currentPassword) {
+
+        showMessage(
+          "passwordMessage",
+          "Enter your current password.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (!newPassword) {
+
+        showMessage(
+          "passwordMessage",
+          "Enter a new password.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        newPassword.length < 6
+      ) {
+
+        showMessage(
+          "passwordMessage",
+          "New password must be at least 6 characters.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        newPassword !==
+        confirmPassword
+      ) {
+
+        showMessage(
+          "passwordMessage",
+          "New passwords do not match.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const users =
+        getUsers();
+
+
+      const index =
+        users.findIndex(
+          function (user) {
+
+            return (
+              user.id ===
+              currentUser.id
+            );
+
+          }
+        );
+
+
+      if (index === -1) {
+
+        showMessage(
+          "passwordMessage",
+          "User account not found.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        users[index].password !==
+        currentPassword
+      ) {
+
+        showMessage(
+          "passwordMessage",
+          "Current password is incorrect.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      users[index].password =
+        newPassword;
+
+
+      writeJSON(
+        STORAGE.users,
+        users
+      );
+
+
+      writeJSON(
+        STORAGE.currentUser,
+        users[index]
+      );
+
+
+      document.getElementById(
+        "passwordForm"
+      ).reset();
+
+
+      showMessage(
+        "passwordMessage",
+        "Password changed successfully.",
+        "success"
+      );
+
+    }
+
+
+    function logout() {
+
+      localStorage.removeItem(
+        STORAGE.currentUser
+      );
+
+      window.location.href =
+        "/pages/login.html";
+
+    }
+
+
+    function initializeProfile() {
+
+      const user =
+        getCurrentUser();
+
+
+      if (!user) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      fillProfile(
+        user
+      );
+
+
+      document.getElementById(
+        "profileForm"
+      ).addEventListener(
+        "submit",
+        saveProfile
+      );
+
+
+      document.getElementById(
+        "resetProfile"
+      ).addEventListener(
+        "click",
+        resetProfile
+      );
+
+
+      document.getElementById(
+        "passwordForm"
+      ).addEventListener(
+        "submit",
+        changePassword
+      );
+
+
+      document.getElementById(
+        "logoutBtn"
+      ).addEventListener(
+        "click",
+        logout
+      );
+
+    }
+
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeProfile
+    );
+
+  </script>
 
 </body>
+
 </html>
