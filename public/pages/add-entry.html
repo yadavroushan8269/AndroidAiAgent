@@ -14,7 +14,7 @@
     content="#f5a400"
   >
 
-  <title>Add Entry - Hyma RMC Kokapet</title>
+  <title>Add Entry - My-Home-Group</title>
 
   <link
     rel="stylesheet"
@@ -30,7 +30,7 @@
 
     .entry-container {
       width: 100%;
-      max-width: 700px;
+      max-width: 760px;
       margin: 0 auto;
     }
 
@@ -48,99 +48,105 @@
       color: #6b7280;
     }
 
-    .entry-card {
-      background: #ffffff;
+    .card {
+      background: #fff;
       border-radius: 18px;
-      padding: 20px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
     }
 
-    .entry-form {
+    .section-title {
+      margin: 0 0 15px;
+      font-size: 19px;
+    }
+
+    .form-grid {
       display: grid;
-      gap: 14px;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
     }
 
-    .field-group {
+    .field {
       display: grid;
       gap: 7px;
     }
 
-    .field-group label {
-      font-weight: 700;
-      font-size: 14px;
-      color: #252525;
+    .field.full {
+      grid-column: 1 / -1;
     }
 
-    .field-group input,
-    .field-group select,
-    .field-group textarea {
+    .field label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
       width: 100%;
       box-sizing: border-box;
-      border: 1px solid #d7dce2;
-      border-radius: 11px;
       padding: 13px 12px;
-      font-size: 16px;
+      border: 1px solid #d5dbe0;
+      border-radius: 11px;
       background: #fff;
-      color: #222;
+      font-size: 15px;
       outline: none;
+      font-family: inherit;
     }
 
-    .field-group input:focus,
-    .field-group select:focus,
-    .field-group textarea:focus {
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
       border-color: #f5a400;
-      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.13);
+      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
     }
 
-    .field-group input[readonly] {
-      background: #f3f4f6;
+    .readonly {
+      background: #f3f4f5 !important;
       color: #555;
     }
 
-    .time-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
     .duration-box {
-      padding: 16px;
+      margin-top: 15px;
+      padding: 15px;
       border-radius: 14px;
-      background: #fff8e6;
-      border: 1px solid #f5d58b;
+      background: #fff8e7;
+      border: 1px solid #f2d48b;
+      text-align: center;
     }
 
     .duration-label {
-      font-size: 13px;
+      font-size: 12px;
+      color: #7b6a43;
       font-weight: 700;
-      color: #806000;
-      margin-bottom: 5px;
     }
 
     .duration-value {
-      font-size: 25px;
-      font-weight: 800;
-      color: #b87900;
+      margin-top: 4px;
+      font-size: 26px;
+      font-weight: 900;
+      color: #a66d00;
     }
 
-    .duration-note {
-      margin-top: 5px;
-      font-size: 12px;
-      color: #806000;
-    }
-
-    .form-message {
+    .message {
       min-height: 20px;
-      padding: 0;
-      font-size: 14px;
-      font-weight: 600;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    .form-message.success {
+    .message.success {
       color: #16803c;
     }
 
-    .form-message.error {
+    .message.error {
       color: #c62828;
     }
 
@@ -148,7 +154,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 5px;
+      margin-top: 16px;
     }
 
     .secondary-btn {
@@ -157,24 +163,53 @@
       color: #333;
       border-radius: 11px;
       padding: 13px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
     }
 
-    .secondary-btn:active,
-    .primary-btn:active {
-      transform: scale(0.98);
-    }
-
-    .info-box {
-      margin-top: 15px;
+    .vehicle-info {
+      display: none;
+      margin-top: 14px;
       padding: 13px;
       border-radius: 12px;
-      background: #f3f6f9;
-      color: #59636e;
+      background: #f6f7f8;
+      border: 1px solid #e1e5e9;
+    }
+
+    .vehicle-info.show {
+      display: block;
+    }
+
+    .vehicle-info-title {
       font-size: 13px;
-      line-height: 1.5;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    .vehicle-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .info-item {
+      padding: 9px;
+      background: #fff;
+      border-radius: 9px;
+    }
+
+    .info-label {
+      font-size: 10px;
+      color: #7b8289;
+      font-weight: 800;
+    }
+
+    .info-value {
+      margin-top: 3px;
+      font-size: 13px;
+      font-weight: 700;
+      word-break: break-word;
     }
 
     .bottom-nav {
@@ -185,7 +220,7 @@
       z-index: 1000;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      background: #ffffff;
+      background: #fff;
       border-top: 1px solid #ddd;
       box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
     }
@@ -229,23 +264,31 @@
       font-size: 26px !important;
     }
 
+    @media (max-width: 650px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .button-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 480px) {
       .entry-page {
         padding: 16px 12px 100px;
       }
 
-      .entry-card {
-        padding: 16px;
-        border-radius: 15px;
-      }
-
-      .time-grid,
-      .button-row {
-        grid-template-columns: 1fr;
-      }
-
       .entry-header h1 {
         font-size: 23px;
+      }
+
+      .vehicle-info-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -258,98 +301,96 @@
     <div class="entry-container">
 
       <header class="entry-header">
+
         <h1>➕ Add Vehicle Entry</h1>
-        <p>Record vehicle entry and exit duration</p>
+
+        <p>
+          Record vehicle entry and exit duration
+        </p>
+
       </header>
 
 
-      <section class="entry-card">
+      <section class="card">
+
+        <h2 class="section-title">
+          Vehicle Details
+        </h2>
+
 
         <form
           id="entryForm"
-          class="entry-form"
           novalidate
         >
 
-          <!-- DATE -->
+          <div class="form-grid">
 
-          <div class="field-group">
+            <div class="field full">
 
-            <label for="entryDate">
-              Date
-            </label>
+              <label for="entryVehicle">
+                Vehicle
+              </label>
 
-            <input
-              id="entryDate"
-              name="date"
-              type="date"
-            >
+              <select id="entryVehicle">
 
-          </div>
+                <option value="">
+                  Select vehicle
+                </option>
 
+              </select>
 
-          <!-- VEHICLE -->
-
-          <div class="field-group">
-
-            <label for="entryVehicle">
-              Vehicle
-            </label>
-
-            <select
-              id="entryVehicle"
-              name="vehicleId"
-            >
-              <option value="">
-                Select vehicle
-              </option>
-            </select>
-
-          </div>
+            </div>
 
 
-          <!-- VEHICLE TYPE -->
+            <div class="field">
 
-          <div class="field-group">
+              <label for="entryDate">
+                Date
+              </label>
 
-            <label for="entryVehicleType">
-              Vehicle Type
-            </label>
+              <input
+                id="entryDate"
+                type="date"
+              >
 
-            <input
-              id="entryVehicleType"
-              name="vehicleType"
-              type="text"
-              placeholder="Vehicle type"
-              readonly
-            >
-
-          </div>
+            </div>
 
 
-          <!-- DRIVER -->
+            <div class="field">
 
-          <div class="field-group">
+              <label for="entryDriver">
+                Driver
+              </label>
 
-            <label for="entryDriver">
-              Driver
-            </label>
+              <input
+                id="entryDriver"
+                type="text"
+                class="readonly"
+                readonly
+                placeholder="Auto-filled"
+              >
 
-            <input
-              id="entryDriver"
-              name="driverName"
-              type="text"
-              placeholder="Driver name"
-            >
-
-          </div>
+            </div>
 
 
-          <!-- TIME -->
+            <div class="field full">
 
-          <div class="time-grid">
+              <label for="entryContractor">
+                Contractor / Company
+              </label>
 
-            <div class="field-group">
+              <input
+                id="entryContractor"
+                type="text"
+                class="readonly"
+                readonly
+                placeholder="Auto-filled"
+              >
+
+            </div>
+
+
+            <div class="field">
 
               <label for="entryTime">
                 Entry Time
@@ -357,14 +398,13 @@
 
               <input
                 id="entryTime"
-                name="entryTime"
                 type="time"
               >
 
             </div>
 
 
-            <div class="field-group">
+            <div class="field">
 
               <label for="exitTime">
                 Exit Time
@@ -372,892 +412,64 @@
 
               <input
                 id="exitTime"
-                name="exitTime"
                 type="time"
               >
 
             </div>
 
-          </div>
 
+            <div class="field full">
 
-          <!-- DURATION -->
+              <label for="entryPurpose">
+                Purpose
+              </label>
 
-          <div class="duration-box">
+              <select id="entryPurpose">
 
-            <div class="duration-label">
-              Calculated Duration
+                <option value="">
+                  Select purpose
+                </option>
+
+                <option value="Material Delivery">
+                  Material Delivery
+                </option>
+
+                <option value="RMC / Concrete">
+                  RMC / Concrete
+                </option>
+
+                <option value="Construction Work">
+                  Construction Work
+                </option>
+
+                <option value="Loading / Unloading">
+                  Loading / Unloading
+                </option>
+
+                <option value="Equipment Movement">
+                  Equipment Movement
+                </option>
+
+                <option value="Site Work">
+                  Site Work
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
+
+              </select>
+
             </div>
 
-            <div
-              id="durationValue"
-              class="duration-value"
-            >
-              0 min
-            </div>
 
-            <div
-              id="durationNote"
-              class="duration-note"
-            >
-              Select entry and exit time
-            </div>
+            <div class="field full">
 
-          </div>
+              <label for="entryNotes">
+                Notes
+              </label>
 
-
-          <!-- PURPOSE -->
-
-          <div class="field-group">
-
-            <label for="entryPurpose">
-              Purpose
-            </label>
-
-            <select
-              id="entryPurpose"
-              name="purpose"
-            >
-
-              <option value="">
-                Select purpose
-              </option>
-
-              <option value="Material Delivery">
-                Material Delivery
-              </option>
-
-              <option value="RMC / Concrete">
-                RMC / Concrete
-              </option>
-
-              <option value="Construction Work">
-                Construction Work
-              </option>
-
-              <option value="Loading / Unloading">
-                Loading / Unloading
-              </option>
-
-              <option value="Equipment Movement">
-                Equipment Movement
-              </option>
-
-              <option value="Site Work">
-                Site Work
-              </option>
-
-              <option value="Other">
-                Other
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- NOTES -->
-
-          <div class="field-group">
-
-            <label for="entryNotes">
-              Notes
-            </label>
-
-            <textarea
-              id="entryNotes"
-              name="notes"
-              rows="3"
-              placeholder="Optional notes"
-            ></textarea>
-
-          </div>
-
-
-          <!-- MESSAGE -->
-
-          <div
-            id="entryMessage"
-            class="form-message"
-          ></div>
-
-
-          <!-- BUTTONS -->
-
-          <div class="button-row">
-
-            <button
-              type="button"
-              class="secondary-btn"
-              onclick="window.location.href='/pages/dashboard.html'"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              class="primary-btn"
-            >
-              Save Entry
-            </button>
-
-          </div>
-
-        </form>
-
-
-        <div class="info-box">
-          💡 Duration automatically calculate hogi. Agar exit time
-          entry time se chhota hai, system usse next-day exit
-          maan kar duration calculate karega.
-        </div>
-
-      </section>
-
-    </div>
-
-  </main>
-
-
-  <!-- BOTTOM NAV -->
-
-  <nav class="bottom-nav">
-
-    <a href="/pages/dashboard.html">
-      <span>🏠</span>
-      Home
-    </a>
-
-    <a href="/pages/vehicles.html">
-      <span>🚛</span>
-      Vehicles
-    </a>
-
-    <a
-      href="/pages/add-entry.html"
-      class="active add-main-btn"
-    >
-      <span>+</span>
-    </a>
-
-    <a href="/pages/calendar.html">
-      <span>📅</span>
-      Calendar
-    </a>
-
-    <a href="/pages/profile.html">
-      <span>👤</span>
-      You
-    </a>
-
-  </nav>
-
-
-  <script>
-
-    const STORAGE = {
-      vehicles: "hyma_vehicles",
-      entries: "hyma_entries",
-      currentUser: "hyma_current_user"
-    };
-
-
-    function readJSON(key, fallback) {
-
-      try {
-
-        const value =
-          localStorage.getItem(key);
-
-        return value
-          ? JSON.parse(value)
-          : fallback;
-
-      } catch (error) {
-
-        return fallback;
-
-      }
-
-    }
-
-
-    function writeJSON(key, value) {
-
-      localStorage.setItem(
-        key,
-        JSON.stringify(value)
-      );
-
-    }
-
-
-    function getVehicles() {
-
-      return readJSON(
-        STORAGE.vehicles,
-        []
-      );
-
-    }
-
-
-    function getEntries() {
-
-      return readJSON(
-        STORAGE.entries,
-        []
-      );
-
-    }
-
-
-    function getCurrentUser() {
-
-      return readJSON(
-        STORAGE.currentUser,
-        null
-      );
-
-    }
-
-
-    function generateId(prefix) {
-
-      return (
-        prefix +
-        "_" +
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .substring(2, 8)
-      );
-
-    }
-
-
-    function getToday() {
-
-      const now = new Date();
-
-      const year =
-        now.getFullYear();
-
-      const month =
-        String(
-          now.getMonth() + 1
-        ).padStart(2, "0");
-
-      const day =
-        String(
-          now.getDate()
-        ).padStart(2, "0");
-
-      return `${year}-${month}-${day}`;
-
-    }
-
-
-    function timeToMinutes(time) {
-
-      if (!time || !time.includes(":")) {
-        return null;
-      }
-
-      const parts =
-        time.split(":");
-
-      const hours =
-        Number(parts[0]);
-
-      const minutes =
-        Number(parts[1]);
-
-      if (
-        Number.isNaN(hours) ||
-        Number.isNaN(minutes)
-      ) {
-        return null;
-      }
-
-      return (
-        hours * 60 +
-        minutes
-      );
-
-    }
-
-
-    function calculateDuration(
-      entryTime,
-      exitTime
-    ) {
-
-      const start =
-        timeToMinutes(entryTime);
-
-      const end =
-        timeToMinutes(exitTime);
-
-      if (
-        start === null ||
-        end === null
-      ) {
-        return null;
-      }
-
-      let difference =
-        end - start;
-
-      if (difference < 0) {
-        difference += 24 * 60;
-      }
-
-      return difference;
-
-    }
-
-
-    function formatDuration(minutes) {
-
-      if (
-        minutes === null ||
-        minutes === undefined
-      ) {
-        return "0 min";
-      }
-
-      const hours =
-        Math.floor(minutes / 60);
-
-      const mins =
-        minutes % 60;
-
-      if (hours === 0) {
-        return `${mins} min`;
-      }
-
-      if (mins === 0) {
-        return `${hours} hr`;
-      }
-
-      return `${hours} hr ${mins} min`;
-
-    }
-
-
-    function showMessage(
-      message,
-      type
-    ) {
-
-      const box =
-        document.getElementById(
-          "entryMessage"
-        );
-
-      box.textContent =
-        message;
-
-      box.className =
-        "form-message " +
-        (type || "");
-
-    }
-
-
-    function loadVehicles() {
-
-      const select =
-        document.getElementById(
-          "entryVehicle"
-        );
-
-      const vehicles =
-        getVehicles();
-
-      select.innerHTML =
-        '<option value="">Select vehicle</option>';
-
-      vehicles.forEach(
-        function (vehicle) {
-
-          const option =
-            document.createElement(
-              "option"
-            );
-
-          option.value =
-            vehicle.id;
-
-          option.textContent =
-            vehicle.vehicleNumber ||
-            vehicle.number ||
-            "Unknown Vehicle";
-
-          option.dataset.type =
-            vehicle.vehicleType ||
-            vehicle.type ||
-            "";
-
-          option.dataset.driver =
-            vehicle.driverName ||
-            vehicle.driver ||
-            "";
-
-          select.appendChild(
-            option
-          );
-
-        }
-      );
-
-    }
-
-
-    function updateVehicleDetails() {
-
-      const select =
-        document.getElementById(
-          "entryVehicle"
-        );
-
-      const option =
-        select.options[
-          select.selectedIndex
-        ];
-
-      const typeInput =
-        document.getElementById(
-          "entryVehicleType"
-        );
-
-      const driverInput =
-        document.getElementById(
-          "entryDriver"
-        );
-
-      if (
-        !option ||
-        !option.value
-      ) {
-
-        typeInput.value = "";
-        driverInput.value = "";
-
-        return;
-
-      }
-
-      typeInput.value =
-        option.dataset.type || "";
-
-      driverInput.value =
-        option.dataset.driver || "";
-
-    }
-
-
-    function updateDuration() {
-
-      const entryTime =
-        document.getElementById(
-          "entryTime"
-        ).value;
-
-      const exitTime =
-        document.getElementById(
-          "exitTime"
-        ).value;
-
-      const durationValue =
-        document.getElementById(
-          "durationValue"
-        );
-
-      const durationNote =
-        document.getElementById(
-          "durationNote"
-        );
-
-      if (
-        !entryTime ||
-        !exitTime
-      ) {
-
-        durationValue.textContent =
-          "0 min";
-
-        durationNote.textContent =
-          "Select entry and exit time";
-
-        return;
-
-      }
-
-      const minutes =
-        calculateDuration(
-          entryTime,
-          exitTime
-        );
-
-      if (minutes === null) {
-
-        durationValue.textContent =
-          "0 min";
-
-        durationNote.textContent =
-          "Invalid time";
-
-        return;
-
-      }
-
-      durationValue.textContent =
-        formatDuration(minutes);
-
-      const start =
-        timeToMinutes(entryTime);
-
-      const end =
-        timeToMinutes(exitTime);
-
-      if (end < start) {
-
-        durationNote.textContent =
-          "Overnight duration detected";
-
-      } else {
-
-        durationNote.textContent =
-          "Automatically calculated";
-
-      }
-
-    }
-
-
-    function saveEntry(event) {
-
-      event.preventDefault();
-
-      showMessage("", "");
-
-
-      const currentUser =
-        getCurrentUser();
-
-
-      const date =
-        document.getElementById(
-          "entryDate"
-        ).value;
-
-      const vehicleId =
-        document.getElementById(
-          "entryVehicle"
-        ).value;
-
-      const vehicleType =
-        document.getElementById(
-          "entryVehicleType"
-        ).value.trim();
-
-      const driverName =
-        document.getElementById(
-          "entryDriver"
-        ).value.trim();
-
-      const entryTime =
-        document.getElementById(
-          "entryTime"
-        ).value;
-
-      const exitTime =
-        document.getElementById(
-          "exitTime"
-        ).value;
-
-      const purpose =
-        document.getElementById(
-          "entryPurpose"
-        ).value;
-
-      const notes =
-        document.getElementById(
-          "entryNotes"
-        ).value.trim();
-
-
-      if (!date) {
-
-        showMessage(
-          "Please select date.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (!vehicleId) {
-
-        showMessage(
-          "Please select a vehicle.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (!entryTime) {
-
-        showMessage(
-          "Please select entry time.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (!exitTime) {
-
-        showMessage(
-          "Please select exit time.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      const duration =
-        calculateDuration(
-          entryTime,
-          exitTime
-        );
-
-
-      if (
-        duration === null ||
-        duration <= 0
-      ) {
-
-        showMessage(
-          "Entry and exit time must be different.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      const entries =
-        getEntries();
-
-
-      const vehicles =
-        getVehicles();
-
-
-      const vehicle =
-        vehicles.find(
-          function (item) {
-
-            return item.id === vehicleId;
-
-          }
-        );
-
-
-      const newEntry = {
-
-        id: generateId("entry"),
-
-        vehicleId:
-
-          vehicleId,
-
-        vehicleNumber:
-
-          vehicle
-            ? (
-                vehicle.vehicleNumber ||
-                vehicle.number ||
-                ""
-              )
-            : "",
-
-        vehicleType:
-
-          vehicleType,
-
-        driverName:
-
-          driverName,
-
-        date:
-
-          date,
-
-        entryTime:
-
-          entryTime,
-
-        exitTime:
-
-          exitTime,
-
-        duration:
-
-          duration,
-
-        purpose:
-
-          purpose,
-
-        notes:
-
-          notes,
-
-        userId:
-
-          currentUser
-            ? currentUser.id
-            : "",
-
-        createdAt:
-
-          new Date().toISOString()
-
-      };
-
-
-      entries.push(
-        newEntry
-      );
-
-
-      writeJSON(
-        STORAGE.entries,
-        entries
-      );
-
-
-      showMessage(
-        "Entry saved successfully.",
-        "success"
-      );
-
-
-      document.getElementById(
-        "entryForm"
-      ).reset();
-
-
-      document.getElementById(
-        "entryDate"
-      ).value = getToday();
-
-
-      document.getElementById(
-        "durationValue"
-      ).textContent =
-        "0 min";
-
-
-      document.getElementById(
-        "durationNote"
-      ).textContent =
-        "Select entry and exit time";
-
-
-      setTimeout(
-        function () {
-
-          window.location.href =
-            "/pages/dashboard.html";
-
-        },
-        900
-      );
-
-    }
-
-
-    function initializePage() {
-
-      const currentUser =
-        getCurrentUser();
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      document.getElementById(
-        "entryDate"
-      ).value =
-        getToday();
-
-
-      loadVehicles();
-
-
-      document.getElementById(
-        "entryVehicle"
-      ).addEventListener(
-        "change",
-        updateVehicleDetails
-      );
-
-
-      document.getElementById(
-        "entryTime"
-      ).addEventListener(
-        "change",
-        updateDuration
-      );
-
-
-      document.getElementById(
-        "exitTime"
-      ).addEventListener(
-        "change",
-        updateDuration
-      );
-
-
-      document.getElementById(
-        "entryForm"
-      ).addEventListener(
-        "submit",
-        saveEntry
-      );
-
-    }
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializePage
-    );
-
-  </script>
-
-</body>
-
-</html>
+              <textarea
+                id="entryNotes"
+                placeholder="Optional notes..."
+              ></
