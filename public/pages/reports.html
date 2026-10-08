@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
+<head>
   <meta charset="UTF-8">
 
   <meta
@@ -9,427 +9,326 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Reports - My Home Group</title>
+  <title>Reports — MY HOME GROUP</title>
 
   <link
     rel="stylesheet"
-    href="../style.css"
+    href="/style.css"
   >
-
 </head>
 
 <body>
 
-<header class="app-header">
+  <div class="page">
 
-  <div class="app-header-inner">
+    <header class="app-header">
 
-    <a
-      href="/pages/dashboard.html"
-      class="app-brand"
-    >
+      <div class="app-header-inner">
 
-      <div class="app-brand-mark">
-        MH
-      </div>
-
-      <div class="app-brand-text">
-
-        <div class="app-brand-name">
-          My Home Group
-        </div>
-
-        <div class="app-brand-subtitle">
-          Vehicle Duration Management
-        </div>
-
-      </div>
-
-    </a>
-
-    <div class="header-actions">
-
-      <a
-        href="/pages/notifications.html"
-        class="header-icon-btn"
-      >
-        🔔
-        <span
-          class="notification-badge hidden"
-          data-notification-count
-        ></span>
-      </a>
-
-      <a
-        href="/pages/profile.html"
-        class="header-icon-btn"
-      >
-        👤
-      </a>
-
-    </div>
-
-  </div>
-
-</header>
-
-<div class="app-layout">
-
-  <aside class="sidebar">
-
-    <nav class="sidebar-nav">
-
-      <a
-        href="/pages/dashboard.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">🏠</span>
-        Dashboard
-      </a>
-
-      <a
-        href="/pages/vehicles.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">🚛</span>
-        Vehicles
-      </a>
-
-      <a
-        href="/pages/add-entry.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">➕</span>
-        Add Entry
-      </a>
-
-      <a
-        href="/pages/calendar.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">📅</span>
-        Calendar
-      </a>
-
-      <a
-        href="/pages/reports.html"
-        class="nav-link active"
-      >
-        <span class="nav-icon">📊</span>
-        Reports
-      </a>
-
-      <a
-        href="/pages/notifications.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">🔔</span>
-        Notifications
-      </a>
-
-      <a
-        href="/pages/profile.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">👤</span>
-        Profile
-      </a>
-
-      <a
-        href="#"
-        class="nav-link logout-btn"
-      >
-        <span class="nav-icon">🚪</span>
-        Logout
-      </a>
-
-    </nav>
-
-  </aside>
-
-  <main class="main-content">
-
-    <div class="content-inner">
-
-      <div class="page-heading">
-
-        <div class="page-heading-text">
-
-          <h1>
-            Reports
-          </h1>
-
-          <p>
-            Analyse vehicle duration and activity
-          </p>
-
-        </div>
-
-      </div>
-
-      <div class="filter-bar">
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            Preset
-          </label>
-
-          <select
-            id="preset"
-            class="form-control"
-          >
-
-            <option value="today">
-              Today
-            </option>
-
-            <option value="week">
-              This Week
-            </option>
-
-            <option value="month">
-              This Month
-            </option>
-
-            <option value="custom">
-              Custom
-            </option>
-
-          </select>
-
-        </div>
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            From
-          </label>
-
-          <input
-            id="fromDate"
-            type="date"
-            class="form-control"
-          >
-
-        </div>
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            To
-          </label>
-
-          <input
-            id="toDate"
-            type="date"
-            class="form-control"
-          >
-
-        </div>
-
-        <div
-          style="
-            display:flex;
-            align-items:end;
-          "
+        <a
+          href="/dashboard"
+          class="header-brand"
         >
+          <div class="brand-logo">MH</div>
 
-          <button
-            id="applyReport"
-            class="btn btn-primary btn-block"
+          <div>
+            <strong>MY HOME GROUP</strong>
+            <span>Reports</span>
+          </div>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            href="/pages/notifications.html"
+            class="icon-btn"
           >
-            Apply
-          </button>
+            🔔
+            <span
+              class="notification-badge hidden"
+            >
+              0
+            </span>
+          </a>
+
+          <a
+            href="/pages/profile.html"
+            class="icon-btn"
+          >
+            👤
+          </a>
 
         </div>
 
       </div>
 
-      <div class="filter-bar">
+    </header>
 
-        <div class="filter-group">
+    <main class="page-content">
 
-          <label class="filter-label">
-            Vehicle Type
-          </label>
+      <div class="page-title">
 
-          <select
-            id="typeFilter"
-            class="form-control"
-          >
+        <h1>REPORTS</h1>
 
-            <option value="">
-              All Types
-            </option>
-
-            <option>TM / Transit Mixer</option>
-            <option>Truck</option>
-            <option>Dumper</option>
-            <option>Excavator</option>
-            <option>JCB</option>
-            <option>Loader</option>
-            <option>Crane</option>
-            <option>Tractor</option>
-            <option>Water Tanker</option>
-            <option>Other</option>
-
-          </select>
-
-        </div>
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            Vehicle
-          </label>
-
-          <select
-            id="vehicleFilter"
-            class="form-control"
-          >
-
-            <option value="">
-              All Vehicles
-            </option>
-
-          </select>
-
-        </div>
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            Driver
-          </label>
-
-          <input
-            id="driverFilter"
-            type="text"
-            class="form-control"
-            placeholder="Driver"
-          >
-
-        </div>
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            Contractor
-          </label>
-
-          <input
-            id="contractorFilter"
-            type="text"
-            class="form-control"
-            placeholder="Contractor"
-          >
-
-        </div>
-
-      </div>
-
-      <div class="report-summary">
-
-        <div class="report-box">
-
-          <div class="report-box-label">
-            Entries
-          </div>
-
-          <div
-            id="totalEntries"
-            class="report-box-value"
-          >
-            0
-          </div>
-
-        </div>
-
-        <div class="report-box">
-
-          <div class="report-box-label">
-            Vehicles
-          </div>
-
-          <div
-            id="totalVehicles"
-            class="report-box-value"
-          >
-            0
-          </div>
-
-        </div>
-
-        <div class="report-box">
-
-          <div class="report-box-label">
-            Running
-          </div>
-
-          <div
-            id="totalRunning"
-            class="report-box-value"
-          >
-            0
-          </div>
-
-        </div>
-
-        <div class="report-box">
-
-          <div class="report-box-label">
-            Duration
-          </div>
-
-          <div
-            id="totalDuration"
-            class="report-box-value"
-          >
-            0m
-          </div>
-
-        </div>
+        <p>
+          Generate vehicle duration reports.
+        </p>
 
       </div>
 
       <section class="card">
 
-        <div class="card-header">
+        <div class="report-filters">
 
-          <div class="card-title">
-            Vehicle-wise Report
+          <div class="form-group">
+
+            <label for="reportPeriod">
+              Period
+            </label>
+
+            <select
+              id="reportPeriod"
+              class="form-control"
+            >
+              <option value="daily">
+                Daily
+              </option>
+
+              <option value="weekly">
+                Weekly
+              </option>
+
+              <option value="monthly">
+                Monthly
+              </option>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportFrom">
+              From
+            </label>
+
+            <input
+              id="reportFrom"
+              class="form-control"
+              type="date"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportTo">
+              To
+            </label>
+
+            <input
+              id="reportTo"
+              class="form-control"
+              type="date"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportVehicle">
+              Vehicle
+            </label>
+
+            <select
+              id="reportVehicle"
+              class="form-control"
+            >
+              <option value="">
+                All
+              </option>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportDriver">
+              Driver
+            </label>
+
+            <select
+              id="reportDriver"
+              class="form-control"
+            >
+              <option value="">
+                All
+              </option>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportContractor">
+              Contractor
+            </label>
+
+            <select
+              id="reportContractor"
+              class="form-control"
+            >
+              <option value="">
+                All
+              </option>
+            </select>
+
+          </div>
+
+          <div class="full">
+
+            <button
+              class="btn btn-primary"
+              type="button"
+              onclick="generateReport()"
+            >
+              Generate Report
+            </button>
+
           </div>
 
         </div>
+
+      </section>
+
+      <section
+        class="stats-grid report-summary"
+      >
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            TOTAL VEHICLES
+          </div>
+
+          <div
+            id="reportVehicles"
+            class="stat-value primary"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            TOTAL ENTRIES
+          </div>
+
+          <div
+            id="reportEntries"
+            class="stat-value"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            TOTAL DURATION
+          </div>
+
+          <div
+            id="reportDuration"
+            class="stat-value success"
+          >
+            0h 0m
+          </div>
+
+        </div>
+
+      </section>
+
+      <div class="report-tabs">
+
+        <button
+          class="report-tab active"
+          type="button"
+        >
+          Vehicle-wise
+        </button>
+
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Driver-wise
+        </button>
+
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Contractor-wise
+        </button>
+
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Daily
+        </button>
+
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Weekly
+        </button>
+
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Monthly
+        </button>
+
+      </div>
+
+      <section
+        class="card"
+        style="margin-top: 14px;"
+      >
 
         <div class="table-wrap">
 
           <table class="data-table">
 
             <thead>
-
               <tr>
-
+                <th>Date</th>
                 <th>Vehicle</th>
                 <th>Type</th>
-                <th>Entries</th>
+                <th>Driver</th>
+                <th>Contractor</th>
+                <th>Entry</th>
+                <th>Exit</th>
                 <th>Duration</th>
-
               </tr>
-
             </thead>
 
-            <tbody id="vehicleReportBody">
-
+            <tbody
+              id="reportTableBody"
+            >
               <tr>
-                <td colspan="4">
+                <td colspan="8">
                   <div class="loading">
                     Loading...
                   </div>
                 </td>
               </tr>
-
             </tbody>
 
           </table>
@@ -438,598 +337,67 @@
 
       </section>
 
-      <section
-        class="card"
-        style="margin-top:18px;"
-      >
+      <div class="export-actions">
 
-        <div class="card-header">
+        <button
+          class="btn btn-secondary"
+          type="button"
+          onclick="window.print()"
+        >
+          Export PDF
+        </button>
 
-          <div class="card-title">
-            Driver-wise Report
-          </div>
+        <button
+          class="btn btn-primary"
+          type="button"
+          onclick="exportReportCSV()"
+        >
+          Export Excel
+        </button>
 
-        </div>
+      </div>
 
-        <div class="table-wrap">
+    </main>
 
-          <table class="data-table">
+    <nav class="bottom-nav">
 
-            <thead>
+      <div class="bottom-nav-inner">
 
-              <tr>
+        <a href="/dashboard">
+          <span>🏠</span>
+          <span>Home</span>
+        </a>
 
-                <th>Driver</th>
-                <th>Entries</th>
-                <th>Duration</th>
+        <a href="/pages/vehicles.html">
+          <span>🚚</span>
+          <span>Vehicles</span>
+        </a>
 
-              </tr>
+        <a
+          href="/pages/add-entry.html"
+          class="entry-button"
+        >
+          <span>＋</span>
+          <span>Entry</span>
+        </a>
 
-            </thead>
+        <a href="/pages/calendar.html">
+          <span>📅</span>
+          <span>Calendar</span>
+        </a>
 
-            <tbody id="driverReportBody">
+        <a href="/pages/profile.html">
+          <span>👤</span>
+          <span>You</span>
+        </a>
 
-            </tbody>
+      </div>
 
-          </table>
-
-        </div>
-
-      </section>
-
-      <section
-        class="card"
-        style="margin-top:18px;"
-      >
-
-        <div class="card-header">
-
-          <div class="card-title">
-            Contractor-wise Report
-          </div>
-
-        </div>
-
-        <div class="table-wrap">
-
-          <table class="data-table">
-
-            <thead>
-
-              <tr>
-
-                <th>Contractor</th>
-                <th>Entries</th>
-                <th>Duration</th>
-
-              </tr>
-
-            </thead>
-
-            <tbody id="contractorReportBody">
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </section>
-
-    </div>
-
-  </main>
-
-</div>
-
-<nav class="mobile-bottom-nav">
-
-  <div class="mobile-nav-inner">
-
-    <a
-      href="/pages/dashboard.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">🏠</span>
-      Home
-    </a>
-
-    <a
-      href="/pages/vehicles.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">🚛</span>
-      Vehicles
-    </a>
-
-    <a
-      href="/pages/add-entry.html"
-      class="mobile-nav-item add"
-    >
-      <span class="mobile-nav-add">+</span>
-      Entry
-    </a>
-
-    <a
-      href="/pages/calendar.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">📅</span>
-      Calendar
-    </a>
-
-    <a
-      href="/pages/profile.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">👤</span>
-      You
-    </a>
+    </nav>
 
   </div>
 
-</nav>
-
-<script src="../app.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-
-  const preset =
-    document.getElementById("preset");
-
-  const fromDate =
-    document.getElementById("fromDate");
-
-  const toDate =
-    document.getElementById("toDate");
-
-  const vehicleFilter =
-    document.getElementById("vehicleFilter");
-
-  const typeFilter =
-    document.getElementById("typeFilter");
-
-  const driverFilter =
-    document.getElementById("driverFilter");
-
-  const contractorFilter =
-    document.getElementById(
-      "contractorFilter"
-    );
-
-  let allEntries = [];
-  let vehicles = [];
-
-  function applyPreset() {
-
-    const today =
-      MyHomeGroup.todayString();
-
-    if (preset.value === "today") {
-
-      fromDate.value = today;
-      toDate.value = today;
-
-    } else if (
-      preset.value === "week"
-    ) {
-
-      fromDate.value =
-        MyHomeGroup.getWeekStart();
-
-      toDate.value = today;
-
-    } else if (
-      preset.value === "month"
-    ) {
-
-      fromDate.value =
-        MyHomeGroup.getMonthStart();
-
-      toDate.value = today;
-
-    }
-
-  }
-
-  function aggregate(
-    entries,
-    key
-  ) {
-
-    const map =
-      new Map();
-
-    entries.forEach(entry => {
-
-      const name =
-        entry[key] ||
-        "Unknown";
-
-      const existing =
-        map.get(name) || {
-          name,
-          entries: 0,
-          duration: 0
-        };
-
-      existing.entries += 1;
-
-      existing.duration +=
-        Number(
-          entry.duration || 0
-        );
-
-      map.set(
-        name,
-        existing
-      );
-
-    });
-
-    return Array.from(
-      map.values()
-    ).sort(
-      (a, b) =>
-        b.duration - a.duration
-    );
-
-  }
-
-  function render() {
-
-    let entries =
-      [...allEntries];
-
-    const type =
-      typeFilter.value;
-
-    const vehicleId =
-      vehicleFilter.value;
-
-    const driver =
-      driverFilter.value
-        .trim()
-        .toLowerCase();
-
-    const contractor =
-      contractorFilter.value
-        .trim()
-        .toLowerCase();
-
-    entries =
-      entries.filter(entry => {
-
-        if (
-          type &&
-          entry.vehicle_type !== type
-        ) {
-          return false;
-        }
-
-        if (
-          vehicleId &&
-          String(entry.vehicle_id) !==
-          String(vehicleId)
-        ) {
-          return false;
-        }
-
-        if (
-          driver &&
-          !String(
-            entry.driver_name || ""
-          )
-            .toLowerCase()
-            .includes(driver)
-        ) {
-          return false;
-        }
-
-        if (
-          contractor &&
-          !String(
-            entry.contractor || ""
-          )
-            .toLowerCase()
-            .includes(contractor)
-        ) {
-          return false;
-        }
-
-        return true;
-
-      });
-
-    const total =
-      entries.reduce(
-        (sum, entry) =>
-          sum +
-          Number(entry.duration || 0),
-        0
-      );
-
-    const running =
-      entries.filter(
-        entry => !entry.exit_time
-      ).length;
-
-    const uniqueVehicles =
-      new Set(
-        entries.map(
-          entry =>
-            entry.vehicle_id ||
-            entry.vehicle_number
-        )
-      ).size;
-
-    document.getElementById(
-      "totalEntries"
-    ).textContent =
-      entries.length;
-
-    document.getElementById(
-      "totalVehicles"
-    ).textContent =
-      uniqueVehicles;
-
-    document.getElementById(
-      "totalRunning"
-    ).textContent =
-      running;
-
-    document.getElementById(
-      "totalDuration"
-    ).textContent =
-      MyHomeGroup.minutesToDuration(
-        total
-      );
-
-    const vehicleRows =
-      aggregate(
-        entries,
-        "vehicle_number"
-      );
-
-    document.getElementById(
-      "vehicleReportBody"
-    ).innerHTML =
-      vehicleRows.length
-        ? vehicleRows.map(item => {
-
-            const entry =
-              entries.find(
-                e =>
-                  e.vehicle_number ===
-                  item.name
-              );
-
-            return `
-              <tr>
-
-                <td>
-                  <strong>
-                    ${MyHomeGroup.escapeHtml(
-                      item.name
-                    )}
-                  </strong>
-                </td>
-
-                <td>
-                  ${MyHomeGroup.escapeHtml(
-                    entry?.vehicle_type || "-"
-                  )}
-                </td>
-
-                <td>
-                  ${item.entries}
-                </td>
-
-                <td>
-                  ${MyHomeGroup.minutesToDuration(
-                    item.duration
-                  )}
-                </td>
-
-              </tr>
-            `;
-
-          }).join("")
-        : `
-          <tr>
-            <td colspan="4">
-              <div class="empty-state">
-                No data found.
-              </div>
-            </td>
-          </tr>
-        `;
-
-    const driverRows =
-      aggregate(
-        entries,
-        "driver_name"
-      );
-
-    document.getElementById(
-      "driverReportBody"
-    ).innerHTML =
-      driverRows.length
-        ? driverRows.map(item => `
-          <tr>
-
-            <td>
-              ${MyHomeGroup.escapeHtml(
-                item.name
-              )}
-            </td>
-
-            <td>
-              ${item.entries}
-            </td>
-
-            <td>
-              ${MyHomeGroup.minutesToDuration(
-                item.duration
-              )}
-            </td>
-
-          </tr>
-        `).join("")
-        : `
-          <tr>
-            <td colspan="3">
-              <div class="empty-state">
-                No data found.
-              </div>
-            </td>
-          </tr>
-        `;
-
-    const contractorRows =
-      aggregate(
-        entries,
-        "contractor"
-      );
-
-    document.getElementById(
-      "contractorReportBody"
-    ).innerHTML =
-      contractorRows.length
-        ? contractorRows.map(item => `
-          <tr>
-
-            <td>
-              ${MyHomeGroup.escapeHtml(
-                item.name
-              )}
-            </td>
-
-            <td>
-              ${item.entries}
-            </td>
-
-            <td>
-              ${MyHomeGroup.minutesToDuration(
-                item.duration
-              )}
-            </td>
-
-          </tr>
-        `).join("")
-        : `
-          <tr>
-            <td colspan="3">
-              <div class="empty-state">
-                No data found.
-              </div>
-            </td>
-          </tr>
-        `;
-
-  }
-
-  async function load() {
-
-    try {
-
-      const [
-        entries,
-        vehicleList
-      ] = await Promise.all([
-
-        MyHomeGroup.getEntries({
-          from_date:
-            fromDate.value,
-          to_date:
-            toDate.value
-        }),
-
-        MyHomeGroup.getVehicles()
-
-      ]);
-
-      allEntries =
-        entries;
-
-      vehicles =
-        vehicleList;
-
-      vehicleFilter.innerHTML = `
-        <option value="">
-          All Vehicles
-        </option>
-
-        ${
-          vehicles.map(vehicle => `
-            <option value="${vehicle.id}">
-              ${MyHomeGroup.escapeHtml(
-                vehicle.vehicle_number
-              )}
-            </option>
-          `).join("")
-        }
-      `;
-
-      render();
-
-    } catch (error) {
-
-      MyHomeGroup.showToast(
-        error.message,
-        "error"
-      );
-
-    }
-
-  }
-
-  preset.addEventListener(
-    "change",
-    () => {
-
-      if (
-        preset.value !== "custom"
-      ) {
-        applyPreset();
-      }
-
-    }
-  );
-
-  [
-    typeFilter,
-    vehicleFilter,
-    driverFilter,
-    contractorFilter
-  ].forEach(element => {
-
-    element.addEventListener(
-      "input",
-      render
-    );
-
-    element.addEventListener(
-      "change",
-      render
-    );
-
-  });
-
-  document
-    .getElementById("applyReport")
-    .addEventListener(
-      "click",
-      load
-    );
-
-  applyPreset();
-
-  await load();
-
-});
-</script>
+  <script src="/app.js"></script>
 
 </body>
 </html>
