@@ -5,137 +5,39 @@ const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
 
 const app = express();
-const PORT = process.env.PORT || 10000;
 
+const PORT = process.env.PORT || 10000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
-  console.error("ERROR: JWT_SECRET is missing or too short.");
+  console.error("JWT_SECRET is missing or too short.");
   process.exit(1);
 }
 
-// ============================================================
-// DATABASE
-// ============================================================
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL
+  ssl: process.env.NODE_ENV === "production"
     ? { rejectUnauthorized: false }
-    : false,
+    : false
 });
-
-pool.on("error", (err) => {
-  console.error("Unexpected PostgreSQL error:", err);
-});
-
-// ============================================================
-// EXPRESS
-// ============================================================
 
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// ============================================================
-// HELPERS
-// ============================================================
-
-function cleanString(value, maxLength = 255) {
-  if (value === undefined || value === null) return "";
-  return String(value).trim().slice(0, maxLength);
-}
-
-function cleanEmail(value) {
-  return cleanString(value, 255).toLowerCase();
-}
-
-function validEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function createToken(user) {
-  return jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-    },
-    JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-}
-
-function publicUser(user) {
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    mobile: user.mobile,
-    role: user.role,
-    company: user.company,
-    created_at: user.created_at,
-  };
-}
-
-// ============================================================
-// AUTH MIDDLEWARE
-// ============================================================
-
-function authenticate(req, res, next) {
-  try {
-    const authHeader = req.headers.authorization || "";
-
-    if (!authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication required.",
-      });
-    }
-
-    const token = authHeader.substring(7).trim();
-
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication token missing.",
-      });
-    }
-
-    req.user = jwt.verify(token, JWT_SECRET);
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: "Session expired or invalid. Please login again.",
-    });
-  }
-}
-
-function requireAdmin(req, res, next) {
-  if (!req.user || req.user.role !== "Admin") {
-    return res.status(403).json({
-      success: false,
-      message: "Admin access required.",
-    });
-  }
-
-  next();
-}
-
-// ============================================================
-// DATABASE INITIALIZATION
-// ============================================================
+/* =========================================================
+   DATABASE
+========================================================= */
 
 async function initDatabase() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
-      name VARCHAR(150) NOT NULL,
-      email VARCHAR(255) UNIQUE NOT NULL,
+      name VARCHAR(120) NOT NULL,
+      email VARCHAR(180) UNIQUE NOT NULL,
       mobile VARCHAR(30),
       password_hash TEXT NOT NULL,
-      role VARCHAR(50) NOT NULL DEFAULT 'Security Guard',
-      company VARCHAR(150),
+      role VARCHAR(30) NOT NULL DEFAULT 'Security Guard',
+      company VARCHAR(180),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `);
@@ -143,11 +45,11 @@ async function initDatabase() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS vehicles (
       id SERIAL PRIMARY KEY,
-      vehicle_number VARCHAR(100) UNIQUE NOT NULL,
-      vehicle_type VARCHAR(100) NOT NULL,
-      driver_name VARCHAR(150),
-      contractor VARCHAR(150),
-      status VARCHAR(50) DEFAULT 'Active',
+      vehicle_number VARCHAR(50) UNIQUE NOT NULL,
+      vehicle_type VARCHAR(80) NOT NULL,
+      driver_name VARCHAR(120),
+      contractor VARCHAR(180),
+      status VARCHAR(30) DEFAULT 'Active',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `);
@@ -157,23 +59,19 @@ async function initDatabase() {
       id SERIAL PRIMARY KEY,
       vehicle_id INTEGER REFERENCES vehicles(id) ON DELETE SET NULL,
       user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-      vehicle_number VARCHAR(100) NOT NULL,
-      vehicle_type VARCHAR(100),
-      driver_name VARCHAR(150),
-      contractor VARCHAR(150),
+      vehicle_number VARCHAR(50) NOT NULL,
+      vehicle_type VARCHAR(80),
+      driver_name VARCHAR(120),
+      contractor VARCHAR(180),
       entry_date DATE NOT NULL,
       entry_time TIME NOT NULL,
       exit_time TIME,
       duration INTEGER DEFAULT 0,
-      purpose VARCHAR(255),
+      purpose TEXT,
       notes TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `);
-
-  // ==========================================================
-  // NOTIFICATIONS TABLE
-  // ==========================================================
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS notifications (
@@ -181,23 +79,103 @@ async function initDatabase() {
       user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
       title VARCHAR(200) NOT NULL,
       message TEXT NOT NULL,
-      type VARCHAR(50) DEFAULT 'info',
+      type VARCHAR(50) DEFAULT 'general',
       is_read BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `);
 
-  await pool.query(`
-    ALTER TABLE users
-    ALTER COLUMN role SET DEFAULT 'Security Guard'
-  `);
-
-  console.log("Database initialized successfully.");
+  console.log("Database tables ready.");
 }
 
-// ============================================================
-// HEALTH
-// ============================================================
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function createToken(user) {
+  return jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    },
+    JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+}
+
+function getTokenFromRequest(req) {
+  const header = req.headers.authorization || "";
+
+  if (!header.startsWith("Bearer ")) {
+    return null;
+  }
+
+  return header.substring(7);
+}
+
+function authRequired(req, res, next) {
+  try {
+    const token = getTokenFromRequest(req);
+
+    if (!token) {
+      return res.status(401).json({
+        message: "Authentication required."
+      });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    req.user = decoded;
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: "Invalid or expired token."
+    });
+  }
+}
+
+function adminRequired(req, res, next) {
+  if (!req.user || req.user.role !== "Admin") {
+    return res.status(403).json({
+      message: "Admin access required."
+    });
+  }
+
+  next();
+}
+
+function calculateDuration(entryTime, exitTime) {
+  if (!entryTime || !exitTime) {
+    return 0;
+  }
+
+  const [eh, em] = String(entryTime).split(":").map(Number);
+  const [xh, xm] = String(exitTime).split(":").map(Number);
+
+  if (
+    Number.isNaN(eh) ||
+    Number.isNaN(em) ||
+    Number.isNaN(xh) ||
+    Number.isNaN(xm)
+  ) {
+    return 0;
+  }
+
+  let start = eh * 60 + em;
+  let end = xh * 60 + xm;
+
+  if (end < start) {
+    end += 24 * 60;
+  }
+
+  return end - start;
+}
+
+/* =========================================================
+   HEALTH
+========================================================= */
 
 app.get("/health", async (req, res) => {
   try {
@@ -205,68 +183,64 @@ app.get("/health", async (req, res) => {
 
     res.json({
       status: "ok",
-      database: "connected",
-      service: "My Home Group Vehicle Duration Management",
+      app: "My Home Group",
+      service: "Vehicle Duration Management",
+      database: "connected"
     });
   } catch (error) {
-    console.error("Health check error:", error);
+    console.error("Health error:", error);
 
     res.status(500).json({
       status: "error",
-      database: "disconnected",
+      app: "My Home Group",
+      database: "disconnected"
     });
   }
 });
 
-// ============================================================
-// AUTH - REGISTER
-// ============================================================
+/* =========================================================
+   AUTH
+========================================================= */
 
 app.post("/api/auth/register", async (req, res) => {
   try {
-    const name = cleanString(req.body.name, 150);
-    const email = cleanEmail(req.body.email);
-    const mobile = cleanString(req.body.mobile, 30);
-    const password = String(req.body.password || "");
-    const company = cleanString(req.body.company, 150);
+    const {
+      name,
+      email,
+      mobile,
+      password,
+      company
+    } = req.body;
 
-    if (!name) {
+    if (!name || !email || !password) {
       return res.status(400).json({
-        success: false,
-        message: "Name is required.",
+        message: "Name, email and password are required."
       });
     }
 
-    if (!email || !validEmail(email)) {
+    if (String(password).length < 6) {
       return res.status(400).json({
-        success: false,
-        message: "Please enter a valid email address.",
+        message: "Password must be at least 6 characters."
       });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 6 characters.",
-      });
-    }
+    const normalizedEmail = String(email).trim().toLowerCase();
 
     const existing = await pool.query(
-      "SELECT id FROM users WHERE LOWER(email) = LOWER($1)",
-      [email]
+      "SELECT id FROM users WHERE email = $1",
+      [normalizedEmail]
     );
 
-    if (existing.rows.length > 0) {
+    if (existing.rows.length) {
       return res.status(409).json({
-        success: false,
-        message: "An account with this email already exists.",
+        message: "An account with this email already exists."
       });
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
-
-    // Public registration can never create Admin.
-    const role = "Security Guard";
+    const passwordHash = await bcrypt.hash(
+      String(password),
+      12
+    );
 
     const result = await pool.query(
       `
@@ -276,49 +250,48 @@ app.post("/api/auth/register", async (req, res) => {
       RETURNING id, name, email, mobile, role, company, created_at
       `,
       [
-        name,
-        email,
+        String(name).trim(),
+        normalizedEmail,
         mobile || null,
         passwordHash,
-        role,
-        company || null,
+        "Security Guard",
+        company || null
       ]
     );
 
     const user = result.rows[0];
+
     const token = createToken(user);
 
     res.status(201).json({
-      success: true,
       message: "Registration successful.",
       token,
-      user: publicUser(user),
+      user
     });
+
   } catch (error) {
     console.error("Register error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Registration failed. Please try again.",
+      message: "Registration failed."
     });
   }
 });
 
-// ============================================================
-// AUTH - LOGIN
-// ============================================================
-
 app.post("/api/auth/login", async (req, res) => {
   try {
-    const email = cleanEmail(req.body.email);
-    const password = String(req.body.password || "");
+    const {
+      email,
+      password
+    } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
-        success: false,
-        message: "Email and password are required.",
+        message: "Email and password are required."
       });
     }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
 
     const result = await pool.query(
       `
@@ -332,205 +305,166 @@ app.post("/api/auth/login", async (req, res) => {
         company,
         created_at
       FROM users
-      WHERE LOWER(email) = LOWER($1)
-      LIMIT 1
+      WHERE email = $1
       `,
-      [email]
+      [normalizedEmail]
     );
 
-    if (result.rows.length === 0) {
+    if (!result.rows.length) {
       return res.status(401).json({
-        success: false,
-        message: "Invalid email or password.",
+        message: "Invalid email or password."
       });
     }
 
     const user = result.rows[0];
 
-    const passwordMatch = await bcrypt.compare(
-      password,
+    const validPassword = await bcrypt.compare(
+      String(password),
       user.password_hash
     );
 
-    if (!passwordMatch) {
+    if (!validPassword) {
       return res.status(401).json({
-        success: false,
-        message: "Invalid email or password.",
+        message: "Invalid email or password."
       });
     }
+
+    delete user.password_hash;
 
     const token = createToken(user);
 
     res.json({
-      success: true,
       message: "Login successful.",
       token,
-      user: publicUser(user),
+      user
     });
+
   } catch (error) {
     console.error("Login error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Login failed. Please try again.",
+      message: "Login failed."
     });
   }
 });
 
-// ============================================================
-// CURRENT USER
-// ============================================================
-
-app.get("/api/me", authenticate, async (req, res) => {
+app.get("/api/me", authRequired, async (req, res) => {
   try {
     const result = await pool.query(
       `
-      SELECT id, name, email, mobile, role, company, created_at
+      SELECT
+        id,
+        name,
+        email,
+        mobile,
+        role,
+        company,
+        created_at
       FROM users
       WHERE id = $1
-      LIMIT 1
       `,
       [req.user.id]
     );
 
-    if (result.rows.length === 0) {
+    if (!result.rows.length) {
       return res.status(404).json({
-        success: false,
-        message: "User not found.",
+        message: "User not found."
       });
     }
 
-    res.json({
-      success: true,
-      user: publicUser(result.rows[0]),
-    });
+    res.json(result.rows[0]);
+
   } catch (error) {
     console.error("Get me error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Unable to load profile.",
+      message: "Unable to load profile."
     });
   }
 });
 
-// ============================================================
-// UPDATE PROFILE
-// ============================================================
-
-app.put("/api/me", authenticate, async (req, res) => {
+app.put("/api/me", authRequired, async (req, res) => {
   try {
-    const name = cleanString(req.body.name, 150);
-    const mobile = cleanString(req.body.mobile, 30);
-    const company = cleanString(req.body.company, 150);
-
-    if (!name) {
-      return res.status(400).json({
-        success: false,
-        message: "Name is required.",
-      });
-    }
+    const {
+      name,
+      mobile,
+      company
+    } = req.body;
 
     const result = await pool.query(
       `
       UPDATE users
       SET
-        name = $1,
-        mobile = $2,
-        company = $3
+        name = COALESCE($1, name),
+        mobile = COALESCE($2, mobile),
+        company = COALESCE($3, company)
       WHERE id = $4
       RETURNING id, name, email, mobile, role, company, created_at
       `,
       [
-        name,
-        mobile || null,
-        company || null,
-        req.user.id,
+        name ?? null,
+        mobile ?? null,
+        company ?? null,
+        req.user.id
       ]
     );
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found.",
-      });
-    }
+    res.json(result.rows[0]);
 
-    res.json({
-      success: true,
-      message: "Profile updated successfully.",
-      user: publicUser(result.rows[0]),
-    });
   } catch (error) {
-    console.error("Update profile error:", error);
+    console.error("Profile update error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Unable to update profile.",
+      message: "Profile update failed."
     });
   }
 });
 
-// ============================================================
-// CHANGE PASSWORD
-// ============================================================
-
-app.post("/api/auth/change-password", authenticate, async (req, res) => {
+app.post("/api/auth/change-password", authRequired, async (req, res) => {
   try {
-    const currentPassword = String(
-      req.body.currentPassword || ""
-    );
-
-    const newPassword = String(
-      req.body.newPassword || ""
-    );
+    const {
+      currentPassword,
+      newPassword
+    } = req.body;
 
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
-        success: false,
-        message: "Current and new password are required.",
+        message: "Current and new password are required."
       });
     }
 
-    if (newPassword.length < 6) {
+    if (String(newPassword).length < 6) {
       return res.status(400).json({
-        success: false,
-        message: "New password must be at least 6 characters.",
+        message: "New password must be at least 6 characters."
       });
     }
 
     const result = await pool.query(
-      `
-      SELECT id, password_hash
-      FROM users
-      WHERE id = $1
-      LIMIT 1
-      `,
+      "SELECT password_hash FROM users WHERE id = $1",
       [req.user.id]
     );
 
-    if (result.rows.length === 0) {
+    if (!result.rows.length) {
       return res.status(404).json({
-        success: false,
-        message: "User not found.",
+        message: "User not found."
       });
     }
 
-    const user = result.rows[0];
-
-    const match = await bcrypt.compare(
-      currentPassword,
-      user.password_hash
+    const valid = await bcrypt.compare(
+      String(currentPassword),
+      result.rows[0].password_hash
     );
 
-    if (!match) {
-      return res.status(401).json({
-        success: false,
-        message: "Current password is incorrect.",
+    if (!valid) {
+      return res.status(400).json({
+        message: "Current password is incorrect."
       });
     }
 
-    const newHash = await bcrypt.hash(newPassword, 12);
+    const newHash = await bcrypt.hash(
+      String(newPassword),
+      12
+    );
 
     await pool.query(
       `
@@ -538,105 +472,63 @@ app.post("/api/auth/change-password", authenticate, async (req, res) => {
       SET password_hash = $1
       WHERE id = $2
       `,
-      [newHash, req.user.id]
+      [
+        newHash,
+        req.user.id
+      ]
     );
 
     res.json({
-      success: true,
-      message: "Password changed successfully.",
+      message: "Password changed successfully."
     });
+
   } catch (error) {
     console.error("Change password error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Unable to change password.",
+      message: "Password change failed."
     });
   }
 });
 
-// ============================================================
-// VEHICLES - GET
-// ============================================================
+/* =========================================================
+   VEHICLES
+========================================================= */
 
-app.get("/api/vehicles", authenticate, async (req, res) => {
+app.get("/api/vehicles", authRequired, async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT
-        id,
-        vehicle_number,
-        vehicle_type,
-        driver_name,
-        contractor,
-        status,
-        created_at
+    const result = await pool.query(
+      `
+      SELECT *
       FROM vehicles
-      ORDER BY vehicle_number ASC
-    `);
+      ORDER BY id DESC
+      `
+    );
 
-    res.json({
-      success: true,
-      vehicles: result.rows,
-    });
+    res.json(result.rows);
+
   } catch (error) {
     console.error("Get vehicles error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Unable to load vehicles.",
+      message: "Unable to load vehicles."
     });
   }
 });
 
-// ============================================================
-// VEHICLES - CREATE
-// ============================================================
-
-app.post("/api/vehicles", authenticate, async (req, res) => {
+app.post("/api/vehicles", authRequired, async (req, res) => {
   try {
-    const vehicleNumber = cleanString(
-      req.body.vehicle_number || req.body.vehicleNumber,
-      100
-    ).toUpperCase();
+    const {
+      vehicle_number,
+      vehicle_type,
+      driver_name,
+      contractor,
+      status
+    } = req.body;
 
-    const vehicleType = cleanString(
-      req.body.vehicle_type || req.body.vehicleType,
-      100
-    );
-
-    const driverName = cleanString(
-      req.body.driver_name || req.body.driverName,
-      150
-    );
-
-    const contractor = cleanString(
-      req.body.contractor,
-      150
-    );
-
-    const status =
-      cleanString(req.body.status, 50) || "Active";
-
-    if (!vehicleNumber || !vehicleType) {
+    if (!vehicle_number || !vehicle_type) {
       return res.status(400).json({
-        success: false,
-        message: "Vehicle number and type are required.",
-      });
-    }
-
-    const existing = await pool.query(
-      `
-      SELECT id
-      FROM vehicles
-      WHERE UPPER(vehicle_number) = UPPER($1)
-      `,
-      [vehicleNumber]
-    );
-
-    if (existing.rows.length > 0) {
-      return res.status(409).json({
-        success: false,
-        message: "Vehicle already exists.",
+        message: "Vehicle number and type are required."
       });
     }
 
@@ -648,356 +540,167 @@ app.post("/api/vehicles", authenticate, async (req, res) => {
       RETURNING *
       `,
       [
-        vehicleNumber,
-        vehicleType,
-        driverName || null,
+        String(vehicle_number).trim().toUpperCase(),
+        vehicle_type,
+        driver_name || null,
         contractor || null,
-        status,
+        status || "Active"
       ]
     );
 
-    res.status(201).json({
-      success: true,
-      message: "Vehicle added successfully.",
-      vehicle: result.rows[0],
-    });
+    res.status(201).json(result.rows[0]);
+
   } catch (error) {
     console.error("Create vehicle error:", error);
 
+    if (error.code === "23505") {
+      return res.status(409).json({
+        message: "Vehicle number already exists."
+      });
+    }
+
     res.status(500).json({
-      success: false,
-      message: "Unable to add vehicle.",
+      message: "Unable to create vehicle."
     });
   }
 });
 
-// ============================================================
-// VEHICLES - UPDATE
-// ============================================================
-
-app.put("/api/vehicles/:id", authenticate, async (req, res) => {
+app.put("/api/vehicles/:id", authRequired, async (req, res) => {
   try {
-    const id = Number(req.params.id);
-
-    if (!Number.isInteger(id) || id <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid vehicle ID.",
-      });
-    }
-
-    const vehicleNumber = cleanString(
-      req.body.vehicle_number || req.body.vehicleNumber,
-      100
-    ).toUpperCase();
-
-    const vehicleType = cleanString(
-      req.body.vehicle_type || req.body.vehicleType,
-      100
-    );
-
-    const driverName = cleanString(
-      req.body.driver_name || req.body.driverName,
-      150
-    );
-
-    const contractor = cleanString(
-      req.body.contractor,
-      150
-    );
-
-    const status =
-      cleanString(req.body.status, 50) || "Active";
-
-    if (!vehicleNumber || !vehicleType) {
-      return res.status(400).json({
-        success: false,
-        message: "Vehicle number and type are required.",
-      });
-    }
-
-    const duplicate = await pool.query(
-      `
-      SELECT id
-      FROM vehicles
-      WHERE UPPER(vehicle_number) = UPPER($1)
-      AND id <> $2
-      `,
-      [vehicleNumber, id]
-    );
-
-    if (duplicate.rows.length > 0) {
-      return res.status(409).json({
-        success: false,
-        message: "Another vehicle already uses this number.",
-      });
-    }
+    const {
+      vehicle_number,
+      vehicle_type,
+      driver_name,
+      contractor,
+      status
+    } = req.body;
 
     const result = await pool.query(
       `
       UPDATE vehicles
       SET
-        vehicle_number = $1,
-        vehicle_type = $2,
+        vehicle_number = COALESCE($1, vehicle_number),
+        vehicle_type = COALESCE($2, vehicle_type),
         driver_name = $3,
         contractor = $4,
-        status = $5
+        status = COALESCE($5, status)
       WHERE id = $6
       RETURNING *
       `,
       [
-        vehicleNumber,
-        vehicleType,
-        driverName || null,
+        vehicle_number
+          ? String(vehicle_number).trim().toUpperCase()
+          : null,
+        vehicle_type || null,
+        driver_name || null,
         contractor || null,
-        status,
-        id,
+        status || null,
+        req.params.id
       ]
     );
 
-    if (result.rows.length === 0) {
+    if (!result.rows.length) {
       return res.status(404).json({
-        success: false,
-        message: "Vehicle not found.",
+        message: "Vehicle not found."
       });
     }
 
-    res.json({
-      success: true,
-      message: "Vehicle updated successfully.",
-      vehicle: result.rows[0],
-    });
+    res.json(result.rows[0]);
+
   } catch (error) {
     console.error("Update vehicle error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Unable to update vehicle.",
+      message: "Unable to update vehicle."
     });
   }
 });
 
-// ============================================================
-// VEHICLES - DELETE
-// ============================================================
+app.delete(
+  "/api/vehicles/:id",
+  authRequired,
+  adminRequired,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        "DELETE FROM vehicles WHERE id = $1 RETURNING id",
+        [req.params.id]
+      );
 
-app.delete("/api/vehicles/:id", authenticate, async (req, res) => {
+      if (!result.rows.length) {
+        return res.status(404).json({
+          message: "Vehicle not found."
+        });
+      }
+
+      res.json({
+        message: "Vehicle deleted successfully."
+      });
+
+    } catch (error) {
+      console.error("Delete vehicle error:", error);
+
+      res.status(500).json({
+        message: "Unable to delete vehicle."
+      });
+    }
+  }
+);
+
+/* =========================================================
+   ENTRIES
+========================================================= */
+
+app.get("/api/entries", authRequired, async (req, res) => {
   try {
-    const id = Number(req.params.id);
-
-    if (!Number.isInteger(id) || id <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid vehicle ID.",
-      });
-    }
-
-    if (req.user.role !== "Admin") {
-      return res.status(403).json({
-        success: false,
-        message: "Only Admin can delete vehicles.",
-      });
-    }
-
     const result = await pool.query(
       `
-      DELETE FROM vehicles
-      WHERE id = $1
-      RETURNING id
-      `,
-      [id]
+      SELECT *
+      FROM entries
+      ORDER BY entry_date DESC, entry_time DESC, id DESC
+      `
     );
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Vehicle not found.",
-      });
-    }
+    res.json(result.rows);
 
-    res.json({
-      success: true,
-      message: "Vehicle deleted successfully.",
-    });
-  } catch (error) {
-    console.error("Delete vehicle error:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Unable to delete vehicle.",
-    });
-  }
-});
-
-// ============================================================
-// ENTRIES - GET
-// ============================================================
-
-app.get("/api/entries", authenticate, async (req, res) => {
-  try {
-    const date = cleanString(req.query.date, 20);
-    const vehicleId = cleanString(req.query.vehicle_id, 30);
-    const from = cleanString(req.query.from, 20);
-    const to = cleanString(req.query.to, 20);
-
-    let query = `
-      SELECT
-        e.id,
-        e.vehicle_id,
-        e.user_id,
-        e.vehicle_number,
-        e.vehicle_type,
-        e.driver_name,
-        e.contractor,
-        e.entry_date,
-        e.entry_time,
-        e.exit_time,
-        e.duration,
-        e.purpose,
-        e.notes,
-        e.created_at
-      FROM entries e
-      WHERE 1 = 1
-    `;
-
-    const values = [];
-    let index = 1;
-
-    if (date) {
-      query += ` AND e.entry_date = $${index}`;
-      values.push(date);
-      index++;
-    }
-
-    if (vehicleId) {
-      query += ` AND e.vehicle_id = $${index}`;
-      values.push(Number(vehicleId));
-      index++;
-    }
-
-    if (from) {
-      query += ` AND e.entry_date >= $${index}`;
-      values.push(from);
-      index++;
-    }
-
-    if (to) {
-      query += ` AND e.entry_date <= $${index}`;
-      values.push(to);
-      index++;
-    }
-
-    query += `
-      ORDER BY
-        e.entry_date DESC,
-        e.entry_time DESC,
-        e.id DESC
-    `;
-
-    const result = await pool.query(query, values);
-
-    res.json({
-      success: true,
-      entries: result.rows,
-    });
   } catch (error) {
     console.error("Get entries error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Unable to load entries.",
+      message: "Unable to load entries."
     });
   }
 });
 
-// ============================================================
-// ENTRIES - CREATE
-// ============================================================
-
-app.post("/api/entries", authenticate, async (req, res) => {
+app.post("/api/entries", authRequired, async (req, res) => {
   try {
-    const vehicleId = Number(
-      req.body.vehicle_id || req.body.vehicleId
-    );
+    const {
+      vehicle_id,
+      vehicle_number,
+      vehicle_type,
+      driver_name,
+      contractor,
+      entry_date,
+      entry_time,
+      exit_time,
+      purpose,
+      notes
+    } = req.body;
 
-    const vehicleNumber = cleanString(
-      req.body.vehicle_number || req.body.vehicleNumber,
-      100
-    ).toUpperCase();
-
-    const vehicleType = cleanString(
-      req.body.vehicle_type || req.body.vehicleType,
-      100
-    );
-
-    const driverName = cleanString(
-      req.body.driver_name || req.body.driverName,
-      150
-    );
-
-    const contractor = cleanString(
-      req.body.contractor,
-      150
-    );
-
-    const entryDate = cleanString(
-      req.body.entry_date || req.body.entryDate,
-      20
-    );
-
-    const entryTime = cleanString(
-      req.body.entry_time || req.body.entryTime,
-      20
-    );
-
-    const exitTime = cleanString(
-      req.body.exit_time || req.body.exitTime,
-      20
-    );
-
-    const purpose = cleanString(req.body.purpose, 255);
-    const notes = cleanString(req.body.notes, 2000);
-
-    let duration = Number(req.body.duration);
-
-    if (!Number.isFinite(duration) || duration < 0) {
-      duration = 0;
-    }
-
-    duration = Math.round(duration);
-
-    if (!Number.isInteger(vehicleId) || vehicleId <= 0) {
+    if (
+      !vehicle_number ||
+      !entry_date ||
+      !entry_time
+    ) {
       return res.status(400).json({
-        success: false,
-        message: "Valid vehicle is required.",
+        message: "Vehicle, date and entry time are required."
       });
     }
 
-    if (!vehicleNumber || !entryDate || !entryTime) {
-      return res.status(400).json({
-        success: false,
-        message: "Vehicle, entry date and entry time are required.",
-      });
-    }
-
-    const vehicleResult = await pool.query(
-      `
-      SELECT *
-      FROM vehicles
-      WHERE id = $1
-      LIMIT 1
-      `,
-      [vehicleId]
+    const duration = calculateDuration(
+      entry_time,
+      exit_time
     );
-
-    if (vehicleResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Vehicle not found.",
-      });
-    }
-
-    const vehicle = vehicleResult.rows[0];
 
     const result = await pool.query(
       `
@@ -1017,55 +720,65 @@ app.post("/api/entries", authenticate, async (req, res) => {
         notes
       )
       VALUES
-      ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+      (
+        $1, $2, $3, $4, $5, $6,
+        $7, $8, $9, $10, $11, $12
+      )
       RETURNING *
       `,
       [
-        vehicleId,
+        vehicle_id || null,
         req.user.id,
-        vehicle.vehicle_number,
-        vehicle.vehicle_type,
-        driverName || vehicle.driver_name || null,
-        contractor || vehicle.contractor || null,
-        entryDate,
-        entryTime,
-        exitTime || null,
+        String(vehicle_number).trim().toUpperCase(),
+        vehicle_type || null,
+        driver_name || null,
+        contractor || null,
+        entry_date,
+        entry_time,
+        exit_time || null,
         duration,
         purpose || null,
-        notes || null,
+        notes || null
       ]
     );
 
-    res.status(201).json({
-      success: true,
-      message: "Entry saved successfully.",
-      entry: result.rows[0],
-    });
+    const entry = result.rows[0];
+
+    /* Automatic notification for the user */
+    try {
+      await pool.query(
+        `
+        INSERT INTO notifications
+        (user_id, title, message, type)
+        VALUES ($1, $2, $3, $4)
+        `,
+        [
+          req.user.id,
+          "Vehicle Entry Added",
+          `${entry.vehicle_number} entry has been recorded successfully.`,
+          "entry"
+        ]
+      );
+    } catch (notificationError) {
+      console.error(
+        "Entry notification error:",
+        notificationError
+      );
+    }
+
+    res.status(201).json(entry);
+
   } catch (error) {
     console.error("Create entry error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Unable to save entry.",
+      message: "Unable to create entry."
     });
   }
 });
 
-// ============================================================
-// ENTRIES - DELETE
-// ============================================================
-
-app.delete("/api/entries/:id", authenticate, async (req, res) => {
+app.delete("/api/entries/:id", authRequired, async (req, res) => {
   try {
-    const id = Number(req.params.id);
-
-    if (!Number.isInteger(id) || id <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid entry ID.",
-      });
-    }
-
     let result;
 
     if (req.user.role === "Admin") {
@@ -1075,48 +788,49 @@ app.delete("/api/entries/:id", authenticate, async (req, res) => {
         WHERE id = $1
         RETURNING id
         `,
-        [id]
+        [req.params.id]
       );
     } else {
       result = await pool.query(
         `
         DELETE FROM entries
         WHERE id = $1
-        AND user_id = $2
+          AND user_id = $2
         RETURNING id
         `,
-        [id, req.user.id]
+        [
+          req.params.id,
+          req.user.id
+        ]
       );
     }
 
-    if (result.rows.length === 0) {
+    if (!result.rows.length) {
       return res.status(404).json({
-        success: false,
-        message: "Entry not found or permission denied.",
+        message: "Entry not found or permission denied."
       });
     }
 
     res.json({
-      success: true,
-      message: "Entry deleted successfully.",
+      message: "Entry deleted successfully."
     });
+
   } catch (error) {
     console.error("Delete entry error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Unable to delete entry.",
+      message: "Unable to delete entry."
     });
   }
 });
 
-// ============================================================
-// NOTIFICATIONS - GET
-// ============================================================
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
 
 app.get(
   "/api/notifications",
-  authenticate,
+  authRequired,
   async (req, res) => {
     try {
       const result = await pool.query(
@@ -1135,28 +849,21 @@ app.get(
         [req.user.id]
       );
 
-      res.json({
-        success: true,
-        notifications: result.rows,
-      });
+      res.json(result.rows);
+
     } catch (error) {
       console.error("Get notifications error:", error);
 
       res.status(500).json({
-        success: false,
-        message: "Unable to load notifications.",
+        message: "Unable to load notifications."
       });
     }
   }
 );
 
-// ============================================================
-// NOTIFICATIONS - UNREAD COUNT
-// ============================================================
-
 app.get(
   "/api/notifications/unread-count",
-  authenticate,
+  authRequired,
   async (req, res) => {
     try {
       const result = await pool.query(
@@ -1164,44 +871,42 @@ app.get(
         SELECT COUNT(*)::int AS count
         FROM notifications
         WHERE user_id = $1
-        AND is_read = FALSE
+          AND is_read = FALSE
         `,
         [req.user.id]
       );
 
       res.json({
-        success: true,
-        count: result.rows[0].count,
+        count: result.rows[0].count
       });
+
     } catch (error) {
-      console.error("Unread count error:", error);
+      console.error(
+        "Unread notification count error:",
+        error
+      );
 
       res.status(500).json({
-        success: false,
-        message: "Unable to load unread count.",
+        message: "Unable to load unread count."
       });
     }
   }
 );
 
-// ============================================================
-// NOTIFICATIONS - CREATE
-// ============================================================
-
 app.post(
   "/api/notifications",
-  authenticate,
+  authRequired,
   async (req, res) => {
     try {
-      const title = cleanString(req.body.title, 200);
-      const message = cleanString(req.body.message, 2000);
-      const type =
-        cleanString(req.body.type, 50) || "info";
+      const {
+        title,
+        message,
+        type
+      } = req.body;
 
       if (!title || !message) {
         return res.status(400).json({
-          success: false,
-          message: "Title and message are required.",
+          message: "Title and message are required."
         });
       }
 
@@ -1216,65 +921,41 @@ app.post(
           req.user.id,
           title,
           message,
-          type,
+          type || "general"
         ]
       );
 
-      res.status(201).json({
-        success: true,
-        message: "Notification created.",
-        notification: result.rows[0],
-      });
+      res.status(201).json(result.rows[0]);
+
     } catch (error) {
-      console.error("Create notification error:", error);
+      console.error(
+        "Create notification error:",
+        error
+      );
 
       res.status(500).json({
-        success: false,
-        message: "Unable to create notification.",
+        message: "Unable to create notification."
       });
     }
   }
 );
 
-// ============================================================
-// ADMIN - SEND NOTIFICATION TO USER
-// ============================================================
-
 app.post(
   "/api/admin/notifications",
-  authenticate,
-  requireAdmin,
+  authRequired,
+  adminRequired,
   async (req, res) => {
     try {
-      const userId = Number(req.body.user_id);
-      const title = cleanString(req.body.title, 200);
-      const message = cleanString(req.body.message, 2000);
-      const type =
-        cleanString(req.body.type, 50) || "info";
+      const {
+        user_id,
+        title,
+        message,
+        type
+      } = req.body;
 
-      if (!Number.isInteger(userId) || userId <= 0) {
+      if (!user_id || !title || !message) {
         return res.status(400).json({
-          success: false,
-          message: "Valid user ID is required.",
-        });
-      }
-
-      if (!title || !message) {
-        return res.status(400).json({
-          success: false,
-          message: "Title and message are required.",
-        });
-      }
-
-      const userCheck = await pool.query(
-        "SELECT id FROM users WHERE id = $1",
-        [userId]
-      );
-
-      if (userCheck.rows.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "User not found.",
+          message: "User, title and message are required."
         });
       }
 
@@ -1286,88 +967,71 @@ app.post(
         RETURNING *
         `,
         [
-          userId,
+          user_id,
           title,
           message,
-          type,
+          type || "admin"
         ]
       );
 
-      res.status(201).json({
-        success: true,
-        message: "Notification sent successfully.",
-        notification: result.rows[0],
-      });
+      res.status(201).json(result.rows[0]);
+
     } catch (error) {
-      console.error("Admin notification error:", error);
+      console.error(
+        "Admin notification error:",
+        error
+      );
 
       res.status(500).json({
-        success: false,
-        message: "Unable to send notification.",
+        message: "Unable to send notification."
       });
     }
   }
 );
-
-// ============================================================
-// NOTIFICATIONS - MARK ONE READ
-// ============================================================
 
 app.put(
   "/api/notifications/:id/read",
-  authenticate,
+  authRequired,
   async (req, res) => {
     try {
-      const id = Number(req.params.id);
-
-      if (!Number.isInteger(id) || id <= 0) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid notification ID.",
-        });
-      }
-
       const result = await pool.query(
         `
         UPDATE notifications
         SET is_read = TRUE
         WHERE id = $1
-        AND user_id = $2
+          AND user_id = $2
         RETURNING *
         `,
-        [id, req.user.id]
+        [
+          req.params.id,
+          req.user.id
+        ]
       );
 
-      if (result.rows.length === 0) {
+      if (!result.rows.length) {
         return res.status(404).json({
-          success: false,
-          message: "Notification not found.",
+          message: "Notification not found."
         });
       }
 
-      res.json({
-        success: true,
-        message: "Notification marked as read.",
-        notification: result.rows[0],
-      });
+      res.json(result.rows[0]);
+
     } catch (error) {
-      console.error("Mark notification read error:", error);
+      console.error(
+        "Mark notification read error:",
+        error
+      );
 
       res.status(500).json({
-        success: false,
-        message: "Unable to update notification.",
+        message: "Unable to update notification."
       });
     }
   }
 );
-
-// ============================================================
-// NOTIFICATIONS - MARK ALL READ
-// ============================================================
 
 app.put(
   "/api/notifications/read-all",
-  authenticate,
+  authRequired,
   async (req, res) => {
     try {
       await pool.query(
@@ -1380,77 +1044,66 @@ app.put(
       );
 
       res.json({
-        success: true,
-        message: "All notifications marked as read.",
+        message: "All notifications marked as read."
       });
+
     } catch (error) {
-      console.error("Mark all notifications error:", error);
+      console.error(
+        "Mark all notifications error:",
+        error
+      );
 
       res.status(500).json({
-        success: false,
-        message: "Unable to update notifications.",
+        message: "Unable to update notifications."
       });
     }
   }
 );
 
-// ============================================================
-// NOTIFICATIONS - DELETE ONE
-// ============================================================
-
 app.delete(
   "/api/notifications/:id",
-  authenticate,
+  authRequired,
   async (req, res) => {
     try {
-      const id = Number(req.params.id);
-
-      if (!Number.isInteger(id) || id <= 0) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid notification ID.",
-        });
-      }
-
       const result = await pool.query(
         `
         DELETE FROM notifications
         WHERE id = $1
-        AND user_id = $2
+          AND user_id = $2
         RETURNING id
         `,
-        [id, req.user.id]
+        [
+          req.params.id,
+          req.user.id
+        ]
       );
 
-      if (result.rows.length === 0) {
+      if (!result.rows.length) {
         return res.status(404).json({
-          success: false,
-          message: "Notification not found.",
+          message: "Notification not found."
         });
       }
 
       res.json({
-        success: true,
-        message: "Notification deleted.",
+        message: "Notification deleted."
       });
+
     } catch (error) {
-      console.error("Delete notification error:", error);
+      console.error(
+        "Delete notification error:",
+        error
+      );
 
       res.status(500).json({
-        success: false,
-        message: "Unable to delete notification.",
+        message: "Unable to delete notification."
       });
     }
   }
 );
 
-// ============================================================
-// NOTIFICATIONS - CLEAR ALL
-// ============================================================
-
 app.delete(
   "/api/notifications",
-  authenticate,
+  authRequired,
   async (req, res) => {
     try {
       await pool.query(
@@ -1462,31 +1115,34 @@ app.delete(
       );
 
       res.json({
-        success: true,
-        message: "All notifications cleared.",
+        message: "All notifications deleted."
       });
+
     } catch (error) {
-      console.error("Clear notifications error:", error);
+      console.error(
+        "Clear notifications error:",
+        error
+      );
 
       res.status(500).json({
-        success: false,
-        message: "Unable to clear notifications.",
+        message: "Unable to clear notifications."
       });
     }
   }
 );
 
-// ============================================================
-// ADMIN - USERS
-// ============================================================
+/* =========================================================
+   ADMIN USERS
+========================================================= */
 
 app.get(
   "/api/admin/users",
-  authenticate,
-  requireAdmin,
+  authRequired,
+  adminRequired,
   async (req, res) => {
     try {
-      const result = await pool.query(`
+      const result = await pool.query(
+        `
         SELECT
           id,
           name,
@@ -1496,73 +1152,111 @@ app.get(
           company,
           created_at
         FROM users
-        ORDER BY created_at DESC
-      `);
+        ORDER BY id DESC
+        `
+      );
 
-      res.json({
-        success: true,
-        users: result.rows,
-      });
+      res.json(result.rows);
+
     } catch (error) {
       console.error("Admin users error:", error);
 
       res.status(500).json({
-        success: false,
-        message: "Unable to load users.",
+        message: "Unable to load users."
       });
     }
   }
 );
 
-// ============================================================
-// STATIC FILES
-// ============================================================
+/* =========================================================
+   STATIC FILES
+========================================================= */
 
 const publicPath = path.join(__dirname, "public");
 
-app.use(express.static(publicPath));
+/*
+  IMPORTANT:
+  Static middleware is mounted BEFORE the fallback route.
+  This allows:
+    /index.html
+    /style.css
+    /app.js
+    /pages/login.html
+    /pages/register.html
+    etc.
+  to open correctly.
+*/
+
+app.use(
+  express.static(publicPath, {
+    extensions: ["html"],
+    index: "index.html"
+  })
+);
+
+/* Explicit page routes for reliability */
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(publicPath, "index.html"));
+  res.sendFile(
+    path.join(publicPath, "index.html")
+  );
 });
 
-// ============================================================
-// API 404
-// ============================================================
-
-app.use("/api", (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "API endpoint not found.",
-  });
+app.get("/login", (req, res) => {
+  res.sendFile(
+    path.join(publicPath, "pages", "login.html")
+  );
 });
 
-// ============================================================
-// GENERAL 404
-// ============================================================
+app.get("/register", (req, res) => {
+  res.sendFile(
+    path.join(publicPath, "pages", "register.html")
+  );
+});
+
+app.get("/dashboard", (req, res) => {
+  res.sendFile(
+    path.join(publicPath, "pages", "dashboard.html")
+  );
+});
+
+/* =========================================================
+   404
+========================================================= */
 
 app.use((req, res) => {
+  if (req.path.startsWith("/api/")) {
+    return res.status(404).json({
+      message: "API endpoint not found."
+    });
+  }
+
   res.status(404).send(`
     <!DOCTYPE html>
     <html>
       <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Page Not Found</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
           body {
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 40px;
             text-align: center;
+            padding: 50px 20px;
+            background: #f5f7fa;
           }
+
           a {
-            color: #f59e0b;
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #f59e0b;
+            color: white;
             text-decoration: none;
-            font-weight: bold;
+            border-radius: 10px;
           }
         </style>
       </head>
+
       <body>
         <h1>404</h1>
         <p>Page not found.</p>
@@ -1572,21 +1266,26 @@ app.use((req, res) => {
   `);
 });
 
-// ============================================================
-// START
-// ============================================================
+/* =========================================================
+   START SERVER
+========================================================= */
 
 async function startServer() {
   try {
     await initDatabase();
 
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(
         `My Home Group server running on port ${PORT}`
       );
     });
+
   } catch (error) {
-    console.error("Server startup failed:", error);
+    console.error(
+      "Server startup failed:",
+      error
+    );
+
     process.exit(1);
   }
 }
