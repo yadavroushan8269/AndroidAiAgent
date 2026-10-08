@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -9,432 +9,328 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Calendar - My-Home-Group</title>
+  <title>Calendar - My Home Group</title>
 
   <link
     rel="stylesheet"
     href="../style.css"
   >
 
-  <style>
-    .calendar-page {
-      min-height: 100vh;
-      padding: 20px 16px 100px;
-      background: #f5f7fa;
-    }
-
-    .calendar-container {
-      width: 100%;
-      max-width: 850px;
-      margin: 0 auto;
-    }
-
-    .calendar-header {
-      margin-bottom: 18px;
-    }
-
-    .calendar-header h1 {
-      margin: 0 0 6px;
-      font-size: 26px;
-    }
-
-    .calendar-header p {
-      margin: 0;
-      color: #6b7280;
-    }
-
-    .date-card,
-    .summary-card,
-    .entries-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-    }
-
-    .date-card label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .date-card input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px 12px;
-      border: 1px solid #d5dbe1;
-      border-radius: 11px;
-      font-size: 16px;
-      outline: none;
-      background: #fff;
-    }
-
-    .date-card input:focus {
-      border-color: #f5a400;
-      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .summary-item {
-      padding: 15px;
-      border-radius: 14px;
-      background: #f7f8fa;
-      text-align: center;
-    }
-
-    .summary-icon {
-      font-size: 23px;
-      margin-bottom: 5px;
-    }
-
-    .summary-number {
-      font-size: 23px;
-      font-weight: 800;
-      color: #222;
-    }
-
-    .summary-label {
-      margin-top: 3px;
-      color: #69727d;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .section-title {
-      margin: 0 0 14px;
-      font-size: 19px;
-    }
-
-    .entry-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .entry-item {
-      border: 1px solid #e1e5e9;
-      border-radius: 15px;
-      padding: 15px;
-      background: #fff;
-    }
-
-    .entry-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .vehicle-number {
-      font-size: 18px;
-      font-weight: 800;
-      color: #222;
-    }
-
-    .vehicle-type {
-      margin-top: 3px;
-      color: #777;
-      font-size: 13px;
-    }
-
-    .duration-badge {
-      white-space: nowrap;
-      background: #fff4d6;
-      color: #a86f00;
-      border-radius: 20px;
-      padding: 7px 10px;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .entry-details {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-top: 13px;
-    }
-
-    .detail-box {
-      padding: 10px;
-      border-radius: 10px;
-      background: #f6f7f8;
-    }
-
-    .detail-label {
-      color: #7a828a;
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 3px;
-    }
-
-    .detail-value {
-      color: #282828;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .purpose-box {
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 10px;
-      background: #f8f9fa;
-      color: #555;
-      font-size: 13px;
-    }
-
-    .notes-box {
-      margin-top: 8px;
-      padding: 10px;
-      border-radius: 10px;
-      background: #fffaf0;
-      color: #66552d;
-      font-size: 13px;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 35px 15px;
-      color: #777;
-    }
-
-    .empty-icon {
-      font-size: 42px;
-      margin-bottom: 8px;
-    }
-
-    .empty-state h3 {
-      margin: 0 0 5px;
-      color: #333;
-    }
-
-    .empty-state p {
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      background: #fff;
-      border-top: 1px solid #ddd;
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .bottom-nav a {
-      text-decoration: none;
-      color: #555;
-      text-align: center;
-      padding: 9px 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .bottom-nav a span {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-
-    .bottom-nav a.active {
-      color: #d88900;
-    }
-
-    .add-main-btn {
-      width: 46px;
-      height: 46px;
-      margin: -16px auto 0;
-      border-radius: 50%;
-      background: #f5a400;
-      color: #fff !important;
-      border: 4px solid #fff;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-    }
-
-    .add-main-btn span {
-      margin: 0 !important;
-      font-size: 26px !important;
-    }
-
-    @media (max-width: 600px) {
-      .calendar-page {
-        padding: 16px 12px 100px;
-      }
-
-      .calendar-header h1 {
-        font-size: 23px;
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .summary-item {
-        display: flex;
-        align-items: center;
-        text-align: left;
-        gap: 10px;
-      }
-
-      .summary-icon {
-        margin: 0;
-      }
-
-      .entry-top {
-        flex-direction: column;
-      }
-
-      .entry-details {
-        grid-template-columns: 1fr;
-      }
-
-      .duration-badge {
-        align-self: flex-start;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
-  <main class="calendar-page">
+<header class="app-header">
 
-    <div class="calendar-container">
+  <div class="app-header-inner">
 
-      <header class="calendar-header">
+    <a
+      href="/pages/dashboard.html"
+      class="app-brand"
+    >
 
-        <h1>📅 Calendar</h1>
+      <div class="app-brand-mark">
+        MH
+      </div>
 
-        <p>
-          Date-wise vehicle duration and activity
-        </p>
+      <div class="app-brand-text">
 
-      </header>
+        <div class="app-brand-name">
+          My Home Group
+        </div>
 
+        <div class="app-brand-subtitle">
+          Vehicle Duration Management
+        </div>
 
-      <!-- DATE -->
+      </div>
 
-      <section class="date-card">
+    </a>
 
-        <label for="calendarDate">
-          Select Date
-        </label>
+    <div class="header-actions">
+
+      <a
+        href="/pages/notifications.html"
+        class="header-icon-btn"
+      >
+        🔔
+        <span
+          class="notification-badge hidden"
+          data-notification-count
+        ></span>
+      </a>
+
+      <a
+        href="/pages/profile.html"
+        class="header-icon-btn"
+      >
+        👤
+      </a>
+
+    </div>
+
+  </div>
+
+</header>
+
+<div class="app-layout">
+
+  <aside class="sidebar">
+
+    <nav class="sidebar-nav">
+
+      <a
+        href="/pages/dashboard.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🏠</span>
+        Dashboard
+      </a>
+
+      <a
+        href="/pages/vehicles.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🚛</span>
+        Vehicles
+      </a>
+
+      <a
+        href="/pages/add-entry.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">➕</span>
+        Add Entry
+      </a>
+
+      <a
+        href="/pages/calendar.html"
+        class="nav-link active"
+      >
+        <span class="nav-icon">📅</span>
+        Calendar
+      </a>
+
+      <a
+        href="/pages/reports.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📊</span>
+        Reports
+      </a>
+
+      <a
+        href="/pages/notifications.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🔔</span>
+        Notifications
+      </a>
+
+      <a
+        href="/pages/profile.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
+
+      <a
+        href="#"
+        class="nav-link logout-btn"
+      >
+        <span class="nav-icon">🚪</span>
+        Logout
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <main class="main-content">
+
+    <div class="content-inner">
+
+      <div class="page-heading">
+
+        <div class="page-heading-text">
+
+          <h1>
+            Calendar
+          </h1>
+
+          <p>
+            View vehicle activity by date
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="calendar-toolbar">
+
+        <button
+          id="previousDay"
+          class="btn btn-secondary"
+        >
+          ← Previous
+        </button>
+
+        <div
+          id="selectedDateLabel"
+          class="calendar-date"
+        >
+          -
+        </div>
+
+        <button
+          id="nextDay"
+          class="btn btn-secondary"
+        >
+          Next →
+        </button>
+
+      </div>
+
+      <div
+        style="
+          display:flex;
+          gap:8px;
+          margin-bottom:18px;
+          flex-wrap:wrap;
+        "
+      >
 
         <input
-          id="calendarDate"
+          id="dateInput"
           type="date"
+          class="form-control"
+          style="max-width:220px;"
         >
 
-      </section>
+        <button
+          id="todayButton"
+          class="btn btn-primary"
+        >
+          Today
+        </button>
 
+      </div>
 
-      <!-- SUMMARY -->
+      <div class="report-summary">
 
-      <section class="summary-card">
+        <div class="report-box">
 
-        <div class="summary-grid">
-
-          <div class="summary-item">
-
-            <div class="summary-icon">
-              🚛
-            </div>
-
-            <div>
-              <div
-                id="vehicleCount"
-                class="summary-number"
-              >
-                0
-              </div>
-
-              <div class="summary-label">
-                Vehicles
-              </div>
-            </div>
-
+          <div class="report-box-label">
+            Entries
           </div>
 
-
-          <div class="summary-item">
-
-            <div class="summary-icon">
-              📝
-            </div>
-
-            <div>
-              <div
-                id="entryCount"
-                class="summary-number"
-              >
-                0
-              </div>
-
-              <div class="summary-label">
-                Entries
-              </div>
-            </div>
-
-          </div>
-
-
-          <div class="summary-item">
-
-            <div class="summary-icon">
-              ⏱️
-            </div>
-
-            <div>
-              <div
-                id="totalDuration"
-                class="summary-number"
-              >
-                0 min
-              </div>
-
-              <div class="summary-label">
-                Total Duration
-              </div>
-            </div>
-
+          <div
+            id="entryCount"
+            class="report-box-value"
+          >
+            0
           </div>
 
         </div>
 
-      </section>
+        <div class="report-box">
 
+          <div class="report-box-label">
+            Vehicles
+          </div>
 
-      <!-- ENTRIES -->
+          <div
+            id="vehicleCount"
+            class="report-box-value"
+          >
+            0
+          </div>
 
-      <section class="entries-card">
+        </div>
 
-        <h2 class="section-title">
-          Today's Activity
-        </h2>
+        <div class="report-box">
 
-        <div
-          id="entryList"
-          class="entry-list"
-        ></div>
+          <div class="report-box-label">
+            Running
+          </div>
+
+          <div
+            id="runningCount"
+            class="report-box-value"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="report-box">
+
+          <div class="report-box-label">
+            Total Duration
+          </div>
+
+          <div
+            id="totalDuration"
+            class="report-box-value"
+          >
+            0m
+          </div>
+
+        </div>
+
+      </div>
+
+      <section class="card">
+
+        <div class="card-header">
+
+          <div class="card-title">
+            Vehicle Activity
+          </div>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Vehicle</th>
+                <th>Type</th>
+                <th>Driver</th>
+                <th>Contractor</th>
+                <th>Entry</th>
+                <th>Exit</th>
+                <th>Duration</th>
+                <th>Status</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="calendarBody">
+
+              <tr>
+
+                <td colspan="8">
+
+                  <div class="loading">
+                    Loading...
+                  </div>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </section>
 
@@ -442,559 +338,369 @@
 
   </main>
 
+</div>
 
-  <!-- BOTTOM NAV -->
+<nav class="mobile-bottom-nav">
 
-  <nav class="bottom-nav">
+  <div class="mobile-nav-inner">
 
-    <a href="/pages/dashboard.html">
-      <span>🏠</span>
+    <a
+      href="/pages/dashboard.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🏠</span>
       Home
     </a>
 
-    <a href="/pages/vehicles.html">
-      <span>🚛</span>
+    <a
+      href="/pages/vehicles.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🚛</span>
       Vehicles
     </a>
 
     <a
       href="/pages/add-entry.html"
-      class="add-main-btn"
+      class="mobile-nav-item add"
     >
-      <span>+</span>
+      <span class="mobile-nav-add">+</span>
+      Entry
     </a>
 
     <a
       href="/pages/calendar.html"
-      class="active"
+      class="mobile-nav-item active"
     >
-      <span>📅</span>
+      <span class="mobile-nav-icon">📅</span>
       Calendar
     </a>
 
-    <a href="/pages/profile.html">
-      <span>👤</span>
+    <a
+      href="/pages/profile.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">👤</span>
       You
     </a>
 
-  </nav>
+  </div>
 
+</nav>
 
-  <script>
+<script src="../app.js"></script>
 
-    const STORAGE = {
-      entries: "hyma_entries",
-      currentUser: "hyma_current_user"
-    };
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
 
+  const dateInput =
+    document.getElementById("dateInput");
 
-    function readJSON(
-      key,
-      fallback
-    ) {
+  const label =
+    document.getElementById(
+      "selectedDateLabel"
+    );
 
-      try {
+  const body =
+    document.getElementById(
+      "calendarBody"
+    );
 
-        const value =
-          localStorage.getItem(key);
+  let selectedDate =
+    MyHomeGroup.todayString();
 
-        return value
-          ? JSON.parse(value)
-          : fallback;
+  function setDate(date) {
 
-      } catch (error) {
+    selectedDate = date;
 
-        return fallback;
+    dateInput.value =
+      selectedDate;
 
-      }
-
-    }
-
-
-    function getEntries() {
-
-      return readJSON(
-        STORAGE.entries,
-        []
+    label.textContent =
+      MyHomeGroup.formatDate(
+        selectedDate
       );
 
-    }
+    load();
 
+  }
 
-    function getCurrentUser() {
+  async function load() {
 
-      return readJSON(
-        STORAGE.currentUser,
-        null
-      );
+    body.innerHTML = `
+      <tr>
+        <td colspan="8">
+          <div class="loading">
+            Loading...
+          </div>
+        </td>
+      </tr>
+    `;
 
-    }
-
-
-    function getToday() {
-
-      const now =
-        new Date();
-
-      const year =
-        now.getFullYear();
-
-      const month =
-        String(
-          now.getMonth() + 1
-        ).padStart(2, "0");
-
-      const day =
-        String(
-          now.getDate()
-        ).padStart(2, "0");
-
-      return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
-      );
-
-    }
-
-
-    function formatDuration(
-      minutes
-    ) {
-
-      minutes =
-        Number(minutes) || 0;
-
-      const hours =
-        Math.floor(
-          minutes / 60
-        );
-
-      const mins =
-        minutes % 60;
-
-      if (hours === 0) {
-
-        return `${mins} min`;
-
-      }
-
-      if (mins === 0) {
-
-        return `${hours} hr`;
-
-      }
-
-      return (
-        `${hours} hr ${mins} min`
-      );
-
-    }
-
-
-    function escapeHTML(
-      value
-    ) {
-
-      return String(
-        value || ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-
-    }
-
-
-    function formatDate(
-      dateString
-    ) {
-
-      if (!dateString) {
-        return "";
-      }
-
-      const parts =
-        dateString.split("-");
-
-      if (parts.length !== 3) {
-        return dateString;
-      }
-
-      return (
-        parts[2] +
-        "/" +
-        parts[1] +
-        "/" +
-        parts[0]
-      );
-
-    }
-
-
-    function renderCalendar() {
-
-      const selectedDate =
-        document.getElementById(
-          "calendarDate"
-        ).value;
-
+    try {
 
       const entries =
-        getEntries();
+        await MyHomeGroup.getEntries({
+          date: selectedDate
+        });
 
-
-      const dayEntries =
-        entries.filter(
-          function (entry) {
-
-            return (
-              entry.date ===
-              selectedDate
-            );
-
-          }
+      const uniqueVehicles =
+        new Set(
+          entries.map(
+            entry =>
+              entry.vehicle_id ||
+              entry.vehicle_number
+          )
         );
 
+      const running =
+        entries.filter(
+          entry => !entry.exit_time
+        );
 
-      const vehicleSet =
-        new Set();
-
-
-      let totalMinutes = 0;
-
-
-      dayEntries.forEach(
-        function (entry) {
-
-          if (
-            entry.vehicleId
-          ) {
-
-            vehicleSet.add(
-              entry.vehicleId
-            );
-
-          } else if (
-            entry.vehicleNumber
-          ) {
-
-            vehicleSet.add(
-              entry.vehicleNumber
-            );
-
-          }
-
-
-          totalMinutes +=
-            Number(
-              entry.duration
-            ) || 0;
-
-        }
-      );
-
-
-      document.getElementById(
-        "vehicleCount"
-      ).textContent =
-        vehicleSet.size;
-
+      const total =
+        entries.reduce(
+          (sum, entry) =>
+            sum +
+            Number(entry.duration || 0),
+          0
+        );
 
       document.getElementById(
         "entryCount"
       ).textContent =
-        dayEntries.length;
+        entries.length;
 
+      document.getElementById(
+        "vehicleCount"
+      ).textContent =
+        uniqueVehicles.size;
+
+      document.getElementById(
+        "runningCount"
+      ).textContent =
+        running.length;
 
       document.getElementById(
         "totalDuration"
       ).textContent =
-        formatDuration(
-          totalMinutes
+        MyHomeGroup.minutesToDuration(
+          total
         );
 
+      if (!entries.length) {
 
-      const list =
-        document.getElementById(
-          "entryList"
-        );
+        body.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div class="empty-state">
 
+                <div class="empty-icon">
+                  📅
+                </div>
 
-      if (
-        dayEntries.length === 0
-      ) {
+                <div class="empty-title">
+                  No entries for this date
+                </div>
 
-        list.innerHTML = `
+                <div class="empty-text">
+                  There is no vehicle activity recorded for the selected date.
+                </div>
 
-          <div class="empty-state">
-
-            <div class="empty-icon">
-              📭
-            </div>
-
-            <h3>
-              No entries found
-            </h3>
-
-            <p>
-              ${formatDate(selectedDate)}
-              ke liye koi vehicle entry nahi hai.
-            </p>
-
-          </div>
-
+              </div>
+            </td>
+          </tr>
         `;
 
         return;
-
       }
 
+      body.innerHTML =
+        entries.map(entry => {
 
-      const sortedEntries =
-        [...dayEntries].sort(
-          function (a, b) {
+          const running =
+            !entry.exit_time;
 
-            return String(
-              a.entryTime || ""
-            ).localeCompare(
-              String(
-                b.entryTime || ""
-              )
-            );
+          return `
+            <tr>
 
-          }
-        );
+              <td>
+                <strong>
+                  ${MyHomeGroup.escapeHtml(
+                    entry.vehicle_number
+                  )}
+                </strong>
+              </td>
 
+              <td>
+                ${MyHomeGroup.escapeHtml(
+                  entry.vehicle_type || "-"
+                )}
+              </td>
 
-      list.innerHTML =
-        sortedEntries
-          .map(
-            function (entry) {
+              <td>
+                ${MyHomeGroup.escapeHtml(
+                  entry.driver_name || "-"
+                )}
+              </td>
 
-              const vehicleNumber =
-                entry.vehicleNumber ||
-                "Vehicle";
+              <td>
+                ${MyHomeGroup.escapeHtml(
+                  entry.contractor || "-"
+                )}
+              </td>
 
-              const vehicleType =
-                entry.vehicleType ||
-                "Vehicle";
+              <td>
+                ${MyHomeGroup.formatTime(
+                  entry.entry_time
+                )}
+              </td>
 
-              const driver =
-                entry.driverName ||
-                "Not specified";
+              <td>
+                ${MyHomeGroup.formatTime(
+                  entry.exit_time
+                )}
+              </td>
 
-              const purpose =
-                entry.purpose ||
-                "Not specified";
+              <td>
+                ${MyHomeGroup.minutesToDuration(
+                  Number(entry.duration || 0)
+                )}
+              </td>
 
-              const notes =
-                entry.notes ||
-                "";
+              <td>
 
+                ${
+                  running
+                    ? `
+                      <span class="badge badge-success">
+                        Running
+                      </span>
+                    `
+                    : `
+                      <span class="badge badge-gray">
+                        Completed
+                      </span>
+                    `
+                }
 
-              return `
+              </td>
 
-                <article class="entry-item">
+            </tr>
+          `;
 
-                  <div class="entry-top">
+        }).join("");
 
-                    <div>
+    } catch (error) {
 
-                      <div class="vehicle-number">
-                        ${escapeHTML(
-                          vehicleNumber
-                        )}
-                      </div>
-
-                      <div class="vehicle-type">
-                        ${escapeHTML(
-                          vehicleType
-                        )}
-                      </div>
-
-                    </div>
-
-                    <div class="duration-badge">
-                      ${formatDuration(
-                        entry.duration
-                      )}
-                    </div>
-
-                  </div>
-
-
-                  <div class="entry-details">
-
-                    <div class="detail-box">
-
-                      <div class="detail-label">
-                        ENTRY
-                      </div>
-
-                      <div class="detail-value">
-                        ${escapeHTML(
-                          entry.entryTime ||
-                          "--"
-                        )}
-                      </div>
-
-                    </div>
-
-
-                    <div class="detail-box">
-
-                      <div class="detail-label">
-                        EXIT
-                      </div>
-
-                      <div class="detail-value">
-                        ${escapeHTML(
-                          entry.exitTime ||
-                          "--"
-                        )}
-                      </div>
-
-                    </div>
-
-
-                    <div class="detail-box">
-
-                      <div class="detail-label">
-                        DRIVER
-                      </div>
-
-                      <div class="detail-value">
-                        ${escapeHTML(
-                          driver
-                        )}
-                      </div>
-
-                    </div>
-
-
-                    <div class="detail-box">
-
-                      <div class="detail-label">
-                        DATE
-                      </div>
-
-                      <div class="detail-value">
-                        ${formatDate(
-                          entry.date
-                        )}
-                      </div>
-
-                    </div>
-
-                  </div>
-
-
-                  <div class="purpose-box">
-
-                    <strong>
-                      Purpose:
-                    </strong>
-
-                    ${escapeHTML(
-                      purpose
-                    )}
-
-                  </div>
-
-
-                  ${
-                    notes
-                      ? `
-                        <div class="notes-box">
-
-                          <strong>
-                            Notes:
-                          </strong>
-
-                          ${escapeHTML(
-                            notes
-                          )}
-
-                        </div>
-                      `
-                      : ""
-                  }
-
-                </article>
-
-              `;
-
-            }
-          )
-          .join("");
+      body.innerHTML = `
+        <tr>
+          <td colspan="8">
+            <div class="empty-state">
+              <div class="empty-icon">⚠️</div>
+              <div class="empty-title">
+                Unable to load entries
+              </div>
+              <div class="empty-text">
+                ${MyHomeGroup.escapeHtml(
+                  error.message
+                )}
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
 
     }
 
+  }
 
-    function initializeCalendar() {
+  document
+    .getElementById("previousDay")
+    .addEventListener(
+      "click",
+      () => {
 
-      const currentUser =
-        getCurrentUser();
+        const date =
+          new Date(
+            `${selectedDate}T00:00:00`
+          );
 
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      const dateInput =
-        document.getElementById(
-          "calendarDate"
+        date.setDate(
+          date.getDate() - 1
         );
 
+        setDate(
+          [
+            date.getFullYear(),
+            String(
+              date.getMonth() + 1
+            ).padStart(2, "0"),
+            String(
+              date.getDate()
+            ).padStart(2, "0")
+          ].join("-")
+        );
 
-      dateInput.value =
-        getToday();
-
-
-      dateInput.addEventListener(
-        "change",
-        renderCalendar
-      );
-
-
-      renderCalendar();
-
-    }
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializeCalendar
+      }
     );
 
-  </script>
+  document
+    .getElementById("nextDay")
+    .addEventListener(
+      "click",
+      () => {
+
+        const date =
+          new Date(
+            `${selectedDate}T00:00:00`
+          );
+
+        date.setDate(
+          date.getDate() + 1
+        );
+
+        setDate(
+          [
+            date.getFullYear(),
+            String(
+              date.getMonth() + 1
+            ).padStart(2, "0"),
+            String(
+              date.getDate()
+            ).padStart(2, "0")
+          ].join("-")
+        );
+
+      }
+    );
+
+  dateInput.addEventListener(
+    "change",
+    () => {
+      if (dateInput.value) {
+        setDate(
+          dateInput.value
+        );
+      }
+    }
+  );
+
+  document
+    .getElementById("todayButton")
+    .addEventListener(
+      "click",
+      () => {
+        setDate(
+          MyHomeGroup.todayString()
+        );
+      }
+    );
+
+  setDate(selectedDate);
+
+});
+</script>
 
 </body>
-
 </html>
