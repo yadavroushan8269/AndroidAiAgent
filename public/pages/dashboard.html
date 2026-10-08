@@ -6,7 +6,7 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    content="width=device-width, initial-scale=1.0"
   >
 
   <meta
@@ -14,302 +14,556 @@
     content="#f5a400"
   >
 
-  <title>Dashboard - Hyma RMC Kokapet</title>
+  <title>Dashboard - My-Home-Group</title>
 
   <link
     rel="stylesheet"
     href="../style.css"
   >
+
+  <style>
+    body {
+      margin: 0;
+      background: #f5f7fa;
+    }
+
+    .dashboard-page {
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    .dashboard-header {
+      background: #fff;
+      padding: 18px 16px;
+      border-bottom: 1px solid #e8eaed;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .greeting {
+      min-width: 0;
+    }
+
+    .greeting small {
+      display: block;
+      color: #777;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .greeting h1 {
+      margin: 0;
+      font-size: 22px;
+      color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .notification-btn {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border: 1px solid #e1e4e7;
+      border-radius: 13px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 19px;
+      height: 19px;
+      padding: 0 5px;
+      border-radius: 20px;
+      background: #e53935;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+    }
+
+    .date-line {
+      margin-top: 6px;
+      color: #888;
+      font-size: 12px;
+    }
+
+    .dashboard-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 11px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid #eceff1;
+      border-radius: 15px;
+      padding: 16px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
+    }
+
+    .stat-icon {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 25px;
+      font-weight: 800;
+      color: #222;
+    }
+
+    .stat-label {
+      margin-top: 3px;
+      color: #777;
+      font-size: 12px;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #222;
+    }
+
+    .section-header a {
+      color: #c27d00;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 11px;
+    }
+
+    .quick-action {
+      min-height: 80px;
+      padding: 15px;
+      border-radius: 15px;
+      border: 1px solid #eceff1;
+      background: #fff;
+      text-decoration: none;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .quick-action strong {
+      font-size: 14px;
+    }
+
+    .quick-action span {
+      font-size: 11px;
+      color: #777;
+    }
+
+    .quick-icon {
+      font-size: 23px;
+    }
+
+    .duration-card {
+      background: #fff;
+      border: 1px solid #eceff1;
+      border-radius: 17px;
+      padding: 16px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
+    }
+
+    .duration-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .duration-field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #555;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .duration-field input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px 10px;
+      border: 1px solid #d8dde1;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    .duration-result {
+      margin-top: 12px;
+      padding: 13px;
+      border-radius: 11px;
+      background: #fff7df;
+      text-align: center;
+    }
+
+    .duration-result small {
+      display: block;
+      color: #777;
+      font-size: 11px;
+    }
+
+    .duration-result strong {
+      display: block;
+      margin-top: 3px;
+      color: #a96c00;
+      font-size: 22px;
+    }
+
+    .activity-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .activity-card {
+      background: #fff;
+      border: 1px solid #eceff1;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .activity-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .vehicle-name {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .activity-duration {
+      font-weight: 800;
+      color: #b77700;
+      font-size: 13px;
+    }
+
+    .activity-details {
+      margin-top: 6px;
+      color: #777;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .empty-card {
+      padding: 30px 15px;
+      background: #fff;
+      border: 1px solid #eceff1;
+      border-radius: 15px;
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+      height: 68px;
+      background: #fff;
+      border-top: 1px solid #e5e7e9;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .bottom-nav a {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-decoration: none;
+      color: #777;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .bottom-nav a span {
+      font-size: 21px;
+      line-height: 1;
+    }
+
+    .bottom-nav a.active {
+      color: #d18a00;
+    }
+
+    @media (min-width: 700px) {
+
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .dashboard-header {
+        padding-left: calc((100% - 968px) / 2);
+        padding-right: calc((100% - 968px) / 2);
+      }
+
+      .bottom-nav {
+        left: 50%;
+        right: auto;
+        width: 100%;
+        max-width: 700px;
+        transform: translateX(-50%);
+        border-radius: 16px 16px 0 0;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <div class="app-page">
+  <main class="dashboard-page">
 
+    <header class="dashboard-header">
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
+      <div class="header-top">
 
-    <header class="top-header">
+        <div class="greeting">
 
-      <div>
+          <small>
+            Welcome back
+          </small>
 
-        <h1 id="dashboardTitle">
-          Dashboard
-        </h1>
-
-        <p id="dashboardDate">
-          Today
-        </p>
-
-      </div>
-
-
-      <button
-        id="notificationBtn"
-        class="header-action notification-badge"
-        type="button"
-      >
-        🔔
-      </button>
-
-    </header>
-
-
-    <!-- =====================================================
-         MAIN
-    ====================================================== -->
-
-    <main class="page-content">
-
-
-      <!-- WELCOME -->
-
-      <section class="dashboard-welcome">
-
-        <h2 id="welcomeName">
-          welcome 🤗 💗
-        </h2>
-
-        <p>
-          This app/web is made for the construction side
-        </p>
-
-      </section>
-
-
-      <!-- STATS -->
-
-      <section class="stats-grid">
-
-
-        <div class="stat-card">
-
-          <strong id="dashboardVehicleCount">
-            0
-          </strong>
-
-          <span>
-            Vehicles
-          </span>
-
-        </div>
-
-
-        <div class="stat-card green">
-
-          <strong id="dashboardRunningCount">
-            0
-          </strong>
-
-          <span>
-            Running
-          </span>
-
-        </div>
-
-
-        <div class="stat-card orange">
-
-          <strong id="dashboardEntryCount">
-            0
-          </strong>
-
-          <span>
-            Today's Entries
-          </span>
-
-        </div>
-
-
-        <div class="stat-card blue">
-
-          <strong id="dashboardDuration">
-            0h 0m
-          </strong>
-
-          <span>
-            Total Duration
-          </span>
-
-        </div>
-
-
-      </section>
-
-
-      <!-- =====================================================
-           PERSONAL DURATION CALCULATOR
-      ====================================================== -->
-
-      <section class="personal-duration-card">
-
-
-        <div class="personal-duration-header">
-
-          <div>
-
-            <h2>
-              ⏱️ Only Duration
-            </h2>
-
-            <p>
-              Calculate time between In and Out
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="duration-input-grid">
-
-
-          <div>
-
-            <label for="personalInTime">
-              In Time
-            </label>
-
-            <input
-              id="personalInTime"
-              type="time"
-            >
-
-          </div>
-
-
-
-          
-          <div>
-
-            <label for="personalOutTime">
-              Out Time
-            </label>
-
-            <input
-              id="personalOutTime"
-              type="time"
-            >
-
-          </div>
-
+          <h1 id="userName">
+            User
+          </h1>
 
         </div>
 
 
         <button
-          id="calculatePersonalDuration"
-          class="primary-btn full-width"
+          id="notificationBtn"
+          class="notification-btn"
           type="button"
-        >
-          Calculate Duration
-        </button>
-
-
-        <div
-          id="personalDurationResult"
-          class="personal-duration-result"
+          aria-label="Notifications"
         >
 
-          <span>
-            Duration
+          🔔
+
+          <span
+            id="notificationBadge"
+            class="notification-badge"
+          >
+            0
           </span>
 
-          <strong>
-            0h 0m
-          </strong>
+        </button>
+
+      </div>
+
+
+      <div
+        id="todayDate"
+        class="date-line"
+      ></div>
+
+    </header>
+
+
+    <section class="dashboard-content">
+
+
+      <!-- STATS -->
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            🚚
+          </div>
+
+          <div
+            id="vehicleCount"
+            class="stat-value"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Vehicles
+          </div>
 
         </div>
 
 
-      </section>
+        <div class="stat-card">
 
-
-      <!-- =====================================================
-           QUICK ACTIONS
-      ====================================================== -->
-
-      <section>
-
-        <div class="section-heading">
-
-          <div>
-
-            <h2>
-              Quick Actions
-            </h2>
-
-            <p>
-              Frequently used option
-            </p>
-
+          <div class="stat-icon">
+            🟢
           </div>
+
+          <div
+            id="runningCount"
+            class="stat-value"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Running
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            ⏱️
+          </div>
+
+          <div
+            id="entryCount"
+            class="stat-value"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Today's Entries
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            🕒
+          </div>
+
+          <div
+            id="totalDuration"
+            class="stat-value"
+          >
+            0m
+          </div>
+
+          <div class="stat-label">
+            Total Duration
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- QUICK ACTIONS -->
+
+      <section class="section">
+
+        <div class="section-header">
+
+          <h2>
+            Quick Actions
+          </h2>
 
         </div>
 
 
         <div class="quick-actions">
 
-
-          <!-- ADD ENTRY -->
-
-          <button
+          <a
             class="quick-action"
-            type="button"
-            onclick="window.location.href='/pages/add-entry.html'"
+            href="/pages/add-entry.html"
           >
 
-            <span>
-              get
-            </span>
+            <div class="quick-icon">
+              ➕
+            </div>
 
             <strong>
-              duration time
+              Add Entry
             </strong>
 
             <span>
-              by saved vehicles
+              Record vehicle entry
             </span>
 
-          </button>
+          </a>
 
 
-          <!-- VEHICLES -->
-
-          <button
+          <a
             class="quick-action"
-            type="button"
-            onclick="window.location.href='/pages/vehicles.html'"
+            href="/pages/vehicles.html"
           >
 
-            <span>
-              Add
-            </span>
+            <div class="quick-icon">
+              🚚
+            </div>
 
             <strong>
-              Vehicles/operator
+              Vehicles
             </strong>
 
             <span>
-              manage saved vehicle
+              Manage vehicles
             </span>
 
-          </button>
+          </a>
 
 
-          <!-- CALENDAR -->
-
-          <button
+          <a
             class="quick-action"
-            type="button"
-            onclick="window.location.href='/pages/calendar.html'"
+            href="/pages/calendar.html"
           >
 
-            <span>
+            <div class="quick-icon">
               📅
-            </span>
+            </div>
 
             <strong>
               Calendar
@@ -319,20 +573,17 @@
               View daily activity
             </span>
 
-          </button>
+          </a>
 
 
-          <!-- REPORTS -->
-
-          <button
+          <a
             class="quick-action"
-            type="button"
-            onclick="window.location.href='/pages/reports.html'"
+            href="/pages/reports.html"
           >
 
-            <span>
+            <div class="quick-icon">
               📊
-            </span>
+            </div>
 
             <strong>
               Reports
@@ -342,292 +593,873 @@
               View duration reports
             </span>
 
-          </button>
-
+          </a>
 
         </div>
 
       </section>
 
 
-      <!-- =====================================================
-           TODAY ACTIVITY
-      ====================================================== -->
+      <!-- PERSONAL DURATION -->
 
-      <section>
+      <section class="section">
 
-        <div class="section-heading">
+        <div class="section-header">
 
-          <div>
+          <h2>
+            Only Duration
+          </h2>
 
-            <h2>
-              Today's Activity
-            </h2>
+        </div>
 
-            <p>
-              Latest vehicle entries
-            </p>
+
+        <div class="duration-card">
+
+          <div class="duration-grid">
+
+            <div class="duration-field">
+
+              <label for="personalInTime">
+                In Time
+              </label>
+
+              <input
+                id="personalInTime"
+                type="time"
+              >
+
+            </div>
+
+
+            <div class="duration-field">
+
+              <label for="personalOutTime">
+                Out Time
+              </label>
+
+              <input
+                id="personalOutTime"
+                type="time"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="duration-result">
+
+            <small>
+              Duration
+            </small>
+
+            <strong
+              id="personalDuration"
+            >
+              0 min
+            </strong>
 
           </div>
 
         </div>
 
+      </section>
+
+
+      <!-- TODAY ACTIVITY -->
+
+      <section class="section">
+
+        <div class="section-header">
+
+          <h2>
+            Today's Activity
+          </h2>
+
+          <a
+            href="/pages/calendar.html"
+          >
+            View All
+          </a>
+
+        </div>
+
 
         <div
-          id="dashboardActivityList"
+          id="activityList"
           class="activity-list"
         ></div>
 
       </section>
 
+    </section>
 
-    </main>
-
-
-    <!-- =====================================================
-         BOTTOM NAVIGATION
-    ====================================================== -->
-
-    <nav class="bottom-nav">
+  </main>
 
 
-      <button
-        class="nav-item active"
-        type="button"
-        onclick="window.location.href='/pages/dashboard.html'"
-      >
+  <!-- BOTTOM NAV -->
 
-        <span>
-          ⌂
-        </span>
+  <nav class="bottom-nav">
 
-        <small>
-          Home
-        </small>
+    <a
+      href="/pages/dashboard.html"
+      class="active"
+    >
+      <span>⌂</span>
+      Home
+    </a>
 
-      </button>
+    <a href="/pages/vehicles.html">
+      <span>🚚</span>
+      Vehicles
+    </a>
 
+    <a href="/pages/add-entry.html">
+      <span>＋</span>
+      Entry
+    </a>
 
-      <button
-        class="nav-item"
-        type="button"
-        onclick="window.location.href='/pages/vehicles.html'"
-      >
+    <a href="/pages/calendar.html">
+      <span>▣</span>
+      Calendar
+    </a>
 
-        <span>
-          🚚
-        </span>
+    <a href="/pages/profile.html">
+      <span>👤</span>
+      You
+    </a>
 
-        <small>
-          Vehicles
-        </small>
-
-      </button>
-
-
-      <button
-        class="nav-item add-nav"
-        type="button"
-        onclick="window.location.href='/pages/add-entry.html'"
-        aria-label="Add Entry"
-      >
-
-        <span>
-          +
-        </span>
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        onclick="window.location.href='/pages/calendar.html'"
-      >
-
-        <span>
-          ▣
-        </span>
-
-        <small>
-          Calendar
-        </small>
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        onclick="window.location.href='/pages/profile.html'"
-      >
-
-        <span>
-          👤
-        </span>
-
-        <small>
-          You
-        </small>
-
-      </button>
-
-
-    </nav>
-
-
-  </div>
+  </nav>
 
 
   <script>
 
-    /* =====================================================
-       PERSONAL ONLY DURATION
-    ====================================================== */
+    const STORAGE = {
 
-    const personalInTime =
-      document.getElementById(
-        "personalInTime"
+      currentUser:
+        "hyma_current_user",
+
+      vehicles:
+        "hyma_vehicles",
+
+      entries:
+        "hyma_entries",
+
+      notifications:
+        "hyma_notifications"
+
+    };
+
+
+    function readJSON(
+      key,
+      fallback
+    ) {
+
+      try {
+
+        const value =
+          localStorage.getItem(key);
+
+        return value
+          ? JSON.parse(value)
+          : fallback;
+
+      } catch (error) {
+
+        return fallback;
+
+      }
+
+    }
+
+
+    function getCurrentUser() {
+
+      return readJSON(
+        STORAGE.currentUser,
+        null
       );
 
-    const personalOutTime =
-      document.getElementById(
-        "personalOutTime"
+    }
+
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(
+        value ?? ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    function todayISO() {
+
+      const date =
+        new Date();
+
+      const year =
+        date.getFullYear();
+
+      const month =
+        String(
+          date.getMonth() + 1
+        ).padStart(
+          2,
+          "0"
+        );
+
+      const day =
+        String(
+          date.getDate()
+        ).padStart(
+          2,
+          "0"
+        );
+
+      return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
       );
 
-    const calculatePersonalDuration =
-      document.getElementById(
-        "calculatePersonalDuration"
+    }
+
+
+    function formatDate() {
+
+      return new Date()
+        .toLocaleDateString(
+          "en-IN",
+          {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+          }
+        );
+
+    }
+
+
+    function durationText(
+      minutes
+    ) {
+
+      minutes =
+        Math.max(
+          0,
+          Number(minutes) || 0
+        );
+
+
+      const hours =
+        Math.floor(
+          minutes / 60
+        );
+
+
+      const mins =
+        minutes % 60;
+
+
+      if (hours > 0) {
+
+        return (
+          hours +
+          "h " +
+          mins +
+          "m"
+        );
+
+      }
+
+
+      return mins + "m";
+
+    }
+
+
+    function calculateDuration(
+      inTime,
+      outTime
+    ) {
+
+      if (
+        !inTime ||
+        !outTime
+      ) {
+
+        return 0;
+
+      }
+
+
+      const start =
+        inTime
+          .split(":")
+          .map(Number);
+
+
+      const end =
+        outTime
+          .split(":")
+          .map(Number);
+
+
+      let startMinutes =
+        start[0] * 60 +
+        start[1];
+
+
+      let endMinutes =
+        end[0] * 60 +
+        end[1];
+
+
+      if (
+        endMinutes <
+        startMinutes
+      ) {
+
+        endMinutes +=
+          24 * 60;
+
+      }
+
+
+      return (
+        endMinutes -
+        startMinutes
       );
 
-    const personalDurationResult =
+    }
+
+
+    function loadDashboard() {
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
       document.getElementById(
-        "personalDurationResult"
-      );
+        "userName"
+      ).textContent =
+        currentUser.name ||
+        "User";
 
 
-    calculatePersonalDuration.addEventListener(
-      "click",
-      function () {
-
-        const inTime =
-          personalInTime.value;
-
-        const outTime =
-          personalOutTime.value;
+      document.getElementById(
+        "todayDate"
+      ).textContent =
+        formatDate();
 
 
-        if (!inTime || !outTime) {
+      const vehicles =
+        readJSON(
+          STORAGE.vehicles,
+          []
+        );
 
-          personalDurationResult.innerHTML = `
-            <span>
-              Please select In Time and Out Time
-            </span>
 
-            <strong>
-              —
-            </strong>
-          `;
+      const entries =
+        readJSON(
+          STORAGE.entries,
+          []
+        );
 
-          return;
+
+      const today =
+        todayISO();
+
+
+      const userEntries =
+        entries.filter(
+          function (entry) {
+
+            return (
+              entry.date === today
+            );
+
+          }
+        );
+
+
+      const activeVehicles =
+        vehicles.filter(
+          function (vehicle) {
+
+            return (
+              vehicle.status !==
+              "Inactive"
+            );
+
+          }
+        );
+
+
+      const runningVehicles =
+        userEntries.filter(
+          function (entry) {
+
+            return (
+              entry.entryTime &&
+              !entry.exitTime
+            );
+
+          }
+        );
+
+
+      let totalMinutes = 0;
+
+
+      userEntries.forEach(
+        function (entry) {
+
+          if (
+            entry.duration
+          ) {
+
+            totalMinutes +=
+              Number(
+                entry.duration
+              );
+
+            return;
+
+          }
+
+
+          if (
+            entry.entryTime &&
+            entry.exitTime
+          ) {
+
+            totalMinutes +=
+              calculateDuration(
+                entry.entryTime,
+                entry.exitTime
+              );
+
+          }
+
         }
+      );
 
 
-        const inParts =
-          inTime
-            .split(":")
-            .map(Number);
+      document.getElementById(
+        "vehicleCount"
+      ).textContent =
+        activeVehicles.length;
 
 
-        const outParts =
-          outTime
-            .split(":")
-            .map(Number);
+      document.getElementById(
+        "runningCount"
+      ).textContent =
+        runningVehicles.length;
 
 
-        let start =
-          inParts[0] * 60 +
-          inParts[1];
+      document.getElementById(
+        "entryCount"
+      ).textContent =
+        userEntries.length;
 
 
-        let end =
-          outParts[0] * 60 +
-          outParts[1];
+      document.getElementById(
+        "totalDuration"
+      ).textContent =
+        durationText(
+          totalMinutes
+        );
 
 
-        /*
-          If Out Time is earlier than
-          In Time, assume it crossed midnight.
-        */
-
-        if (end < start) {
-          end += 24 * 60;
-        }
+      renderActivity(
+        userEntries
+      );
 
 
-        const totalMinutes =
-          end - start;
+      updateNotificationBadge(
+        currentUser
+      );
+
+    }
 
 
-        const hours =
-          Math.floor(
-            totalMinutes / 60
+    function renderActivity(
+      entries
+    ) {
+
+      const list =
+        document.getElementById(
+          "activityList"
+        );
+
+
+      if (
+        entries.length === 0
+      ) {
+
+        list.innerHTML = `
+
+          <div class="empty-card">
+
+            No vehicle activity recorded today.
+
+            <br><br>
+
+            Add your first vehicle entry.
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      const latest =
+        entries
+          .slice()
+          .sort(
+            function (a, b) {
+
+              return (
+                String(
+                  b.entryTime ||
+                  ""
+                ).localeCompare(
+                  String(
+                    a.entryTime ||
+                    ""
+                  )
+                )
+              );
+
+            }
+          )
+          .slice(
+            0,
+            8
           );
 
 
-        const minutes =
-          totalMinutes % 60;
+      list.innerHTML =
+        latest
+          .map(
+            function (entry) {
+
+              let duration = 0;
 
 
-        personalDurationResult.innerHTML = `
-          <span>
-            Total Duration
-          </span>
+              if (
+                entry.duration
+              ) {
 
-          <strong>
-            ${hours}h ${minutes}m
-          </strong>
-        `;
+                duration =
+                  Number(
+                    entry.duration
+                  );
+
+              } else if (
+                entry.entryTime &&
+                entry.exitTime
+              ) {
+
+                duration =
+                  calculateDuration(
+                    entry.entryTime,
+                    entry.exitTime
+                  );
+
+              }
+
+
+              const status =
+                entry.exitTime
+                  ? (
+                    entry.entryTime +
+                    " → " +
+                    entry.exitTime
+                  )
+                  : (
+                    entry.entryTime +
+                    " → Running"
+                  );
+
+
+              return `
+
+                <article
+                  class="activity-card"
+                >
+
+                  <div class="activity-top">
+
+                    <div class="vehicle-name">
+
+                      ${escapeHTML(
+                        entry.vehicleNumber ||
+                        "Vehicle"
+                      )}
+
+                    </div>
+
+                    <div class="activity-duration">
+
+                      ${durationText(
+                        duration
+                      )}
+
+                    </div>
+
+                  </div>
+
+
+                  <div class="activity-details">
+
+                    ${
+                      escapeHTML(
+                        entry.vehicleType ||
+                        ""
+                      )
+                    }
+
+                    <br>
+
+                    ${escapeHTML(
+                      status
+                    )}
+
+                    ${
+                      entry.driverName
+                        ? (
+                          "<br>Driver: " +
+                          escapeHTML(
+                            entry.driverName
+                          )
+                        )
+                        : ""
+                    }
+
+                    ${
+                      entry.contractor
+                        ? (
+                          "<br>Contractor: " +
+                          escapeHTML(
+                            entry.contractor
+                          )
+                        )
+                        : ""
+                    }
+
+                  </div>
+
+                </article>
+
+              `;
+
+            }
+          )
+          .join("");
+
+    }
+
+
+    function updateNotificationBadge(
+      currentUser
+    ) {
+
+      const notifications =
+        readJSON(
+          STORAGE.notifications,
+          []
+        );
+
+
+      const userId =
+        currentUser.id ||
+        currentUser.email ||
+        currentUser.mobile;
+
+
+      const unread =
+        notifications.filter(
+          function (item) {
+
+            return (
+              item.userId ===
+              userId &&
+              !item.read
+            );
+
+          }
+        ).length;
+
+
+      const badge =
+        document.getElementById(
+          "notificationBadge"
+        );
+
+
+      if (unread > 0) {
+
+        badge.textContent =
+          unread > 99
+            ? "99+"
+            : unread;
+
+        badge.style.display =
+          "flex";
+
+      } else {
+
+        badge.style.display =
+          "none";
 
       }
-    );
+
+    }
 
 
-    /* =====================================================
-       LIVE RECALCULATION
-    ====================================================== */
+    function calculatePersonalDuration() {
 
-    personalInTime.addEventListener(
-      "change",
+      const inTime =
+        document.getElementById(
+          "personalInTime"
+        ).value;
+
+
+      const outTime =
+        document.getElementById(
+          "personalOutTime"
+        ).value;
+
+
+      const result =
+        document.getElementById(
+          "personalDuration"
+        );
+
+
+      if (
+        !inTime ||
+        !outTime
+      ) {
+
+        result.textContent =
+          "0 min";
+
+        return;
+
+      }
+
+
+      const minutes =
+        calculateDuration(
+          inTime,
+          outTime
+        );
+
+
+      result.textContent =
+        durationText(
+          minutes
+        );
+
+    }
+
+
+    document.addEventListener(
+      "DOMContentLoaded",
       function () {
 
-        if (
-          personalOutTime.value
-        ) {
-          calculatePersonalDuration.click();
+        const currentUser =
+          getCurrentUser();
+
+
+        if (!currentUser) {
+
+          window.location.href =
+            "/pages/login.html";
+
+          return;
+
         }
+
+
+        document.getElementById(
+          "notificationBtn"
+        ).addEventListener(
+          "click",
+          function () {
+
+            window.location.href =
+              "/pages/notifications.html";
+
+          }
+        );
+
+
+        document.getElementById(
+          "personalInTime"
+        ).addEventListener(
+          "input",
+          calculatePersonalDuration
+        );
+
+
+        document.getElementById(
+          "personalOutTime"
+        ).addEventListener(
+          "input",
+          calculatePersonalDuration
+        );
+
+
+        loadDashboard();
 
       }
     );
 
-
-    personalOutTime.addEventListener(
-      "change",
-      function () {
-
-        if (
-          personalInTime.value
-        ) {
-          calculatePersonalDuration.click();
-        }
-
-      }
-    );
 
   </script>
-
-
-  <script src="../app.js"></script>
 
 </body>
 
