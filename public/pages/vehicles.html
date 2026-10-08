@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
+<head>
   <meta charset="UTF-8">
 
   <meta
@@ -9,1279 +9,228 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Vehicles - My Home Group</title>
+  <title>Vehicles — MY HOME GROUP</title>
 
   <link
     rel="stylesheet"
-    href="../style.css"
+    href="/style.css"
   >
-
 </head>
 
 <body>
 
-<header class="app-header">
+  <div class="page">
 
-  <div class="app-header-inner">
+    <header class="app-header">
 
-    <a
-      href="/pages/dashboard.html"
-      class="app-brand"
-    >
+      <div class="app-header-inner">
 
-      <div class="app-brand-mark">
-        MH
+        <a
+          href="/dashboard"
+          class="header-brand"
+        >
+          <div class="brand-logo">MH</div>
+
+          <div>
+            <strong>MY HOME GROUP</strong>
+            <span>Vehicles</span>
+          </div>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            href="/pages/notifications.html"
+            class="icon-btn"
+          >
+            🔔
+            <span
+              class="notification-badge hidden"
+            >
+              0
+            </span>
+          </a>
+
+          <a
+            href="/pages/profile.html"
+            class="icon-btn"
+          >
+            👤
+          </a>
+
+        </div>
+
       </div>
 
-      <div class="app-brand-text">
+    </header>
 
-        <div class="app-brand-name">
-          My Home Group
-        </div>
+    <main class="page-content">
 
-        <div class="app-brand-subtitle">
-          Vehicle Duration Management
-        </div>
+      <div class="page-title">
+
+        <h1>Vehicles</h1>
+
+        <p>
+          Manage your vehicle list.
+        </p>
 
       </div>
 
-    </a>
-
-    <div class="header-actions">
-
-      <a
-        href="/pages/notifications.html"
-        class="header-icon-btn"
+      <section
+        id="add"
+        class="card"
+        style="margin-bottom: 18px;"
       >
-        🔔
-        <span
-          class="notification-badge hidden"
-          data-notification-count
-        ></span>
-      </a>
 
-      <a
-        href="/pages/profile.html"
-        class="header-icon-btn"
-      >
-        👤
-      </a>
+        <h2 class="card-title">
+          ADD VEHICLE
+        </h2>
 
-    </div>
+        <form
+          id="vehicleForm"
+          onsubmit="event.preventDefault(); addVehicle();"
+        >
 
-  </div>
+          <div class="form-row">
 
-</header>
+            <div class="form-group">
 
-<div class="app-layout">
+              <label for="vehicleNumber">
+                Vehicle Number
+              </label>
 
-  <aside class="sidebar">
+              <input
+                id="vehicleNumber"
+                class="form-control"
+                type="text"
+                placeholder="AP28XX1234"
+                required
+              >
 
-    <nav class="sidebar-nav">
+            </div>
 
-      <a
-        href="/pages/dashboard.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">🏠</span>
-        Dashboard
-      </a>
+            <div class="form-group">
 
-      <a
-        href="/pages/vehicles.html"
-        class="nav-link active"
-      >
-        <span class="nav-icon">🚛</span>
-        Vehicles
-      </a>
+              <label for="vehicleType">
+                Vehicle Type
+              </label>
 
-      <a
-        href="/pages/add-entry.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">➕</span>
-        Add Entry
-      </a>
+              <select
+                id="vehicleType"
+                class="form-control"
+                required
+              >
+                <option value="">
+                  Loading...
+                </option>
+              </select>
 
-      <a
-        href="/pages/calendar.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">📅</span>
-        Calendar
-      </a>
+            </div>
 
-      <a
-        href="/pages/reports.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">📊</span>
-        Reports
-      </a>
+          </div>
 
-      <a
-        href="/pages/notifications.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">🔔</span>
-        Notifications
-      </a>
+          <div class="form-row">
 
-      <a
-        href="/pages/profile.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">👤</span>
-        Profile
-      </a>
+            <div class="form-group">
 
-      <a
-        href="#"
-        class="nav-link logout-btn"
-      >
-        <span class="nav-icon">🚪</span>
-        Logout
-      </a>
+              <label for="vehicleDriver">
+                Driver
+              </label>
 
-    </nav>
+              <input
+                id="vehicleDriver"
+                class="form-control"
+                type="text"
+                placeholder="Driver Name"
+              >
 
-  </aside>
+            </div>
 
-  <main class="main-content">
+            <div class="form-group">
 
-    <div class="content-inner">
+              <label for="vehicleContractor">
+                Contractor
+              </label>
 
-      <div class="page-heading">
+              <input
+                id="vehicleContractor"
+                class="form-control"
+                type="text"
+                placeholder="Contractor"
+              >
 
-        <div class="page-heading-text">
+            </div>
 
-          <h1>
-            Vehicles
-          </h1>
-
-          <p>
-            Manage registered vehicles
-          </p>
-
-        </div>
-
-        <div class="page-heading-actions">
+          </div>
 
           <button
-            id="addVehicleButton"
             class="btn btn-primary"
+            type="submit"
           >
             + Add Vehicle
           </button>
 
-        </div>
+        </form>
 
-      </div>
+      </section>
 
-      <div class="filter-bar">
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            Search
-          </label>
-
-          <input
-            id="searchInput"
-            type="search"
-            class="form-control"
-            placeholder="Vehicle, driver, contractor..."
-          >
-
-        </div>
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            Vehicle Type
-          </label>
-
-          <select
-            id="typeFilter"
-            class="form-control"
-          >
-
-            <option value="">
-              All Types
-            </option>
-
-            <option>TM / Transit Mixer</option>
-            <option>Truck</option>
-            <option>Dumper</option>
-            <option>Excavator</option>
-            <option>JCB</option>
-            <option>Loader</option>
-            <option>Crane</option>
-            <option>Tractor</option>
-            <option>Water Tanker</option>
-            <option>Other</option>
-
-          </select>
-
-        </div>
-
-        <div class="filter-group">
-
-          <label class="filter-label">
-            Status
-          </label>
-
-          <select
-            id="statusFilter"
-            class="form-control"
-          >
-
-            <option value="">
-              All
-            </option>
-
-            <option value="Active">
-              Active
-            </option>
-
-            <option value="Inactive">
-              Inactive
-            </option>
-
-          </select>
-
-        </div>
+      <section>
 
         <div
-          style="
-            display:flex;
-            align-items:end;
-          "
+          id="vehicleList"
+          class="vehicle-grid"
         >
-
-          <button
-            id="clearFilters"
-            class="btn btn-secondary btn-block"
-          >
-            Clear
-          </button>
-
-        </div>
-
-      </div>
-
-      <section class="card">
-
-        <div class="card-header">
-
-          <div>
-
-            <div class="card-title">
-              Vehicle List
-            </div>
-
-            <div
-              id="vehicleSummary"
-              class="card-subtitle"
-            >
-              Loading...
-            </div>
-
+          <div class="loading">
+            Loading vehicles...
           </div>
-
-        </div>
-
-        <div class="table-wrap">
-
-          <table class="data-table">
-
-            <thead>
-
-              <tr>
-
-                <th>Vehicle</th>
-                <th>Type</th>
-                <th>Driver</th>
-                <th>Contractor</th>
-                <th>Status</th>
-                <th>Actions</th>
-
-              </tr>
-
-            </thead>
-
-            <tbody id="vehicleBody">
-
-              <tr>
-
-                <td colspan="6">
-
-                  <div class="loading">
-                    Loading vehicles...
-                  </div>
-
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
         </div>
 
       </section>
 
-    </div>
+    </main>
 
-  </main>
+    <nav class="bottom-nav">
 
-</div>
+      <div class="bottom-nav-inner">
 
-<nav class="mobile-bottom-nav">
+        <a href="/dashboard">
+          <span>🏠</span>
+          <span>Home</span>
+        </a>
 
-  <div class="mobile-nav-inner">
+        <a
+          href="/pages/vehicles.html"
+          class="active"
+        >
+          <span>🚚</span>
+          <span>Vehicles</span>
+        </a>
 
-    <a
-      href="/pages/dashboard.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">🏠</span>
-      Home
-    </a>
+        <a
+          href="/pages/add-entry.html"
+          class="entry-button"
+        >
+          <span>＋</span>
+          <span>Entry</span>
+        </a>
 
-    <a
-      href="/pages/vehicles.html"
-      class="mobile-nav-item active"
-    >
-      <span class="mobile-nav-icon">🚛</span>
-      Vehicles
-    </a>
+        <a href="/pages/calendar.html">
+          <span>📅</span>
+          <span>Calendar</span>
+        </a>
 
-    <a
-      href="/pages/add-entry.html"
-      class="mobile-nav-item add"
-    >
-      <span class="mobile-nav-add">+</span>
-      Entry
-    </a>
+        <a href="/pages/profile.html">
+          <span>👤</span>
+          <span>You</span>
+        </a>
 
-    <a
-      href="/pages/calendar.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">📅</span>
-      Calendar
-    </a>
+      </div>
 
-    <a
-      href="/pages/profile.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">👤</span>
-      You
-    </a>
+    </nav>
 
   </div>
 
-</nav>
-
-<div
-  id="vehicleModal"
-  class="modal-backdrop hidden"
->
-
-  <div class="modal">
-
-    <div class="modal-header">
-
-      <div
-        id="modalTitle"
-        class="modal-title"
-      >
-        Add Vehicle
-      </div>
-
-      <button
-        id="closeVehicleModal"
-        class="modal-close"
-      >
-        ×
-      </button>
-
-    </div>
-
-    <form id="vehicleForm">
-
-      <div class="modal-body">
-
-        <input
-          type="hidden"
-          id="vehicleId"
-        >
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label class="form-label">
-              Vehicle Number
-            </label>
-
-            <input
-              id="vehicleNumber"
-              type="text"
-              class="form-control"
-              placeholder="e.g. TS09AB1234"
-              required
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label class="form-label">
-              Vehicle Type
-            </label>
-
-            <select
-              id="vehicleType"
-              class="form-control"
-              required
-            >
-
-              <option value="">
-                Select type
-              </option>
-
-              <option>TM / Transit Mixer</option>
-              <option>Truck</option>
-              <option>Dumper</option>
-              <option>Excavator</option>
-              <option>JCB</option>
-              <option>Loader</option>
-              <option>Crane</option>
-              <option>Tractor</option>
-              <option>Water Tanker</option>
-              <option>Other</option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label class="form-label">
-              Driver Name
-            </label>
-
-            <input
-              id="driverName"
-              type="text"
-              class="form-control"
-              placeholder="Driver name"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label class="form-label">
-              Contractor / Company
-            </label>
-
-            <input
-              id="contractor"
-              type="text"
-              class="form-control"
-              placeholder="Contractor"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label class="form-label">
-              Status
-            </label>
-
-            <select
-              id="vehicleStatus"
-              class="form-control"
-            >
-
-              <option value="Active">
-                Active
-              </option>
-
-              <option value="Inactive">
-                Inactive
-              </option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-        <div
-          id="vehicleFormMessage"
-          style="margin-top:15px;"
-        ></div>
-
-      </div>
-
-      <div class="modal-footer">
-
-        <button
-          type="button"
-          id="cancelVehicle"
-          class="btn btn-secondary"
-        >
-          Cancel
-        </button>
-
-        <button
-          type="submit"
-          id="saveVehicle"
-          class="btn btn-primary"
-        >
-          Save Vehicle
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-
-</div>
-
-<script src="../app.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-
-  let vehicles = [];
-
-  const body =
-    document.getElementById("vehicleBody");
-
-  const summary =
-    document.getElementById("vehicleSummary");
-
-  const modal =
-    document.getElementById("vehicleModal");
-
-  const form =
-    document.getElementById("vehicleForm");
-
-  const modalTitle =
-    document.getElementById("modalTitle");
-
-  const searchInput =
-    document.getElementById("searchInput");
-
-  const typeFilter =
-    document.getElementById("typeFilter");
-
-  const statusFilter =
-    document.getElementById("statusFilter");
-
-  function openModal(vehicle = null) {
-
-    modal.classList.remove("hidden");
-
-    document.body.classList.add(
-      "modal-open"
-    );
-
-    document.getElementById(
-      "vehicleFormMessage"
-    ).innerHTML = "";
-
-    if (vehicle) {
-
-      modalTitle.textContent =
-        "Edit Vehicle";
-
-      document.getElementById(
-        "vehicleId"
-      ).value = vehicle.id;
-
-      document.getElementById(
-        "vehicleNumber"
-      ).value =
-        vehicle.vehicle_number || "";
-
-      document.getElementById(
-        "vehicleType"
-      ).value =
-        vehicle.vehicle_type || "";
-
-      document.getElementById(
-        "driverName"
-      ).value =
-        vehicle.driver_name || "";
-
-      document.getElementById(
-        "contractor"
-      ).value =
-        vehicle.contractor || "";
-
-      document.getElementById(
-        "vehicleStatus"
-      ).value =
-        vehicle.status || "Active";
-
-    } else {
-
-      modalTitle.textContent =
-        "Add Vehicle";
-
-      form.reset();
-
-      document.getElementById(
-        "vehicleStatus"
-      ).value = "Active";
-
-      document.getElementById(
-        "vehicleId"
-      ).value = "";
-
-    }
-  }
-
-  function closeModal() {
-
-    modal.classList.add("hidden");
-
-    document.body.classList.remove(
-      "modal-open"
-    );
-  }
-
-  function filteredVehicles() {
-
-    const search =
-      searchInput.value
-        .trim()
-        .toLowerCase();
-
-    const type =
-      typeFilter.value;
-
-    const status =
-      statusFilter.value;
-
-    return vehicles.filter(
-      vehicle => {
-
-        const searchable = [
-          vehicle.vehicle_number,
-          vehicle.vehicle_type,
-          vehicle.driver_name,
-          vehicle.contractor
-        ]
-          .join(" ")
-          .toLowerCase();
-
-        return (
-          (!search ||
-            searchable.includes(search)) &&
-          (!type ||
-            vehicle.vehicle_type === type) &&
-          (!status ||
-            vehicle.status === status)
-        );
-
-      }
-    );
-  }
-
-  function render() {
-
-    const list =
-      filteredVehicles();
-
-    summary.textContent =
-      `${list.length} vehicle(s)`;
-
-    if (!list.length) {
-
-      body.innerHTML = `
-        <tr>
-          <td colspan="6">
-            <div class="empty-state">
-              <div class="empty-icon">🚛</div>
-              <div class="empty-title">
-                No vehicles found
-              </div>
-              <div class="empty-text">
-                Add a vehicle or change your filters.
-              </div>
-            </div>
-          </td>
-        </tr>
-      `;
-
-      return;
-    }
-
-    body.innerHTML =
-      list.map(vehicle => {
-
-        const status =
-          vehicle.status === "Inactive"
-            ? `
-              <span class="badge badge-danger">
-                Inactive
-              </span>
-            `
-            : `
-              <span class="badge badge-success">
-                Active
-              </span>
-            `;
-
-        return `
-          <tr>
-
-            <td>
-              <strong>
-                ${MyHomeGroup.escapeHtml(
-                  vehicle.vehicle_number
-                )}
-              </strong>
-            </td>
-
-            <td>
-              ${MyHomeGroup.escapeHtml(
-                vehicle.vehicle_type || "-"
-              )}
-            </td>
-
-            <td>
-              ${MyHomeGroup.escapeHtml(
-                vehicle.driver_name || "-"
-              )}
-            </td>
-
-            <td>
-              ${MyHomeGroup.escapeHtml(
-                vehicle.contractor || "-"
-              )}
-            </td>
-
-            <td>
-              ${status}
-            </td>
-
-            <td>
-
-              <div class="table-actions">
-
-                <button
-                  class="btn btn-sm btn-secondary edit-btn"
-                  data-id="${vehicle.id}"
-                >
-                  Edit
-                </button>
-
-                <button
-                  class="btn btn-sm btn-outline history-btn"
-                  data-id="${vehicle.id}"
-                >
-                  History
-                </button>
-
-                <button
-                  class="btn btn-sm btn-danger delete-btn"
-                  data-id="${vehicle.id}"
-                >
-                  Delete
-                </button>
-
-              </div>
-
-            </td>
-
-          </tr>
-        `;
-
-      }).join("");
-
-    document
-      .querySelectorAll(".edit-btn")
-      .forEach(button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const vehicle =
-              vehicles.find(
-                item =>
-                  String(item.id) ===
-                  String(button.dataset.id)
-              );
-
-            if (vehicle) {
-              openModal(vehicle);
-            }
-
-          }
-        );
-
-      });
-
-    document
-      .querySelectorAll(".delete-btn")
-      .forEach(button => {
-
-        button.addEventListener(
-          "click",
-          async () => {
-
-            if (
-              !confirm(
-                "Delete this vehicle?"
-              )
-            ) {
-              return;
-            }
-
-            try {
-
-              await MyHomeGroup
-                .deleteVehicle(
-                  button.dataset.id
-                );
-
-              MyHomeGroup.showToast(
-                "Vehicle deleted.",
-                "success"
-              );
-
-              await load();
-
-            } catch (error) {
-
-              MyHomeGroup.showToast(
-                error.message,
-                "error"
-              );
-
-            }
-
-          }
-        );
-
-      });
-
-    document
-      .querySelectorAll(".history-btn")
-      .forEach(button => {
-
-        button.addEventListener(
-          "click",
-          async () => {
-
-            try {
-
-              const entries =
-                await MyHomeGroup
-                  .getEntries({
-                    vehicle_id:
-                      button.dataset.id
-                  });
-
-              const vehicle =
-                vehicles.find(
-                  item =>
-                    String(item.id) ===
-                    String(button.dataset.id)
-                );
-
-              showHistory(
-                vehicle,
-                entries
-              );
-
-            } catch (error) {
-
-              MyHomeGroup.showToast(
-                error.message,
-                "error"
-              );
-
-            }
-
-          }
-        );
-
-      });
-  }
-
-  function showHistory(
-    vehicle,
-    entries
-  ) {
-
-    const rows =
-      entries.length
-        ? entries.map(entry => `
-          <tr>
-
-            <td>
-              ${MyHomeGroup.formatDate(
-                entry.entry_date
-              )}
-            </td>
-
-            <td>
-              ${MyHomeGroup.formatTime(
-                entry.entry_time
-              )}
-            </td>
-
-            <td>
-              ${MyHomeGroup.formatTime(
-                entry.exit_time
-              )}
-            </td>
-
-            <td>
-              ${MyHomeGroup.minutesToDuration(
-                Number(entry.duration || 0)
-              )}
-            </td>
-
-          </tr>
-        `).join("")
-        : `
-          <tr>
-            <td colspan="4">
-              <div class="empty-state">
-                No history found.
-              </div>
-            </td>
-          </tr>
-        `;
-
-    const backdrop =
-      document.createElement("div");
-
-    backdrop.className =
-      "modal-backdrop";
-
-    backdrop.innerHTML = `
-      <div class="modal">
-
-        <div class="modal-header">
-
-          <div class="modal-title">
-            ${
-              MyHomeGroup.escapeHtml(
-                vehicle?.vehicle_number || "Vehicle"
-              )
-            }
-            History
-          </div>
-
-          <button
-            class="modal-close"
-            id="historyClose"
-          >
-            ×
-          </button>
-
-        </div>
-
-        <div class="modal-body">
-
-          <div class="table-wrap">
-
-            <table class="data-table">
-
-              <thead>
-
-                <tr>
-                  <th>Date</th>
-                  <th>Entry</th>
-                  <th>Exit</th>
-                  <th>Duration</th>
-                </tr>
-
-              </thead>
-
-              <tbody>
-                ${rows}
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-    `;
-
-    document.body.appendChild(
-      backdrop
-    );
-
-    document.body.classList.add(
-      "modal-open"
-    );
-
-    backdrop
-      .querySelector("#historyClose")
-      .addEventListener(
-        "click",
-        () => {
-          backdrop.remove();
-          document.body.classList.remove(
-            "modal-open"
-          );
-        }
-      );
-
-  }
-
-  async function load() {
-
-    try {
-
-      body.innerHTML = `
-        <tr>
-          <td colspan="6">
-            <div class="loading">
-              Loading vehicles...
-            </div>
-          </td>
-        </tr>
-      `;
-
-      vehicles =
-        await MyHomeGroup.getVehicles();
-
-      render();
-
-    } catch (error) {
-
-      body.innerHTML = `
-        <tr>
-          <td colspan="6">
-            <div class="empty-state">
-              <div class="empty-icon">⚠️</div>
-              <div class="empty-title">
-                Unable to load vehicles
-              </div>
-              <div class="empty-text">
-                ${MyHomeGroup.escapeHtml(
-                  error.message
-                )}
-              </div>
-            </div>
-          </td>
-        </tr>
-      `;
-
-    }
-
-  }
-
-  document
-    .getElementById("addVehicleButton")
-    .addEventListener(
-      "click",
-      () => openModal()
-    );
-
-  document
-    .getElementById("closeVehicleModal")
-    .addEventListener(
-      "click",
-      closeModal
-    );
-
-  document
-    .getElementById("cancelVehicle")
-    .addEventListener(
-      "click",
-      closeModal
-    );
-
-  modal.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target === modal
-      ) {
-        closeModal();
-      }
-
-    }
-  );
-
-  [
-    searchInput,
-    typeFilter,
-    statusFilter
-  ].forEach(element => {
-
-    element.addEventListener(
-      "input",
-      render
-    );
-
-    element.addEventListener(
-      "change",
-      render
-    );
-
-  });
-
-  document
-    .getElementById("clearFilters")
-    .addEventListener(
-      "click",
-      () => {
-
-        searchInput.value = "";
-        typeFilter.value = "";
-        statusFilter.value = "";
-
-        render();
-
-      }
-    );
-
-  form.addEventListener(
-    "submit",
-    async event => {
-
-      event.preventDefault();
-
-      const id =
-        document.getElementById(
-          "vehicleId"
-        ).value;
-
-      const payload = {
-
-        vehicle_number:
-          document
-            .getElementById(
-              "vehicleNumber"
-            )
-            .value
-            .trim()
-            .toUpperCase(),
-
-        vehicle_type:
-          document
-            .getElementById(
-              "vehicleType"
-            )
-            .value,
-
-        driver_name:
-          document
-            .getElementById(
-              "driverName"
-            )
-            .value
-            .trim(),
-
-        contractor:
-          document
-            .getElementById(
-              "contractor"
-            )
-            .value
-            .trim(),
-
-        status:
-          document
-            .getElementById(
-              "vehicleStatus"
-            )
-            .value
-
-      };
-
-      const button =
-        document.getElementById(
-          "saveVehicle"
-        );
-
-      try {
-
-        MyHomeGroup.setButtonLoading(
-          button,
-          true,
-          "Saving..."
-        );
-
-        if (id) {
-
-          await MyHomeGroup.updateVehicle(
-            id,
-            payload
-          );
-
-          MyHomeGroup.showToast(
-            "Vehicle updated.",
-            "success"
-          );
-
-        } else {
-
-          await MyHomeGroup.createVehicle(
-            payload
-          );
-
-          MyHomeGroup.showToast(
-            "Vehicle added.",
-            "success"
-          );
-
-        }
-
-        closeModal();
-
-        await load();
-
-      } catch (error) {
-
-        MyHomeGroup.setFormMessage(
-          document.getElementById(
-            "vehicleFormMessage"
-          ),
-          error.message,
-          "error"
-        );
-
-      } finally {
-
-        MyHomeGroup.setButtonLoading(
-          button,
-          false
-        );
-
-      }
-
-    }
-  );
-
-  await load();
-
-});
-</script>
+  <script src="/app.js"></script>
 
 </body>
 </html>
