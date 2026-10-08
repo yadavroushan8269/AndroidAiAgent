@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
+<head>
   <meta charset="UTF-8">
 
   <meta
@@ -9,752 +9,395 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Profile - My Home Group</title>
+  <title>Reports — MY HOME GROUP</title>
 
   <link
     rel="stylesheet"
-    href="../style.css"
+    href="/style.css"
   >
-
 </head>
 
 <body>
 
-<header class="app-header">
+  <div class="page">
 
-  <div class="app-header-inner">
+    <header class="app-header">
 
-    <a
-      href="/pages/dashboard.html"
-      class="app-brand"
-    >
+      <div class="app-header-inner">
 
-      <div class="app-brand-mark">
-        MH
+        <a
+          href="/dashboard"
+          class="header-brand"
+        >
+          <div class="brand-logo">MH</div>
+
+          <div>
+            <strong>MY HOME GROUP</strong>
+            <span>Reports</span>
+          </div>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            href="/pages/notifications.html"
+            class="icon-btn"
+          >
+            🔔
+            <span
+              class="notification-badge hidden"
+            >
+              0
+            </span>
+          </a>
+
+          <a
+            href="/pages/profile.html"
+            class="icon-btn"
+          >
+            👤
+          </a>
+
+        </div>
+
       </div>
 
-      <div class="app-brand-text">
+    </header>
 
-        <div class="app-brand-name">
-          My Home Group
-        </div>
+    <main class="page-content">
 
-        <div class="app-brand-subtitle">
-          Vehicle Duration Management
-        </div>
+      <div class="page-title">
 
-      </div>
+        <h1>REPORTS</h1>
 
-    </a>
-
-    <div class="header-actions">
-
-      <a
-        href="/pages/notifications.html"
-        class="header-icon-btn"
-      >
-        🔔
-        <span
-          class="notification-badge hidden"
-          data-notification-count
-        ></span>
-      </a>
-
-      <a
-        href="/pages/profile.html"
-        class="header-icon-btn"
-      >
-        👤
-      </a>
-
-    </div>
-
-  </div>
-
-</header>
-
-<div class="app-layout">
-
-  <aside class="sidebar">
-
-    <nav class="sidebar-nav">
-
-      <a
-        href="/pages/dashboard.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">🏠</span>
-        Dashboard
-      </a>
-
-      <a
-        href="/pages/vehicles.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">🚛</span>
-        Vehicles
-      </a>
-
-      <a
-        href="/pages/add-entry.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">➕</span>
-        Add Entry
-      </a>
-
-      <a
-        href="/pages/calendar.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">📅</span>
-        Calendar
-      </a>
-
-      <a
-        href="/pages/reports.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">📊</span>
-        Reports
-      </a>
-
-      <a
-        href="/pages/notifications.html"
-        class="nav-link"
-      >
-        <span class="nav-icon">🔔</span>
-        Notifications
-      </a>
-
-      <a
-        href="/pages/profile.html"
-        class="nav-link active"
-      >
-        <span class="nav-icon">👤</span>
-        Profile
-      </a>
-
-      <a
-        href="#"
-        class="nav-link logout-btn"
-      >
-        <span class="nav-icon">🚪</span>
-        Logout
-      </a>
-
-    </nav>
-
-  </aside>
-
-  <main class="main-content">
-
-    <div class="content-inner">
-
-      <div class="page-heading">
-
-        <div class="page-heading-text">
-
-          <h1>
-            My Profile
-          </h1>
-
-          <p>
-            Manage your account information
-          </p>
-
-        </div>
+        <p>
+          Generate vehicle duration reports.
+        </p>
 
       </div>
 
       <section class="card">
 
-        <div class="profile-header">
+        <div class="report-filters">
+
+          <div class="form-group">
+
+            <label for="reportPeriod">
+              Period
+            </label>
+
+            <select
+              id="reportPeriod"
+              class="form-control"
+            >
+              <option value="daily">
+                Daily
+              </option>
+
+              <option value="weekly">
+                Weekly
+              </option>
+
+              <option value="monthly">
+                Monthly
+              </option>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportFrom">
+              From
+            </label>
+
+            <input
+              id="reportFrom"
+              class="form-control"
+              type="date"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportTo">
+              To
+            </label>
+
+            <input
+              id="reportTo"
+              class="form-control"
+              type="date"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportVehicle">
+              Vehicle
+            </label>
+
+            <select
+              id="reportVehicle"
+              class="form-control"
+            >
+              <option value="">
+                All
+              </option>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportDriver">
+              Driver
+            </label>
+
+            <select
+              id="reportDriver"
+              class="form-control"
+            >
+              <option value="">
+                All
+              </option>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="reportContractor">
+              Contractor
+            </label>
+
+            <select
+              id="reportContractor"
+              class="form-control"
+            >
+              <option value="">
+                All
+              </option>
+            </select>
+
+          </div>
+
+          <div class="full">
+
+            <button
+              class="btn btn-primary"
+              type="button"
+              onclick="generateReport()"
+            >
+              Generate Report
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <section
+        class="stats-grid report-summary"
+      >
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            TOTAL VEHICLES
+          </div>
 
           <div
-            class="profile-avatar"
-            data-user-initials
+            id="reportVehicles"
+            class="stat-value primary"
           >
-            U
-          </div>
-
-          <div>
-
-            <div
-              class="profile-name"
-              data-user-name
-            >
-              User
-            </div>
-
-            <div
-              class="profile-meta"
-              data-user-email
-            >
-              -
-            </div>
-
-            <div
-              class="profile-meta"
-              data-user-role
-            >
-              Security Guard
-            </div>
-
+            0
           </div>
 
         </div>
 
-      </section>
+        <div class="stat-card">
 
-      <section
-        class="card"
-        style="margin-top:18px;"
-      >
-
-        <div class="card-header">
-
-          <div>
-
-            <div class="card-title">
-              Profile Information
-            </div>
-
-            <div class="card-subtitle">
-              Update your basic information
-            </div>
-
+          <div class="stat-label">
+            TOTAL ENTRIES
           </div>
 
-        </div>
-
-        <div class="card-body">
-
-          <div id="profileMessage"></div>
-
-          <form id="profileForm">
-
-            <div class="form-grid">
-
-              <div class="form-group">
-
-                <label class="form-label">
-                  Name
-                </label>
-
-                <input
-                  id="profileName"
-                  type="text"
-                  class="form-control"
-                  required
-                >
-
-              </div>
-
-              <div class="form-group">
-
-                <label class="form-label">
-                  Email
-                </label>
-
-                <input
-                  id="profileEmail"
-                  type="email"
-                  class="form-control"
-                  readonly
-                >
-
-              </div>
-
-              <div class="form-group">
-
-                <label class="form-label">
-                  Mobile
-                </label>
-
-                <input
-                  id="profileMobile"
-                  type="tel"
-                  class="form-control"
-                >
-
-              </div>
-
-              <div class="form-group">
-
-                <label class="form-label">
-                  Company / Site
-                </label>
-
-                <input
-                  id="profileCompany"
-                  type="text"
-                  class="form-control"
-                >
-
-              </div>
-
-              <div class="form-group">
-
-                <label class="form-label">
-                  Role
-                </label>
-
-                <input
-                  id="profileRole"
-                  type="text"
-                  class="form-control"
-                  readonly
-                >
-
-              </div>
-
-            </div>
-
-            <div class="form-actions">
-
-              <button
-                id="saveProfile"
-                type="submit"
-                class="btn btn-primary"
-              >
-                Save Changes
-              </button>
-
-            </div>
-
-          </form>
-
-        </div>
-
-      </section>
-
-      <section
-        class="card"
-        style="margin-top:18px;"
-      >
-
-        <div class="card-header">
-
-          <div>
-
-            <div class="card-title">
-              Change Password
-            </div>
-
-            <div class="card-subtitle">
-              Keep your account secure
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="card-body">
-
-          <div id="passwordMessage"></div>
-
-          <form id="passwordForm">
-
-            <div class="form-grid">
-
-              <div class="form-group full">
-
-                <label class="form-label">
-                  Current Password
-                </label>
-
-                <input
-                  id="currentPassword"
-                  type="password"
-                  class="form-control"
-                  required
-                >
-
-              </div>
-
-              <div class="form-group">
-
-                <label class="form-label">
-                  New Password
-                </label>
-
-                <input
-                  id="newPassword"
-                  type="password"
-                  class="form-control"
-                  required
-                >
-
-              </div>
-
-              <div class="form-group">
-
-                <label class="form-label">
-                  Confirm New Password
-                </label>
-
-                <input
-                  id="confirmNewPassword"
-                  type="password"
-                  class="form-control"
-                  required
-                >
-
-              </div>
-
-            </div>
-
-            <div class="form-actions">
-
-              <button
-                id="changePasswordButton"
-                type="submit"
-                class="btn btn-primary"
-              >
-                Change Password
-              </button>
-
-            </div>
-
-          </form>
-
-        </div>
-
-      </section>
-
-      <section
-        class="card"
-        style="margin-top:18px;"
-      >
-
-        <div class="card-body">
-
-          <button
-            id="logoutButton"
-            class="btn btn-danger btn-block"
+          <div
+            id="reportEntries"
+            class="stat-value"
           >
-            Logout
-          </button>
+            0
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            TOTAL DURATION
+          </div>
+
+          <div
+            id="reportDuration"
+            class="stat-value success"
+          >
+            0h 0m
+          </div>
 
         </div>
 
       </section>
 
-    </div>
+      <div class="report-tabs">
 
-  </main>
+        <button
+          class="report-tab active"
+          type="button"
+        >
+          Vehicle-wise
+        </button>
 
-</div>
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Driver-wise
+        </button>
 
-<nav class="mobile-bottom-nav">
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Contractor-wise
+        </button>
 
-  <div class="mobile-nav-inner">
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Daily
+        </button>
 
-    <a
-      href="/pages/dashboard.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">🏠</span>
-      Home
-    </a>
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Weekly
+        </button>
 
-    <a
-      href="/pages/vehicles.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">🚛</span>
-      Vehicles
-    </a>
+        <button
+          class="report-tab"
+          type="button"
+        >
+          Monthly
+        </button>
 
-    <a
-      href="/pages/add-entry.html"
-      class="mobile-nav-item add"
-    >
-      <span class="mobile-nav-add">+</span>
-      Entry
-    </a>
+      </div>
 
-    <a
-      href="/pages/calendar.html"
-      class="mobile-nav-item"
-    >
-      <span class="mobile-nav-icon">📅</span>
-      Calendar
-    </a>
+      <section
+        class="card"
+        style="margin-top: 14px;"
+      >
 
-    <a
-      href="/pages/profile.html"
-      class="mobile-nav-item active"
-    >
-      <span class="mobile-nav-icon">👤</span>
-      You
-    </a>
+        <div class="table-wrap">
+
+          <table class="data-table">
+
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Vehicle</th>
+                <th>Type</th>
+                <th>Driver</th>
+                <th>Contractor</th>
+                <th>Entry</th>
+                <th>Exit</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+
+            <tbody
+              id="reportTableBody"
+            >
+              <tr>
+                <td colspan="8">
+                  <div class="loading">
+                    Loading...
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+      <div class="export-actions">
+
+        <button
+          class="btn btn-secondary"
+          type="button"
+          onclick="window.print()"
+        >
+          Export PDF
+        </button>
+
+        <button
+          class="btn btn-primary"
+          type="button"
+          onclick="exportReportCSV()"
+        >
+          Export Excel
+        </button>
+
+      </div>
+
+    </main>
+
+    <nav class="bottom-nav">
+
+      <div class="bottom-nav-inner">
+
+        <a href="/dashboard">
+          <span>🏠</span>
+          <span>Home</span>
+        </a>
+
+        <a href="/pages/vehicles.html">
+          <span>🚚</span>
+          <span>Vehicles</span>
+        </a>
+
+        <a
+          href="/pages/add-entry.html"
+          class="entry-button"
+        >
+          <span>＋</span>
+          <span>Entry</span>
+        </a>
+
+        <a href="/pages/calendar.html">
+          <span>📅</span>
+          <span>Calendar</span>
+        </a>
+
+        <a href="/pages/profile.html">
+          <span>👤</span>
+          <span>You</span>
+        </a>
+
+      </div>
+
+    </nav>
 
   </div>
 
-</nav>
-
-<script src="../app.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-
-  const profileMessage =
-    document.getElementById(
-      "profileMessage"
-    );
-
-  const passwordMessage =
-    document.getElementById(
-      "passwordMessage"
-    );
-
-  async function loadProfile() {
-
-    try {
-
-      const user =
-        await MyHomeGroup.getMe();
-
-      document.getElementById(
-        "profileName"
-      ).value =
-        user.name || "";
-
-      document.getElementById(
-        "profileEmail"
-      ).value =
-        user.email || "";
-
-      document.getElementById(
-        "profileMobile"
-      ).value =
-        user.mobile || "";
-
-      document.getElementById(
-        "profileCompany"
-      ).value =
-        user.company || "";
-
-      document.getElementById(
-        "profileRole"
-      ).value =
-        user.role || "Security Guard";
-
-      MyHomeGroup.updateUserDisplay();
-
-    } catch (error) {
-
-      MyHomeGroup.showToast(
-        error.message,
-        "error"
-      );
-
-    }
-
-  }
-
-  document
-    .getElementById("profileForm")
-    .addEventListener(
-      "submit",
-      async event => {
-
-        event.preventDefault();
-
-        const button =
-          document.getElementById(
-            "saveProfile"
-          );
-
-        try {
-
-          MyHomeGroup.setButtonLoading(
-            button,
-            true,
-            "Saving..."
-          );
-
-          await MyHomeGroup.updateProfile({
-
-            name:
-              document
-                .getElementById(
-                  "profileName"
-                )
-                .value
-                .trim(),
-
-            mobile:
-              document
-                .getElementById(
-                  "profileMobile"
-                )
-                .value
-                .trim(),
-
-            company:
-              document
-                .getElementById(
-                  "profileCompany"
-                )
-                .value
-                .trim()
-
-          });
-
-          MyHomeGroup.setFormMessage(
-            profileMessage,
-            "Profile updated successfully.",
-            "success"
-          );
-
-          MyHomeGroup.updateUserDisplay();
-
-          MyHomeGroup.showToast(
-            "Profile updated.",
-            "success"
-          );
-
-        } catch (error) {
-
-          MyHomeGroup.setFormMessage(
-            profileMessage,
-            error.message,
-            "error"
-          );
-
-        } finally {
-
-          MyHomeGroup.setButtonLoading(
-            button,
-            false
-          );
-
-        }
-
-      }
-    );
-
-  document
-    .getElementById("passwordForm")
-    .addEventListener(
-      "submit",
-      async event => {
-
-        event.preventDefault();
-
-        const currentPassword =
-          document.getElementById(
-            "currentPassword"
-          ).value;
-
-        const newPassword =
-          document.getElementById(
-            "newPassword"
-          ).value;
-
-        const confirmPassword =
-          document.getElementById(
-            "confirmNewPassword"
-          ).value;
-
-        if (
-          newPassword.length < 6
-        ) {
-
-          MyHomeGroup.setFormMessage(
-            passwordMessage,
-            "New password must contain at least 6 characters.",
-            "error"
-          );
-
-          return;
-        }
-
-        if (
-          newPassword !==
-          confirmPassword
-        ) {
-
-          MyHomeGroup.setFormMessage(
-            passwordMessage,
-            "New passwords do not match.",
-            "error"
-          );
-
-          return;
-        }
-
-        const button =
-          document.getElementById(
-            "changePasswordButton"
-          );
-
-        try {
-
-          MyHomeGroup.setButtonLoading(
-            button,
-            true,
-            "Changing..."
-          );
-
-          await MyHomeGroup.changePassword(
-            currentPassword,
-            newPassword
-          );
-
-          MyHomeGroup.setFormMessage(
-            passwordMessage,
-            "Password changed successfully.",
-            "success"
-          );
-
-          document
-            .getElementById(
-              "passwordForm"
-            )
-            .reset();
-
-          MyHomeGroup.showToast(
-            "Password changed.",
-            "success"
-          );
-
-        } catch (error) {
-
-          MyHomeGroup.setFormMessage(
-            passwordMessage,
-            error.message,
-            "error"
-          );
-
-        } finally {
-
-          MyHomeGroup.setButtonLoading(
-            button,
-            false
-          );
-
-        }
-
-      }
-    );
-
-  document
-    .getElementById("logoutButton")
-    .addEventListener(
-      "click",
-      () => {
-        MyHomeGroup.logout(true);
-      }
-    );
-
-  await loadProfile();
-
-});
-</script>
+  <script src="/app.js"></script>
 
 </body>
 </html>
