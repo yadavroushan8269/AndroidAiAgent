@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Notifications - My-Home-Group</title>
+  <title>Notifications - My Home Group</title>
 
   <link
     rel="stylesheet"
@@ -22,226 +15,213 @@
   >
 
   <style>
-    body {
-      background: #f5f7fa;
+    .page-wrap{
+      max-width:900px;
+      margin:0 auto;
+      padding:20px;
+      padding-bottom:105px;
     }
 
-    .notifications-page {
-      min-height: 100vh;
-      padding-bottom: 90px;
+    .page-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      margin-bottom:20px;
     }
 
-    .notifications-header {
-      background: #fff;
-      padding: 20px 16px 18px;
-      border-bottom: 1px solid #e8eaed;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+    .page-header h1{
+      margin:0;
+      font-size:26px;
     }
 
-    .header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+    .page-header p{
+      margin:5px 0 0;
+      font-size:13px;
+      opacity:.65;
     }
 
-    .header-title h1 {
-      margin: 0;
-      font-size: 24px;
-      color: #222;
+    .back-btn{
+      border:0;
+      background:#eef1f4;
+      border-radius:10px;
+      padding:10px 13px;
+      cursor:pointer;
+      font-weight:700;
     }
 
-    .header-title p {
-      margin: 5px 0 0;
-      font-size: 13px;
-      color: #777;
+    .notification-card{
+      background:#fff;
+      border:1px solid #e3e7eb;
+      border-radius:16px;
+      padding:18px;
+      box-shadow:0 3px 12px rgba(0,0,0,.04);
     }
 
-    .mark-read-btn {
-      border: 1px solid #e0e3e6;
-      background: #fff;
-      border-radius: 10px;
-      padding: 9px 11px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      color: #555;
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:15px;
+      flex-wrap:wrap;
     }
 
-    .notification-count {
-      display: inline-flex;
-      min-width: 22px;
-      height: 22px;
-      padding: 0 6px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      background: #f5a400;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 800;
-      margin-left: 6px;
+    .toolbar-left{
+      font-size:13px;
+      opacity:.7;
     }
 
-    .notifications-content {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 16px;
+    .toolbar-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
     }
 
-    .notification-card {
-      display: flex;
-      gap: 12px;
-      padding: 15px;
-      margin-bottom: 11px;
-      background: #fff;
-      border-radius: 15px;
-      border: 1px solid #eceff1;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
-      position: relative;
+    .toolbar-actions button{
+      border:1px solid #ddd;
+      background:#fff;
+      border-radius:9px;
+      padding:8px 11px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:700;
     }
 
-    .notification-card.unread {
-      border-left: 4px solid #f5a400;
-      background: #fffdf7;
+    .toolbar-actions button:hover{
+      background:#f7f7f7;
     }
 
-    .notification-icon {
-      width: 42px;
-      height: 42px;
-      min-width: 42px;
-      border-radius: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff3cf;
-      font-size: 21px;
+    .notification-list{
+      display:grid;
+      gap:9px;
     }
 
-    .notification-content {
-      flex: 1;
-      min-width: 0;
+    .notification-item{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      border:1px solid #edf0f2;
+      border-radius:12px;
+      padding:13px;
+      transition:.15s ease;
     }
 
-    .notification-content h3 {
-      margin: 0 0 5px;
-      font-size: 15px;
-      color: #222;
+    .notification-item.unread{
+      background:#fff9df;
+      border-color:#f0d46d;
     }
 
-    .notification-content p {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.45;
-      color: #666;
+    .notification-icon{
+      width:40px;
+      height:40px;
+      flex:none;
+      border-radius:11px;
+      background:#eef1f4;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:19px;
     }
 
-    .notification-time {
-      display: block;
-      margin-top: 7px;
-      font-size: 11px;
-      color: #999;
+    .notification-content{
+      flex:1;
+      min-width:0;
     }
 
-    .unread-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #f5a400;
-      position: absolute;
-      top: 17px;
-      right: 16px;
+    .notification-title{
+      font-size:14px;
+      font-weight:800;
     }
 
-    .empty-state {
-      background: #fff;
-      border-radius: 18px;
-      padding: 45px 20px;
-      text-align: center;
-      border: 1px solid #eceff1;
-      margin-top: 10px;
+    .notification-message{
+      margin-top:4px;
+      font-size:12px;
+      line-height:1.6;
+      opacity:.75;
     }
 
-    .empty-icon {
-      font-size: 45px;
-      margin-bottom: 10px;
+    .notification-time{
+      margin-top:5px;
+      font-size:10px;
+      opacity:.5;
     }
 
-    .empty-state h2 {
-      margin: 0 0 6px;
-      font-size: 19px;
+    .notification-actions{
+      display:flex;
+      gap:5px;
+      flex:none;
     }
 
-    .empty-state p {
-      margin: 0;
-      color: #777;
-      font-size: 13px;
+    .small-btn{
+      border:0;
+      background:#eef1f4;
+      border-radius:8px;
+      padding:7px;
+      cursor:pointer;
+      font-size:11px;
     }
 
-    .clear-btn {
-      display: block;
-      margin: 18px auto 0;
-      border: none;
-      background: transparent;
-      color: #d18a00;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
+    .empty{
+      text-align:center;
+      padding:45px 15px;
+      opacity:.65;
     }
 
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 100;
-      height: 68px;
-      background: #fff;
-      border-top: 1px solid #e5e7e9;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
+    .empty-icon{
+      font-size:42px;
+      margin-bottom:10px;
     }
 
-    .bottom-nav a {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      text-decoration: none;
-      color: #777;
-      font-size: 10px;
-      font-weight: 700;
+    .loading{
+      text-align:center;
+      padding:30px;
+      opacity:.65;
     }
 
-    .bottom-nav a span {
-      font-size: 21px;
-      line-height: 1;
+    .bottom-nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:5000;
+      display:flex;
+      justify-content:space-around;
+      background:#fff;
+      border-top:1px solid #ddd;
+      padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+      box-shadow:0 -3px 12px rgba(0,0,0,.06);
     }
 
-    .bottom-nav a.active {
-      color: #d18a00;
+    .bottom-nav a{
+      text-decoration:none;
+      color:#555;
+      font-size:11px;
+      text-align:center;
+      padding:6px 8px;
     }
 
-    @media (min-width: 700px) {
+    .bottom-nav a.active{
+      color:#111;
+      font-weight:800;
+    }
 
-      .notifications-header {
-        padding-left: calc((100% - 768px) / 2);
-        padding-right: calc((100% - 768px) / 2);
+    @media(max-width:600px){
+      .page-wrap{
+        padding:15px;
+        padding-bottom:100px;
       }
 
-      .bottom-nav {
-        left: 50%;
-        right: auto;
-        width: 100%;
-        max-width: 700px;
-        transform: translateX(-50%);
-        border-radius: 16px 16px 0 0;
+      .page-header h1{
+        font-size:22px;
+      }
+
+      .notification-item{
+        padding:11px;
+      }
+
+      .notification-actions{
+        flex-direction:column;
       }
     }
   </style>
@@ -249,220 +229,358 @@
 
 <body>
 
-  <main class="notifications-page">
+  <main class="page-wrap">
 
-    <header class="notifications-header">
+    <!-- HEADER -->
 
-      <div class="header-row">
+    <header class="page-header">
 
-        <div class="header-title">
-
-          <h1>
-            Notifications
-            <span
-              id="unreadCount"
-              class="notification-count"
-              style="display:none;"
-            >
-              0
-            </span>
-          </h1>
-
-          <p>
-            Important updates and activity
-          </p>
-
-        </div>
-
-        <button
-          id="markReadBtn"
-          class="mark-read-btn"
-          type="button"
-        >
-          Mark all read
-        </button>
-
+      <div>
+        <h1>🔔 Notifications</h1>
+        <p>Important updates and activity</p>
       </div>
+
+      <button
+        class="back-btn"
+        type="button"
+        onclick="window.location.href='dashboard.html'"
+      >
+        ← Dashboard
+      </button>
 
     </header>
 
 
-    <section
-      id="notificationsList"
-      class="notifications-content"
-    ></section>
+    <!-- NOTIFICATIONS -->
+
+    <section class="notification-card">
+
+      <div class="toolbar">
+
+        <div
+          id="notificationSummary"
+          class="toolbar-left"
+        >
+          Loading notifications...
+        </div>
 
 
-    <button
-      id="clearBtn"
-      class="clear-btn"
-      type="button"
-      style="display:none;"
-    >
-      Clear all notifications
-    </button>
+        <div class="toolbar-actions">
+
+          <button
+            id="markAllButton"
+            type="button"
+          >
+            ✓ Mark All Read
+          </button>
+
+          <button
+            id="clearButton"
+            type="button"
+          >
+            Clear All
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="notificationList"
+        class="notification-list"
+      >
+
+        <div class="loading">
+          Loading...
+        </div>
+
+      </div>
+
+    </section>
 
   </main>
 
 
+  <!-- MOBILE NAV -->
+
   <nav class="bottom-nav">
 
-    <a href="/pages/dashboard.html">
-      <span>⌂</span>
+    <a href="dashboard.html">
+      🏠<br>
       Home
     </a>
 
-    <a href="/pages/vehicles.html">
-      <span>🚚</span>
+    <a href="vehicles.html">
+      🚚<br>
       Vehicles
     </a>
 
-    <a href="/pages/add-entry.html">
-      <span>＋</span>
+    <a href="add-entry.html">
+      ➕<br>
       Entry
     </a>
 
-    <a href="/pages/calendar.html">
-      <span>▣</span>
+    <a href="calendar.html">
+      📅<br>
       Calendar
     </a>
 
     <a
-      href="/pages/profile.html"
+      href="profile.html"
       class="active"
     >
-      <span>👤</span>
+      👤<br>
       You
     </a>
 
   </nav>
 
 
+  <script src="../app.js"></script>
+
+
   <script>
-
-    const STORAGE = {
-      currentUser: "hyma_current_user",
-      users: "hyma_users",
-      vehicles: "hyma_vehicles",
-      entries: "hyma_entries",
-      notifications: "hyma_notifications"
-    };
+    "use strict";
 
 
-    function readJSON(
-      key,
-      fallback
-    ) {
+    let notifications = [];
 
-      try {
 
-        const value =
-          localStorage.getItem(key);
+    /* =====================================================
+       HELPERS
+    ===================================================== */
 
-        return value
-          ? JSON.parse(value)
-          : fallback;
+    function escapeHTML(value){
 
-      } catch (error) {
+      const div =
+        document.createElement("div");
 
-        return fallback;
+      div.textContent =
+        value == null
+          ? ""
+          : String(value);
+
+      return div.innerHTML;
+
+    }
+
+
+    function getNotifications(){
+
+      /*
+        app.js stores notifications locally
+        for now. This page uses the central
+        MyHomeGroup notification functions.
+      */
+
+      if(
+        typeof window.MyHomeGroup
+          .getNotifications ===
+        "function"
+      ){
+
+        return (
+          window.MyHomeGroup
+            .getNotifications() || []
+        );
+
+      }
+
+
+      try{
+
+        return JSON.parse(
+          localStorage.getItem(
+            "hyma_notifications"
+          ) || "[]"
+        );
+
+      }catch(error){
+
+        return [];
 
       }
 
     }
 
 
-    function writeJSON(
-      key,
-      value
-    ) {
+    function saveNotifications(){
+
+      if(
+        typeof window.MyHomeGroup
+          .saveNotifications ===
+        "function"
+      ){
+
+        window.MyHomeGroup
+          .saveNotifications(
+            notifications
+          );
+
+        return;
+
+      }
+
 
       localStorage.setItem(
-        key,
-        JSON.stringify(value)
+        "hyma_notifications",
+        JSON.stringify(
+          notifications
+        )
       );
 
     }
 
 
-    function getCurrentUser() {
+    function getId(
+      notification,
+      index
+    ){
 
-      return readJSON(
-        STORAGE.currentUser,
-        null
+      return (
+        notification.id ||
+        notification._id ||
+        index
       );
 
     }
 
 
-    function getNotifications() {
+    function isRead(
+      notification
+    ){
 
-      return readJSON(
-        STORAGE.notifications,
-        []
+      return (
+        notification.read === true ||
+        notification.isRead === true
       );
 
     }
 
 
-    function saveNotifications(
-      notifications
-    ) {
+    function getTitle(
+      notification
+    ){
 
-      writeJSON(
-        STORAGE.notifications,
-        notifications
+      return (
+        notification.title ||
+        notification.heading ||
+        "Notification"
       );
 
     }
 
 
-    function escapeHTML(
-      value
-    ) {
+    function getMessage(
+      notification
+    ){
 
-      return String(
-        value ?? ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
+      return (
+        notification.message ||
+        notification.body ||
+        notification.text ||
+        ""
+      );
+
+    }
+
+
+    function getTime(
+      notification
+    ){
+
+      return (
+        notification.createdAt ||
+        notification.created_at ||
+        notification.time ||
+        notification.date ||
+        ""
+      );
+
+    }
+
+
+    function getIcon(
+      notification
+    ){
+
+      const type =
+        String(
+          notification.type ||
+          ""
+        ).toLowerCase();
+
+
+      if(
+        type.includes("vehicle")
+      ){
+
+        return "🚚";
+
+      }
+
+
+      if(
+        type.includes("entry")
+      ){
+
+        return "📋";
+
+      }
+
+
+      if(
+        type.includes("warning")
+      ){
+
+        return "⚠️";
+
+      }
+
+
+      if(
+        type.includes("success")
+      ){
+
+        return "✅";
+
+      }
+
+
+      return "🔔";
 
     }
 
 
     function formatTime(
-      timestamp
-    ) {
+      value
+    ){
+
+      if(
+        !value
+      ){
+
+        return "";
+
+      }
+
 
       const date =
-        new Date(timestamp);
+        new Date(
+          value
+        );
 
 
-      if (
+      if(
         Number.isNaN(
           date.getTime()
         )
-      ) {
+      ){
 
-        return "";
+        return String(
+          value
+        );
 
       }
 
@@ -470,402 +588,65 @@
       return date.toLocaleString(
         "en-IN",
         {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
+          day:"numeric",
+          month:"short",
+          year:"numeric",
+          hour:"2-digit",
+          minute:"2-digit"
         }
       );
 
     }
 
 
-    function createAutomaticNotifications() {
-
-      const currentUser =
-        getCurrentUser();
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      let notifications =
-        getNotifications();
-
-
-      const entries =
-        readJSON(
-          STORAGE.entries,
-          []
-        );
-
-
-      const vehicles =
-        readJSON(
-          STORAGE.vehicles,
-          []
-        );
-
-
-      const today =
-        new Date()
-          .toISOString()
-          .slice(
-            0,
-            10
-          );
-
-
-      /*
-       * Create a welcome notification
-       * only once for the user.
-       */
-
-      const welcomeId =
-        "welcome-" +
-        String(
-          currentUser.id ||
-          currentUser.email ||
-          currentUser.mobile
-        );
-
-
-      const welcomeExists =
-        notifications.some(
-          function (item) {
-
-            return (
-              item.id ===
-              welcomeId
-            );
-
-          }
-        );
-
-
-      if (!welcomeExists) {
-
-        notifications.push({
-
-          id: welcomeId,
-
-          userId:
-            currentUser.id ||
-            currentUser.email ||
-            currentUser.mobile,
-
-          title:
-            "Welcome to My-Home-Group",
-
-          message:
-            "Your vehicle duration management dashboard is ready.",
-
-          icon:
-            "👋",
-
-          read:
-            false,
-
-          createdAt:
-            new Date().toISOString()
-
-        });
-
-      }
-
-
-      /*
-       * Today's running vehicle alerts.
-       */
-
-      const userEntries =
-        entries.filter(
-          function (entry) {
-
-            return (
-              entry.userId ===
-                currentUser.id &&
-              entry.date ===
-                today &&
-              entry.entryTime &&
-              !entry.exitTime
-            );
-
-          }
-        );
-
-
-      userEntries.forEach(
-        function (entry) {
-
-          const id =
-            "running-" +
-            entry.id;
-
-
-          const exists =
-            notifications.some(
-              function (item) {
-
-                return item.id === id;
-
-              }
-            );
-
-
-          if (!exists) {
-
-            notifications.push({
-
-              id,
-
-              userId:
-                currentUser.id,
-
-              title:
-                "Vehicle still running",
-
-              message:
-                (
-                  entry.vehicleNumber ||
-                  "Vehicle"
-                ) +
-                " has an open entry for today.",
-
-              icon:
-                "🚚",
-
-              read:
-                false,
-
-              createdAt:
-                new Date().toISOString()
-
-            });
-
-          }
-
-        }
-      );
-
-
-      /*
-       * If there are no vehicles yet,
-       * give a useful setup notification.
-       */
-
-      if (
-        vehicles.length === 0
-      ) {
-
-        const setupId =
-          "setup-vehicles-" +
-          String(
-            currentUser.id ||
-            currentUser.email ||
-            currentUser.mobile
-          );
-
-
-        const exists =
-          notifications.some(
-            function (item) {
-
-              return item.id === setupId;
-
-            }
-          );
-
-
-        if (!exists) {
-
-          notifications.push({
-
-            id: setupId,
-
-            userId:
-              currentUser.id ||
-              currentUser.email ||
-              currentUser.mobile,
-
-            title:
-              "Add your first vehicle",
-
-            message:
-              "Open Vehicles and add a vehicle to start recording duration.",
-
-            icon:
-              "🚧",
-
-            read:
-              false,
-
-            createdAt:
-              new Date().toISOString()
-
-          });
-
-        }
-
-      }
-
-
-      /*
-       * Keep only this user's notifications.
-       */
-
-      notifications =
-        notifications.filter(
-          function (item) {
-
-            return (
-              item.userId ===
-              (
-                currentUser.id ||
-                currentUser.email ||
-                currentUser.mobile
-              )
-            );
-
-          }
-        );
-
-
-      saveNotifications(
-        notifications
-      );
-
-    }
-
-
-    function renderNotifications() {
+    /* =====================================================
+       RENDER
+    ===================================================== */
+
+    function renderNotifications(){
 
       const list =
         document.getElementById(
-          "notificationsList"
+          "notificationList"
         );
-
-
-      const currentUser =
-        getCurrentUser();
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      const userId =
-        currentUser.id ||
-        currentUser.email ||
-        currentUser.mobile;
-
-
-      const notifications =
-        getNotifications()
-          .filter(
-            function (item) {
-
-              return (
-                item.userId ===
-                userId
-              );
-
-            }
-          )
-          .sort(
-            function (a, b) {
-
-              return (
-                new Date(
-                  b.createdAt
-                ) -
-                new Date(
-                  a.createdAt
-                )
-              );
-
-            }
-          );
 
 
       const unread =
         notifications.filter(
-          function (item) {
-
-            return !item.read;
-
-          }
+          notification =>
+            !isRead(
+              notification
+            )
         ).length;
 
 
-      const count =
-        document.getElementById(
-          "unreadCount"
-        );
+      document.getElementById(
+        "notificationSummary"
+      ).textContent =
+        notifications.length === 0
+          ? "No notifications"
+          : `${notifications.length} notification${
+              notifications.length === 1
+                ? ""
+                : "s"
+            } · ${unread} unread`;
 
 
-      if (unread > 0) {
-
-        count.textContent =
-          unread;
-
-        count.style.display =
-          "inline-flex";
-
-      } else {
-
-        count.style.display =
-          "none";
-
-      }
-
-
-      const clearBtn =
-        document.getElementById(
-          "clearBtn"
-        );
-
-
-      clearBtn.style.display =
-        notifications.length
-          ? "block"
-          : "none";
-
-
-      if (
-        notifications.length ===
-        0
-      ) {
+      if(
+        notifications.length === 0
+      ){
 
         list.innerHTML = `
 
-          <div class="empty-state">
+          <div class="empty">
 
             <div class="empty-icon">
-              🔔
+              🔕
             </div>
 
-            <h2>
-              No notifications
-            </h2>
-
-            <p>
+            <div>
               You're all caught up.
-            </p>
+            </div>
 
           </div>
 
@@ -877,194 +658,305 @@
 
 
       list.innerHTML =
-        notifications
-          .map(
-            function (item) {
+        "";
 
-              return `
 
-                <article
-                  class="notification-card ${
-                    item.read
-                      ? ""
-                      : "unread"
-                  }"
-                  data-id="${escapeHTML(
-                    item.id
-                  )}"
-                >
+      notifications.forEach(
+        (
+          notification,
+          index
+        ) => {
 
-                  <div class="notification-icon">
-                    ${escapeHTML(
-                      item.icon ||
-                      "🔔"
-                    )}
-                  </div>
+          const item =
+            document.createElement(
+              "div"
+            );
 
-                  <div class="notification-content">
 
-                    <h3>
-                      ${escapeHTML(
-                        item.title ||
-                        "Notification"
-                      )}
-                    </h3>
+          item.className =
+            "notification-item" +
+            (
+              isRead(
+                notification
+              )
+                ? ""
+                : " unread"
+            );
 
-                    <p>
-                      ${escapeHTML(
-                        item.message ||
-                        ""
-                      )}
-                    </p>
 
-                    <span class="notification-time">
-                      ${escapeHTML(
-                        formatTime(
-                          item.createdAt
-                        )
-                      )}
-                    </span>
+          const id =
+            getId(
+              notification,
+              index
+            );
 
-                  </div>
 
-                  ${
-                    item.read
-                      ? ""
-                      : `<span class="unread-dot"></span>`
-                  }
+          item.innerHTML = `
 
-                </article>
+            <div class="notification-icon">
+              ${getIcon(
+                notification
+              )}
+            </div>
 
-              `;
 
-            }
-          )
-          .join("");
+            <div class="notification-content">
+
+              <div class="notification-title">
+
+                ${escapeHTML(
+                  getTitle(
+                    notification
+                  )
+                )}
+
+              </div>
+
+
+              <div class="notification-message">
+
+                ${escapeHTML(
+                  getMessage(
+                    notification
+                  )
+                )}
+
+              </div>
+
+
+              <div class="notification-time">
+
+                ${escapeHTML(
+                  formatTime(
+                    getTime(
+                      notification
+                    )
+                  )
+                )}
+
+              </div>
+
+            </div>
+
+
+            <div class="notification-actions">
+
+              ${
+                !isRead(
+                  notification
+                )
+                  ? `
+                    <button
+                      class="small-btn"
+                      type="button"
+                      onclick="markOneRead('${escapeHTML(
+                        id
+                      )}')"
+                    >
+                      ✓
+                    </button>
+                  `
+                  : ""
+              }
+
+
+              <button
+                class="small-btn"
+                type="button"
+                onclick="deleteOne('${escapeHTML(
+                  id
+                )}')"
+              >
+                🗑️
+              </button>
+
+            </div>
+
+          `;
+
+
+          list.appendChild(
+            item
+          );
+
+        }
+      );
 
     }
 
 
-    function markAllRead() {
+    /* =====================================================
+       MARK ONE READ
+    ===================================================== */
 
-      const currentUser =
-        getCurrentUser();
+    function markOneRead(
+      id
+    ){
+
+      notifications =
+        notifications.map(
+          (
+            notification,
+            index
+          ) => {
+
+            const notificationId =
+              String(
+                getId(
+                  notification,
+                  index
+                )
+              );
 
 
-      if (!currentUser) {
+            if(
+              notificationId ===
+              String(id)
+            ){
 
-        return;
+              return {
+                ...notification,
+                read:true,
+                isRead:true
+              };
 
-      }
-
-
-      const userId =
-        currentUser.id ||
-        currentUser.email ||
-        currentUser.mobile;
-
-
-      const notifications =
-        getNotifications();
+            }
 
 
-      notifications.forEach(
-        function (item) {
-
-          if (
-            item.userId ===
-            userId
-          ) {
-
-            item.read = true;
+            return notification;
 
           }
+        );
+
+
+      saveNotifications();
+
+      renderNotifications();
+
+    }
+
+
+    /* =====================================================
+       MARK ALL
+    ===================================================== */
+
+    document
+      .getElementById(
+        "markAllButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          notifications =
+            notifications.map(
+              notification => ({
+                ...notification,
+                read:true,
+                isRead:true
+              })
+            );
+
+
+          saveNotifications();
+
+          renderNotifications();
 
         }
       );
 
 
-      saveNotifications(
-        notifications
-      );
+    /* =====================================================
+       DELETE ONE
+    ===================================================== */
 
+    function deleteOne(
+      id
+    ){
+
+      notifications =
+        notifications.filter(
+          (
+            notification,
+            index
+          ) => {
+
+            return String(
+              getId(
+                notification,
+                index
+              )
+            ) !==
+            String(id);
+
+          }
+        );
+
+
+      saveNotifications();
 
       renderNotifications();
 
     }
 
 
-    function clearAll() {
+    /* =====================================================
+       CLEAR ALL
+    ===================================================== */
 
-      const currentUser =
-        getCurrentUser();
+    document
+      .getElementById(
+        "clearButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
 
+          if(
+            notifications.length === 0
+          ){
 
-      if (!currentUser) {
+            return;
 
-        return;
-
-      }
-
-
-      const userId =
-        currentUser.id ||
-        currentUser.email ||
-        currentUser.mobile;
-
-
-      const notifications =
-        getNotifications()
-          .filter(
-            function (item) {
-
-              return (
-                item.userId !==
-                userId
-              );
-
-            }
-          );
+          }
 
 
-      saveNotifications(
-        notifications
+          const confirmed =
+            confirm(
+              "Clear all notifications?"
+            );
+
+
+          if(
+            !confirmed
+          ){
+
+            return;
+
+          }
+
+
+          notifications = [];
+
+          saveNotifications();
+
+          renderNotifications();
+
+        }
       );
 
 
-      renderNotifications();
+    /* =====================================================
+       INIT
+    ===================================================== */
 
-    }
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      function () {
-
-        createAutomaticNotifications();
-
-        renderNotifications();
+    notifications =
+      getNotifications();
 
 
-        document.getElementById(
-          "markReadBtn"
-        ).addEventListener(
-          "click",
-          markAllRead
-        );
-
-
-        document.getElementById(
-          "clearBtn"
-        ).addEventListener(
-          "click",
-          clearAll
-        );
-
-      }
-    );
+    renderNotifications();
 
   </script>
 
 </body>
-
 </html>
