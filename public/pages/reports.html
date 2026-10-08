@@ -1,211 +1,1391 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f5a400">
-  <meta
-    name="description"
-    content="Hyma RMC Kokapet Vehicle Reports"
-  >
-  <title>Reports - Hyma RMC Kokapet</title>
 
-  <link rel="stylesheet" href="../style.css">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#f5a400"
+  >
+
+  <title>Reports - My-Home-Group</title>
+
+  <link
+    rel="stylesheet"
+    href="../style.css"
+  >
+
+  <style>
+    .reports-page {
+      min-height: 100vh;
+      padding: 20px 16px 100px;
+      background: #f5f7fa;
+    }
+
+    .reports-container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .reports-header {
+      margin-bottom: 18px;
+    }
+
+    .reports-header h1 {
+      margin: 0 0 6px;
+      font-size: 26px;
+    }
+
+    .reports-header p {
+      margin: 0;
+      color: #6b7280;
+    }
+
+    .report-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field-group {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field-group label {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .field-group input,
+    .field-group select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #d6dbe0;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .field-group input:focus,
+    .field-group select:focus {
+      border-color: #f5a400;
+      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
+    }
+
+    .report-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .secondary-btn {
+      border: 1px solid #d5d9df;
+      background: #fff;
+      color: #333;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .summary-item {
+      background: #f7f8fa;
+      border-radius: 13px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .summary-icon {
+      font-size: 22px;
+    }
+
+    .summary-number {
+      margin-top: 4px;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .summary-label {
+      margin-top: 3px;
+      color: #737b84;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 19px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th,
+    td {
+      padding: 11px 9px;
+      border-bottom: 1px solid #e6e8eb;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f7f8fa;
+      font-weight: 800;
+      color: #444;
+    }
+
+    td {
+      color: #444;
+    }
+
+    .duration-cell {
+      font-weight: 800;
+      color: #a86f00;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 10px;
+      color: #777;
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 8px;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 5px;
+      color: #333;
+    }
+
+    .empty-state p {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .report-message {
+      min-height: 20px;
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .report-message.error {
+      color: #c62828;
+    }
+
+    .report-message.success {
+      color: #16803c;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      background: #fff;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #555;
+      text-align: center;
+      padding: 9px 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .bottom-nav a span {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+
+    .bottom-nav a.active {
+      color: #d88900;
+    }
+
+    .add-main-btn {
+      width: 46px;
+      height: 46px;
+      margin: -16px auto 0;
+      border-radius: 50%;
+      background: #f5a400;
+      color: #fff !important;
+      border: 4px solid #fff;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+
+    .add-main-btn span {
+      margin: 0 !important;
+      font-size: 26px !important;
+    }
+
+    @media (max-width: 700px) {
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .reports-page {
+        padding: 16px 12px 100px;
+      }
+
+      .reports-header h1 {
+        font-size: 23px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <div class="app-page">
+  <main class="reports-page">
 
-    <header class="top-header">
+    <div class="reports-container">
 
-      <div>
-        <h1>Reports</h1>
-        <p>Vehicle duration reports</p>
-      </div>
+      <header class="reports-header">
 
-      <button
-        id="reportTodayBtn"
-        class="header-action"
-        type="button"
-      >
-        Today
-      </button>
+        <h1>📊 Reports</h1>
 
-    </header>
+        <p>
+          Vehicle duration and activity reports
+        </p>
 
-    <main class="page-content">
+      </header>
 
-      <!-- Report Filters -->
+
+      <!-- FILTER -->
 
       <section class="report-card">
 
-        <h2>Report Period</h2>
+        <div class="filter-grid">
 
-        <p>
-          Select the period you want to analyse.
-        </p>
+          <div class="field-group">
 
-        <div class="report-filters">
+            <label for="reportType">
+              Report Period
+            </label>
 
-          <div>
+            <select id="reportType">
+
+              <option value="daily">
+                Daily
+              </option>
+
+              <option value="weekly">
+                Weekly
+              </option>
+
+              <option value="monthly">
+                Monthly
+              </option>
+
+              <option value="custom">
+                Custom
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field-group">
+
             <label for="reportFrom">
-              From
+              From Date
             </label>
 
             <input
               id="reportFrom"
               type="date"
             >
+
           </div>
 
-          <div>
+
+          <div class="field-group">
+
             <label for="reportTo">
-              To
+              To Date
             </label>
 
             <input
               id="reportTo"
               type="date"
             >
+
           </div>
 
         </div>
 
-      </section>
 
-      <!-- Report Summary -->
+        <div class="report-buttons">
 
-      <section class="stats-grid">
+          <button
+            id="generateReport"
+            class="primary-btn"
+            type="button"
+          >
+            Generate Report
+          </button>
 
-        <div class="stat-card">
-          <strong id="reportVehicleCount">0</strong>
-          <span>Vehicles</span>
-        </div>
-
-        <div class="stat-card orange">
-          <strong id="reportEntryCount">0</strong>
-          <span>Total Entries</span>
-        </div>
-
-        <div class="stat-card green">
-          <strong id="reportCompletedCount">0</strong>
-          <span>Completed</span>
-        </div>
-
-        <div class="stat-card blue">
-          <strong id="reportDuration">0h 0m</strong>
-          <span>Total Duration</span>
-        </div>
-
-      </section>
-
-      <!-- Vehicle Report -->
-
-      <section class="report-card">
-
-        <div class="section-heading">
-
-          <div>
-            <h2>Vehicle-wise Report</h2>
-
-            <p>
-              Duration recorded for each vehicle.
-            </p>
-          </div>
+          <button
+            id="todayReport"
+            class="secondary-btn"
+            type="button"
+          >
+            Today's Report
+          </button>
 
         </div>
+
 
         <div
-          id="vehicleReportList"
-          class="activity-list"
+          id="reportMessage"
+          class="report-message"
         ></div>
 
       </section>
 
-      <!-- Entry Report -->
+
+      <!-- SUMMARY -->
 
       <section class="report-card">
 
-        <div class="section-heading">
+        <div class="summary-grid">
 
-          <div>
-            <h2>Entries</h2>
+          <div class="summary-item">
 
-            <p>
-              Detailed entries for selected period.
-            </p>
+            <div class="summary-icon">
+              🚛
+            </div>
+
+            <div
+              id="summaryVehicles"
+              class="summary-number"
+            >
+              0
+            </div>
+
+            <div class="summary-label">
+              VEHICLES
+            </div>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <div class="summary-icon">
+              📝
+            </div>
+
+            <div
+              id="summaryEntries"
+              class="summary-number"
+            >
+              0
+            </div>
+
+            <div class="summary-label">
+              ENTRIES
+            </div>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <div class="summary-icon">
+              👨‍🔧
+            </div>
+
+            <div
+              id="summaryDrivers"
+              class="summary-number"
+            >
+              0
+            </div>
+
+            <div class="summary-label">
+              DRIVERS
+            </div>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <div class="summary-icon">
+              ⏱️
+            </div>
+
+            <div
+              id="summaryDuration"
+              class="summary-number"
+            >
+              0 min
+            </div>
+
+            <div class="summary-label">
+              TOTAL TIME
+            </div>
+
           </div>
 
         </div>
 
+      </section>
+
+
+      <!-- VEHICLE REPORT -->
+
+      <section class="report-card">
+
+        <h2 class="section-title">
+          🚛 Vehicle-wise Report
+        </h2>
+
         <div
-          id="reportEntryList"
-          class="activity-list"
+          id="vehicleReport"
+          class="table-wrap"
         ></div>
 
       </section>
 
-      <div
-        id="reportMessage"
-        class="form-message"
-      ></div>
 
-    </main>
+      <!-- DRIVER REPORT -->
 
-    <!-- Bottom Navigation -->
+      <section class="report-card">
 
-    <nav class="bottom-nav">
+        <h2 class="section-title">
+          👨‍🔧 Driver-wise Report
+        </h2>
 
-      <button
-        class="nav-item"
-        data-page="dashboard"
-        type="button"
-      >
-        <span>⌂</span>
-        <small>Home</small>
-      </button>
+        <div
+          id="driverReport"
+          class="table-wrap"
+        ></div>
 
-      <button
-        class="nav-item"
-        data-page="vehicles"
-        type="button"
-      >
-        <span>🚚</span>
-        <small>Vehicles</small>
-      </button>
+      </section>
 
-      <button
-        class="nav-item add-nav"
-        data-page="add-entry"
-        type="button"
-      >
-        <span>+</span>
-      </button>
 
-      <button
-        class="nav-item"
-        data-page="calendar"
-        type="button"
-      >
-        <span>▣</span>
-        <small>Calendar</small>
-      </button>
+      <!-- CONTRACTOR REPORT -->
 
-      <button
-        class="nav-item"
-        data-page="profile"
-        type="button"
-      >
-        <span>👤</span>
-        <small>You</small>
-      </button>
+      <section class="report-card">
 
-    </nav>
+        <h2 class="section-title">
+          🏢 Contractor-wise Report
+        </h2>
 
-  </div>
+        <div
+          id="contractorReport"
+          class="table-wrap"
+        ></div>
 
-  <script src="../app.js"></script>
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottom-nav">
+
+    <a href="/pages/dashboard.html">
+      <span>🏠</span>
+      Home
+    </a>
+
+    <a href="/pages/vehicles.html">
+      <span>🚛</span>
+      Vehicles
+    </a>
+
+    <a
+      href="/pages/add-entry.html"
+      class="add-main-btn"
+    >
+      <span>+</span>
+    </a>
+
+    <a href="/pages/calendar.html">
+      <span>📅</span>
+      Calendar
+    </a>
+
+    <a
+      href="/pages/profile.html"
+      class="active"
+    >
+      <span>👤</span>
+      You
+    </a>
+
+  </nav>
+
+
+  <script>
+
+    const STORAGE = {
+      entries: "hyma_entries",
+      currentUser: "hyma_current_user"
+    };
+
+
+    function readJSON(
+      key,
+      fallback
+    ) {
+
+      try {
+
+        const value =
+          localStorage.getItem(key);
+
+        return value
+          ? JSON.parse(value)
+          : fallback;
+
+      } catch (error) {
+
+        return fallback;
+
+      }
+
+    }
+
+
+    function getEntries() {
+
+      return readJSON(
+        STORAGE.entries,
+        []
+      );
+
+    }
+
+
+    function getCurrentUser() {
+
+      return readJSON(
+        STORAGE.currentUser,
+        null
+      );
+
+    }
+
+
+    function getToday() {
+
+      const now =
+        new Date();
+
+      const year =
+        now.getFullYear();
+
+      const month =
+        String(
+          now.getMonth() + 1
+        ).padStart(2, "0");
+
+      const day =
+        String(
+          now.getDate()
+        ).padStart(2, "0");
+
+      return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+      );
+
+    }
+
+
+    function addDays(
+      dateString,
+      amount
+    ) {
+
+      const date =
+        new Date(
+          dateString +
+          "T00:00:00"
+        );
+
+      date.setDate(
+        date.getDate() +
+        amount
+      );
+
+      const year =
+        date.getFullYear();
+
+      const month =
+        String(
+          date.getMonth() + 1
+        ).padStart(2, "0");
+
+      const day =
+        String(
+          date.getDate()
+        ).padStart(2, "0");
+
+      return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+      );
+
+    }
+
+
+    function formatDuration(
+      minutes
+    ) {
+
+      minutes =
+        Number(minutes) || 0;
+
+      const hours =
+        Math.floor(
+          minutes / 60
+        );
+
+      const mins =
+        minutes % 60;
+
+      if (hours === 0) {
+        return `${mins} min`;
+      }
+
+      if (mins === 0) {
+        return `${hours} hr`;
+      }
+
+      return `${hours} hr ${mins} min`;
+
+    }
+
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(
+        value || ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    function setMessage(
+      message,
+      type
+    ) {
+
+      const element =
+        document.getElementById(
+          "reportMessage"
+        );
+
+      element.textContent =
+        message;
+
+      element.className =
+        "report-message " +
+        (type || "");
+
+    }
+
+
+    function getDateRange() {
+
+      const type =
+        document.getElementById(
+          "reportType"
+        ).value;
+
+      const today =
+        getToday();
+
+      let from =
+        document.getElementById(
+          "reportFrom"
+        ).value;
+
+      let to =
+        document.getElementById(
+          "reportTo"
+        ).value;
+
+
+      if (type === "daily") {
+
+        from = today;
+        to = today;
+
+      }
+
+
+      if (type === "weekly") {
+
+        from =
+          addDays(
+            today,
+            -6
+          );
+
+        to = today;
+
+      }
+
+
+      if (type === "monthly") {
+
+        const date =
+          new Date(
+            today +
+            "T00:00:00"
+          );
+
+        date.setDate(1);
+
+        const year =
+          date.getFullYear();
+
+        const month =
+          String(
+            date.getMonth() + 1
+          ).padStart(2, "0");
+
+        from =
+          `${year}-${month}-01`;
+
+        to = today;
+
+      }
+
+
+      return {
+        from,
+        to
+      };
+
+    }
+
+
+    function generateReport() {
+
+      const range =
+        getDateRange();
+
+
+      if (
+        !range.from ||
+        !range.to
+      ) {
+
+        setMessage(
+          "Please select From and To dates.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        range.from >
+        range.to
+      ) {
+
+        setMessage(
+          "From date cannot be after To date.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const entries =
+        getEntries();
+
+
+      const filtered =
+        entries.filter(
+          function (entry) {
+
+            return (
+              entry.date >=
+              range.from &&
+              entry.date <=
+              range.to
+            );
+
+          }
+        );
+
+
+      renderSummary(
+        filtered
+      );
+
+      renderVehicleReport(
+        filtered
+      );
+
+      renderDriverReport(
+        filtered
+      );
+
+      renderContractorReport(
+        filtered
+      );
+
+
+      setMessage(
+        `${filtered.length} entries found.`,
+        "success"
+      );
+
+    }
+
+
+    function renderSummary(
+      entries
+    ) {
+
+      const vehicles =
+        new Set();
+
+      const drivers =
+        new Set();
+
+
+      let duration = 0;
+
+
+      entries.forEach(
+        function (entry) {
+
+          if (
+            entry.vehicleId
+          ) {
+
+            vehicles.add(
+              entry.vehicleId
+            );
+
+          } else if (
+            entry.vehicleNumber
+          ) {
+
+            vehicles.add(
+              entry.vehicleNumber
+            );
+
+          }
+
+
+          if (
+            entry.driverName
+          ) {
+
+            drivers.add(
+              entry.driverName
+            );
+
+          }
+
+
+          duration +=
+            Number(
+              entry.duration
+            ) || 0;
+
+        }
+      );
+
+
+      document.getElementById(
+        "summaryVehicles"
+      ).textContent =
+        vehicles.size;
+
+
+      document.getElementById(
+        "summaryEntries"
+      ).textContent =
+        entries.length;
+
+
+      document.getElementById(
+        "summaryDrivers"
+      ).textContent =
+        drivers.size;
+
+
+      document.getElementById(
+        "summaryDuration"
+      ).textContent =
+        formatDuration(
+          duration
+        );
+
+    }
+
+
+    function groupEntries(
+      entries,
+      keyFunction
+    ) {
+
+      const groups = {};
+
+
+      entries.forEach(
+        function (entry) {
+
+          const key =
+            keyFunction(entry) ||
+            "Not specified";
+
+
+          if (!groups[key]) {
+
+            groups[key] = {
+              name: key,
+              entries: 0,
+              duration: 0
+            };
+
+          }
+
+
+          groups[key].entries += 1;
+
+
+          groups[key].duration +=
+            Number(
+              entry.duration
+            ) || 0;
+
+        }
+      );
+
+
+      return Object.values(
+        groups
+      ).sort(
+        function (a, b) {
+
+          return (
+            b.duration -
+            a.duration
+          );
+
+        }
+      );
+
+    }
+
+
+    function createTable(
+      rows,
+      firstColumn
+    ) {
+
+      if (
+        rows.length === 0
+      ) {
+
+        return `
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+              📭
+            </div>
+
+            <h3>
+              No data
+            </h3>
+
+            <p>
+              Selected period mein data available nahi hai.
+            </p>
+
+          </div>
+
+        `;
+
+      }
+
+
+      return `
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                ${firstColumn}
+              </th>
+
+              <th>
+                Entries
+              </th>
+
+              <th>
+                Total Duration
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${rows
+              .map(
+                function (row) {
+
+                  return `
+
+                    <tr>
+
+                      <td>
+                        ${escapeHTML(
+                          row.name
+                        )}
+                      </td>
+
+                      <td>
+                        ${row.entries}
+                      </td>
+
+                      <td class="duration-cell">
+                        ${formatDuration(
+                          row.duration
+                        )}
+                      </td>
+
+                    </tr>
+
+                  `;
+
+                }
+              )
+              .join("")}
+
+          </tbody>
+
+        </table>
+
+      `;
+
+    }
+
+
+    function renderVehicleReport(
+      entries
+    ) {
+
+      const rows =
+        groupEntries(
+          entries,
+          function (entry) {
+
+            return (
+              entry.vehicleNumber ||
+              "Vehicle"
+            );
+
+          }
+        );
+
+
+      document.getElementById(
+        "vehicleReport"
+      ).innerHTML =
+        createTable(
+          rows,
+          "Vehicle"
+        );
+
+    }
+
+
+    function renderDriverReport(
+      entries
+    ) {
+
+      const rows =
+        groupEntries(
+          entries,
+          function (entry) {
+
+            return entry.driverName;
+
+          }
+        );
+
+
+      document.getElementById(
+        "driverReport"
+      ).innerHTML =
+        createTable(
+          rows,
+          "Driver"
+        );
+
+    }
+
+
+    function renderContractorReport(
+      entries
+    ) {
+
+      const rows =
+        groupEntries(
+          entries,
+          function (entry) {
+
+            return (
+              entry.contractor ||
+              "Not specified"
+            );
+
+          }
+        );
+
+
+      document.getElementById(
+        "contractorReport"
+      ).innerHTML =
+        createTable(
+          rows,
+          "Contractor"
+        );
+
+    }
+
+
+    function setTodayReport() {
+
+      const today =
+        getToday();
+
+
+      document.getElementById(
+        "reportType"
+      ).value =
+        "daily";
+
+
+      document.getElementById(
+        "reportFrom"
+      ).value =
+        today;
+
+
+      document.getElementById(
+        "reportTo"
+      ).value =
+        today;
+
+
+      generateReport();
+
+    }
+
+
+    function initializeReports() {
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      const today =
+        getToday();
+
+
+      document.getElementById(
+        "reportFrom"
+      ).value =
+        today;
+
+
+      document.getElementById(
+        "reportTo"
+      ).value =
+        today;
+
+
+      document.getElementById(
+        "reportType"
+      ).addEventListener(
+        "change",
+        function () {
+
+          const type =
+            this.value;
+
+
+          if (
+            type !== "custom"
+          ) {
+
+            const range =
+              getDateRange();
+
+
+            document.getElementById(
+              "reportFrom"
+            ).value =
+              range.from;
+
+
+            document.getElementById(
+              "reportTo"
+            ).value =
+              range.to;
+
+          }
+
+        }
+      );
+
+
+      document.getElementById(
+        "generateReport"
+      ).addEventListener(
+        "click",
+        generateReport
+      );
+
+
+      document.getElementById(
+        "todayReport"
+      ).addEventListener(
+        "click",
+        setTodayReport
+      );
+
+
+      generateReport();
+
+    }
+
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeReports
+    );
+
+  </script>
 
 </body>
+
 </html>
