@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -9,507 +9,368 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Add Entry - Hyma RMC Kokapet</title>
+  <title>Add Entry - My Home Group</title>
 
   <link
     rel="stylesheet"
     href="../style.css"
   >
 
-  <style>
-    .entry-page {
-      min-height: 100vh;
-      padding: 20px 16px 100px;
-      background: #f5f7fa;
-    }
-
-    .entry-container {
-      width: 100%;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .entry-header {
-      margin-bottom: 18px;
-    }
-
-    .entry-header h1 {
-      margin: 0 0 6px;
-      font-size: 26px;
-    }
-
-    .entry-header p {
-      margin: 0;
-      color: #6b7280;
-    }
-
-    .entry-card {
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 20px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
-    }
-
-    .entry-form {
-      display: grid;
-      gap: 14px;
-    }
-
-    .field-group {
-      display: grid;
-      gap: 7px;
-    }
-
-    .field-group label {
-      font-weight: 700;
-      font-size: 14px;
-      color: #252525;
-    }
-
-    .field-group input,
-    .field-group select,
-    .field-group textarea {
-      width: 100%;
-      box-sizing: border-box;
-      border: 1px solid #d7dce2;
-      border-radius: 11px;
-      padding: 13px 12px;
-      font-size: 16px;
-      background: #fff;
-      color: #222;
-      outline: none;
-    }
-
-    .field-group input:focus,
-    .field-group select:focus,
-    .field-group textarea:focus {
-      border-color: #f5a400;
-      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.13);
-    }
-
-    .field-group input[readonly] {
-      background: #f3f4f6;
-      color: #555;
-    }
-
-    .time-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .duration-box {
-      padding: 16px;
-      border-radius: 14px;
-      background: #fff8e6;
-      border: 1px solid #f5d58b;
-    }
-
-    .duration-label {
-      font-size: 13px;
-      font-weight: 700;
-      color: #806000;
-      margin-bottom: 5px;
-    }
-
-    .duration-value {
-      font-size: 25px;
-      font-weight: 800;
-      color: #b87900;
-    }
-
-    .duration-note {
-      margin-top: 5px;
-      font-size: 12px;
-      color: #806000;
-    }
-
-    .form-message {
-      min-height: 20px;
-      padding: 0;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .form-message.success {
-      color: #16803c;
-    }
-
-    .form-message.error {
-      color: #c62828;
-    }
-
-    .button-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 5px;
-    }
-
-    .secondary-btn {
-      border: 1px solid #d5d9df;
-      background: #fff;
-      color: #333;
-      border-radius: 11px;
-      padding: 13px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .secondary-btn:active,
-    .primary-btn:active {
-      transform: scale(0.98);
-    }
-
-    .info-box {
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 12px;
-      background: #f3f6f9;
-      color: #59636e;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      background: #ffffff;
-      border-top: 1px solid #ddd;
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .bottom-nav a {
-      text-decoration: none;
-      color: #555;
-      text-align: center;
-      padding: 9px 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .bottom-nav a span {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-
-    .bottom-nav a.active {
-      color: #d88900;
-    }
-
-    .add-main-btn {
-      width: 46px;
-      height: 46px;
-      margin: -16px auto 0;
-      border-radius: 50%;
-      background: #f5a400;
-      color: #fff !important;
-      border: 4px solid #fff;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-    }
-
-    .add-main-btn span {
-      margin: 0 !important;
-      font-size: 26px !important;
-    }
-
-    @media (max-width: 480px) {
-      .entry-page {
-        padding: 16px 12px 100px;
-      }
-
-      .entry-card {
-        padding: 16px;
-        border-radius: 15px;
-      }
-
-      .time-grid,
-      .button-row {
-        grid-template-columns: 1fr;
-      }
-
-      .entry-header h1 {
-        font-size: 23px;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
-  <main class="entry-page">
+<header class="app-header">
 
-    <div class="entry-container">
+  <div class="app-header-inner">
 
-      <header class="entry-header">
-        <h1>➕ Add Vehicle Entry</h1>
-        <p>Record vehicle entry and exit duration</p>
-      </header>
+    <a
+      href="/pages/dashboard.html"
+      class="app-brand"
+    >
 
+      <div class="app-brand-mark">
+        MH
+      </div>
 
-      <section class="entry-card">
+      <div class="app-brand-text">
 
-        <form
-          id="entryForm"
-          class="entry-form"
-          novalidate
-        >
+        <div class="app-brand-name">
+          My Home Group
+        </div>
 
-          <!-- DATE -->
+        <div class="app-brand-subtitle">
+          Vehicle Duration Management
+        </div>
 
-          <div class="field-group">
+      </div>
 
-            <label for="entryDate">
-              Date
-            </label>
+    </a>
 
-            <input
-              id="entryDate"
-              name="date"
-              type="date"
-            >
+    <div class="header-actions">
 
-          </div>
+      <a
+        href="/pages/notifications.html"
+        class="header-icon-btn"
+      >
+        🔔
+        <span
+          class="notification-badge hidden"
+          data-notification-count
+        ></span>
+      </a>
 
+      <a
+        href="/pages/profile.html"
+        class="header-icon-btn"
+      >
+        👤
+      </a>
 
-          <!-- VEHICLE -->
+    </div>
 
-          <div class="field-group">
+  </div>
 
-            <label for="entryVehicle">
-              Vehicle
-            </label>
+</header>
 
-            <select
-              id="entryVehicle"
-              name="vehicleId"
-            >
-              <option value="">
-                Select vehicle
-              </option>
-            </select>
+<div class="app-layout">
 
-          </div>
+  <aside class="sidebar">
 
+    <nav class="sidebar-nav">
 
-          <!-- VEHICLE TYPE -->
+      <a
+        href="/pages/dashboard.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🏠</span>
+        Dashboard
+      </a>
 
-          <div class="field-group">
+      <a
+        href="/pages/vehicles.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🚛</span>
+        Vehicles
+      </a>
 
-            <label for="entryVehicleType">
-              Vehicle Type
-            </label>
+      <a
+        href="/pages/add-entry.html"
+        class="nav-link active"
+      >
+        <span class="nav-icon">➕</span>
+        Add Entry
+      </a>
 
-            <input
-              id="entryVehicleType"
-              name="vehicleType"
-              type="text"
-              placeholder="Vehicle type"
-              readonly
-            >
+      <a
+        href="/pages/calendar.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📅</span>
+        Calendar
+      </a>
 
-          </div>
+      <a
+        href="/pages/reports.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📊</span>
+        Reports
+      </a>
 
+      <a
+        href="/pages/notifications.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🔔</span>
+        Notifications
+      </a>
 
-          <!-- DRIVER -->
+      <a
+        href="/pages/profile.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
 
-          <div class="field-group">
+      <a
+        href="#"
+        class="nav-link logout-btn"
+      >
+        <span class="nav-icon">🚪</span>
+        Logout
+      </a>
 
-            <label for="entryDriver">
-              Driver
-            </label>
+    </nav>
 
-            <input
-              id="entryDriver"
-              name="driverName"
-              type="text"
-              placeholder="Driver name"
-            >
+  </aside>
 
-          </div>
+  <main class="main-content">
 
+    <div class="content-inner">
 
-          <!-- TIME -->
+      <div class="page-heading">
 
-          <div class="time-grid">
+        <div class="page-heading-text">
 
-            <div class="field-group">
+          <h1>
+            Add Vehicle Entry
+          </h1>
 
-              <label for="entryTime">
-                Entry Time
-              </label>
+          <p>
+            Record vehicle entry and exit duration
+          </p>
 
-              <input
-                id="entryTime"
-                name="entryTime"
-                type="time"
+        </div>
+
+      </div>
+
+      <section class="card">
+
+        <div class="card-body">
+
+          <div id="entryMessage"></div>
+
+          <form id="entryForm">
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Date
+                </label>
+
+                <input
+                  id="entryDate"
+                  type="date"
+                  class="form-control"
+                  required
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Vehicle
+                </label>
+
+                <select
+                  id="vehicleId"
+                  class="form-control"
+                  required
+                >
+
+                  <option value="">
+                    Loading vehicles...
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Vehicle Number
+                </label>
+
+                <input
+                  id="vehicleNumber"
+                  type="text"
+                  class="form-control"
+                  readonly
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Vehicle Type
+                </label>
+
+                <input
+                  id="vehicleType"
+                  type="text"
+                  class="form-control"
+                  readonly
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Driver
+                </label>
+
+                <input
+                  id="driverName"
+                  type="text"
+                  class="form-control"
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Contractor
+                </label>
+
+                <input
+                  id="contractor"
+                  type="text"
+                  class="form-control"
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Entry Time
+                </label>
+
+                <input
+                  id="entryTime"
+                  type="time"
+                  class="form-control"
+                  required
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Exit Time
+                </label>
+
+                <input
+                  id="exitTime"
+                  type="time"
+                  class="form-control"
+                >
+
+              </div>
+
+              <div class="form-group full">
+
+                <div class="duration-result">
+
+                  <div class="duration-result-label">
+                    Calculated Duration
+                  </div>
+
+                  <div
+                    id="durationDisplay"
+                    class="duration-result-value"
+                  >
+                    0m
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Purpose
+                </label>
+
+                <input
+                  id="purpose"
+                  type="text"
+                  class="form-control"
+                  placeholder="e.g. Material delivery"
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Notes
+                </label>
+
+                <input
+                  id="notes"
+                  type="text"
+                  class="form-control"
+                  placeholder="Optional notes"
+                >
+
+              </div>
+
+            </div>
+
+            <div class="form-actions">
+
+              <a
+                href="/pages/dashboard.html"
+                class="btn btn-secondary"
               >
+                Cancel
+              </a>
 
-            </div>
-
-
-            <div class="field-group">
-
-              <label for="exitTime">
-                Exit Time
-              </label>
-
-              <input
-                id="exitTime"
-                name="exitTime"
-                type="time"
+              <button
+                id="saveEntryButton"
+                type="submit"
+                class="btn btn-primary"
               >
+                Save Entry
+              </button>
 
             </div>
 
-          </div>
+          </form>
 
-
-          <!-- DURATION -->
-
-          <div class="duration-box">
-
-            <div class="duration-label">
-              Calculated Duration
-            </div>
-
-            <div
-              id="durationValue"
-              class="duration-value"
-            >
-              0 min
-            </div>
-
-            <div
-              id="durationNote"
-              class="duration-note"
-            >
-              Select entry and exit time
-            </div>
-
-          </div>
-
-
-          <!-- PURPOSE -->
-
-          <div class="field-group">
-
-            <label for="entryPurpose">
-              Purpose
-            </label>
-
-            <select
-              id="entryPurpose"
-              name="purpose"
-            >
-
-              <option value="">
-                Select purpose
-              </option>
-
-              <option value="Material Delivery">
-                Material Delivery
-              </option>
-
-              <option value="RMC / Concrete">
-                RMC / Concrete
-              </option>
-
-              <option value="Construction Work">
-                Construction Work
-              </option>
-
-              <option value="Loading / Unloading">
-                Loading / Unloading
-              </option>
-
-              <option value="Equipment Movement">
-                Equipment Movement
-              </option>
-
-              <option value="Site Work">
-                Site Work
-              </option>
-
-              <option value="Other">
-                Other
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- NOTES -->
-
-          <div class="field-group">
-
-            <label for="entryNotes">
-              Notes
-            </label>
-
-            <textarea
-              id="entryNotes"
-              name="notes"
-              rows="3"
-              placeholder="Optional notes"
-            ></textarea>
-
-          </div>
-
-
-          <!-- MESSAGE -->
-
-          <div
-            id="entryMessage"
-            class="form-message"
-          ></div>
-
-
-          <!-- BUTTONS -->
-
-          <div class="button-row">
-
-            <button
-              type="button"
-              class="secondary-btn"
-              onclick="window.location.href='/pages/dashboard.html'"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              class="primary-btn"
-            >
-              Save Entry
-            </button>
-
-          </div>
-
-        </form>
-
-
-        <div class="info-box">
-          💡 Duration automatically calculate hogi. Agar exit time
-          entry time se chhota hai, system usse next-day exit
-          maan kar duration calculate karega.
         </div>
 
       </section>
@@ -518,746 +379,371 @@
 
   </main>
 
+</div>
 
-  <!-- BOTTOM NAV -->
+<nav class="mobile-bottom-nav">
 
-  <nav class="bottom-nav">
+  <div class="mobile-nav-inner">
 
-    <a href="/pages/dashboard.html">
-      <span>🏠</span>
+    <a
+      href="/pages/dashboard.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🏠</span>
       Home
     </a>
 
-    <a href="/pages/vehicles.html">
-      <span>🚛</span>
+    <a
+      href="/pages/vehicles.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🚛</span>
       Vehicles
     </a>
 
     <a
       href="/pages/add-entry.html"
-      class="active add-main-btn"
+      class="mobile-nav-item add active"
     >
-      <span>+</span>
+      <span class="mobile-nav-add">+</span>
+      Entry
     </a>
 
-    <a href="/pages/calendar.html">
-      <span>📅</span>
+    <a
+      href="/pages/calendar.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">📅</span>
       Calendar
     </a>
 
-    <a href="/pages/profile.html">
-      <span>👤</span>
+    <a
+      href="/pages/profile.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">👤</span>
       You
     </a>
 
-  </nav>
+  </div>
 
+</nav>
 
-  <script>
+<script src="../app.js"></script>
 
-    const STORAGE = {
-      vehicles: "hyma_vehicles",
-      entries: "hyma_entries",
-      currentUser: "hyma_current_user"
-    };
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
 
+  const vehicleSelect =
+    document.getElementById("vehicleId");
 
-    function readJSON(key, fallback) {
+  const dateInput =
+    document.getElementById("entryDate");
 
-      try {
+  const entryTime =
+    document.getElementById("entryTime");
 
-        const value =
-          localStorage.getItem(key);
+  const exitTime =
+    document.getElementById("exitTime");
 
-        return value
-          ? JSON.parse(value)
-          : fallback;
+  const durationDisplay =
+    document.getElementById("durationDisplay");
 
-      } catch (error) {
+  let vehicles = [];
 
-        return fallback;
+  dateInput.value =
+    MyHomeGroup.todayString();
 
-      }
+  const now = new Date();
 
-    }
+  entryTime.value =
+    `${String(now.getHours()).padStart(2, "0")}:${String(
+      now.getMinutes()
+    ).padStart(2, "0")}`;
 
+  async function loadVehicles() {
 
-    function writeJSON(key, value) {
+    try {
 
-      localStorage.setItem(
-        key,
-        JSON.stringify(value)
-      );
+      vehicles =
+        await MyHomeGroup.getVehicles();
 
-    }
-
-
-    function getVehicles() {
-
-      return readJSON(
-        STORAGE.vehicles,
-        []
-      );
-
-    }
-
-
-    function getEntries() {
-
-      return readJSON(
-        STORAGE.entries,
-        []
-      );
-
-    }
-
-
-    function getCurrentUser() {
-
-      return readJSON(
-        STORAGE.currentUser,
-        null
-      );
-
-    }
-
-
-    function generateId(prefix) {
-
-      return (
-        prefix +
-        "_" +
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .substring(2, 8)
-      );
-
-    }
-
-
-    function getToday() {
-
-      const now = new Date();
-
-      const year =
-        now.getFullYear();
-
-      const month =
-        String(
-          now.getMonth() + 1
-        ).padStart(2, "0");
-
-      const day =
-        String(
-          now.getDate()
-        ).padStart(2, "0");
-
-      return `${year}-${month}-${day}`;
-
-    }
-
-
-    function timeToMinutes(time) {
-
-      if (!time || !time.includes(":")) {
-        return null;
-      }
-
-      const parts =
-        time.split(":");
-
-      const hours =
-        Number(parts[0]);
-
-      const minutes =
-        Number(parts[1]);
-
-      if (
-        Number.isNaN(hours) ||
-        Number.isNaN(minutes)
-      ) {
-        return null;
-      }
-
-      return (
-        hours * 60 +
-        minutes
-      );
-
-    }
-
-
-    function calculateDuration(
-      entryTime,
-      exitTime
-    ) {
-
-      const start =
-        timeToMinutes(entryTime);
-
-      const end =
-        timeToMinutes(exitTime);
-
-      if (
-        start === null ||
-        end === null
-      ) {
-        return null;
-      }
-
-      let difference =
-        end - start;
-
-      if (difference < 0) {
-        difference += 24 * 60;
-      }
-
-      return difference;
-
-    }
-
-
-    function formatDuration(minutes) {
-
-      if (
-        minutes === null ||
-        minutes === undefined
-      ) {
-        return "0 min";
-      }
-
-      const hours =
-        Math.floor(minutes / 60);
-
-      const mins =
-        minutes % 60;
-
-      if (hours === 0) {
-        return `${mins} min`;
-      }
-
-      if (mins === 0) {
-        return `${hours} hr`;
-      }
-
-      return `${hours} hr ${mins} min`;
-
-    }
-
-
-    function showMessage(
-      message,
-      type
-    ) {
-
-      const box =
-        document.getElementById(
-          "entryMessage"
+      const active =
+        vehicles.filter(
+          vehicle =>
+            vehicle.status !== "Inactive"
         );
 
-      box.textContent =
-        message;
+      if (!active.length) {
 
-      box.className =
-        "form-message " +
-        (type || "");
+        vehicleSelect.innerHTML = `
+          <option value="">
+            No active vehicles found
+          </option>
+        `;
 
-    }
+        return;
+      }
 
-
-    function loadVehicles() {
-
-      const select =
-        document.getElementById(
-          "entryVehicle"
-        );
-
-      const vehicles =
-        getVehicles();
-
-      select.innerHTML =
-        '<option value="">Select vehicle</option>';
-
-      vehicles.forEach(
-        function (vehicle) {
-
-          const option =
-            document.createElement(
-              "option"
-            );
-
-          option.value =
-            vehicle.id;
-
-          option.textContent =
-            vehicle.vehicleNumber ||
-            vehicle.number ||
-            "Unknown Vehicle";
-
-          option.dataset.type =
-            vehicle.vehicleType ||
-            vehicle.type ||
-            "";
-
-          option.dataset.driver =
-            vehicle.driverName ||
-            vehicle.driver ||
-            "";
-
-          select.appendChild(
-            option
-          );
-
+      vehicleSelect.innerHTML = `
+        <option value="">
+          Select vehicle
+        </option>
+        ${
+          active.map(vehicle => `
+            <option value="${vehicle.id}">
+              ${MyHomeGroup.escapeHtml(
+                vehicle.vehicle_number
+              )}
+              -
+              ${MyHomeGroup.escapeHtml(
+                vehicle.vehicle_type || ""
+              )}
+          `).join("")
         }
+      `;
+
+    } catch (error) {
+
+      vehicleSelect.innerHTML = `
+        <option value="">
+          Unable to load vehicles
+        </option>
+      `;
+
+      MyHomeGroup.showToast(
+        error.message,
+        "error"
       );
 
     }
 
-
-    function updateVehicleDetails() {
-
-      const select =
-        document.getElementById(
-          "entryVehicle"
-        );
-
-      const option =
-        select.options[
-          select.selectedIndex
-        ];
-
-      const typeInput =
-        document.getElementById(
-          "entryVehicleType"
-        );
-
-      const driverInput =
-        document.getElementById(
-          "entryDriver"
-        );
-
-      if (
-        !option ||
-        !option.value
-      ) {
-
-        typeInput.value = "";
-        driverInput.value = "";
-
-        return;
-
-      }
-
-      typeInput.value =
-        option.dataset.type || "";
-
-      driverInput.value =
-        option.dataset.driver || "";
-
-    }
-
-
-    function updateDuration() {
-
-      const entryTime =
-        document.getElementById(
-          "entryTime"
-        ).value;
-
-      const exitTime =
-        document.getElementById(
-          "exitTime"
-        ).value;
-
-      const durationValue =
-        document.getElementById(
-          "durationValue"
-        );
-
-      const durationNote =
-        document.getElementById(
-          "durationNote"
-        );
-
-      if (
-        !entryTime ||
-        !exitTime
-      ) {
-
-        durationValue.textContent =
-          "0 min";
-
-        durationNote.textContent =
-          "Select entry and exit time";
-
-        return;
-
-      }
-
-      const minutes =
-        calculateDuration(
-          entryTime,
-          exitTime
-        );
-
-      if (minutes === null) {
-
-        durationValue.textContent =
-          "0 min";
-
-        durationNote.textContent =
-          "Invalid time";
-
-        return;
-
-      }
-
-      durationValue.textContent =
-        formatDuration(minutes);
-
-      const start =
-        timeToMinutes(entryTime);
-
-      const end =
-        timeToMinutes(exitTime);
-
-      if (end < start) {
-
-        durationNote.textContent =
-          "Overnight duration detected";
-
-      } else {
-
-        durationNote.textContent =
-          "Automatically calculated";
-
-      }
-
-    }
-
-
-    function saveEntry(event) {
-
-      event.preventDefault();
-
-      showMessage("", "");
-
-
-      const currentUser =
-        getCurrentUser();
-
-
-      const date =
-        document.getElementById(
-          "entryDate"
-        ).value;
-
-      const vehicleId =
-        document.getElementById(
-          "entryVehicle"
-        ).value;
-
-      const vehicleType =
-        document.getElementById(
-          "entryVehicleType"
-        ).value.trim();
-
-      const driverName =
-        document.getElementById(
-          "entryDriver"
-        ).value.trim();
-
-      const entryTime =
-        document.getElementById(
-          "entryTime"
-        ).value;
-
-      const exitTime =
-        document.getElementById(
-          "exitTime"
-        ).value;
-
-      const purpose =
-        document.getElementById(
-          "entryPurpose"
-        ).value;
-
-      const notes =
-        document.getElementById(
-          "entryNotes"
-        ).value.trim();
-
-
-      if (!date) {
-
-        showMessage(
-          "Please select date.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (!vehicleId) {
-
-        showMessage(
-          "Please select a vehicle.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (!entryTime) {
-
-        showMessage(
-          "Please select entry time.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (!exitTime) {
-
-        showMessage(
-          "Please select exit time.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      const duration =
-        calculateDuration(
-          entryTime,
-          exitTime
-        );
-
-
-      if (
-        duration === null ||
-        duration <= 0
-      ) {
-
-        showMessage(
-          "Entry and exit time must be different.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      const entries =
-        getEntries();
-
-
-      const vehicles =
-        getVehicles();
-
+  }
+
+  vehicleSelect.addEventListener(
+    "change",
+    () => {
 
       const vehicle =
         vehicles.find(
-          function (item) {
-
-            return item.id === vehicleId;
-
-          }
+          item =>
+            String(item.id) ===
+            String(vehicleSelect.value)
         );
 
+      if (!vehicle) {
 
-      const newEntry = {
+        document.getElementById(
+          "vehicleNumber"
+        ).value = "";
 
-        id: generateId("entry"),
+        document.getElementById(
+          "vehicleType"
+        ).value = "";
 
-        vehicleId:
+        document.getElementById(
+          "driverName"
+        ).value = "";
 
-          vehicleId,
-
-        vehicleNumber:
-
-          vehicle
-            ? (
-                vehicle.vehicleNumber ||
-                vehicle.number ||
-                ""
-              )
-            : "",
-
-        vehicleType:
-
-          vehicleType,
-
-        driverName:
-
-          driverName,
-
-        date:
-
-          date,
-
-        entryTime:
-
-          entryTime,
-
-        exitTime:
-
-          exitTime,
-
-        duration:
-
-          duration,
-
-        purpose:
-
-          purpose,
-
-        notes:
-
-          notes,
-
-        userId:
-
-          currentUser
-            ? currentUser.id
-            : "",
-
-        createdAt:
-
-          new Date().toISOString()
-
-      };
-
-
-      entries.push(
-        newEntry
-      );
-
-
-      writeJSON(
-        STORAGE.entries,
-        entries
-      );
-
-
-      showMessage(
-        "Entry saved successfully.",
-        "success"
-      );
-
-
-      document.getElementById(
-        "entryForm"
-      ).reset();
-
-
-      document.getElementById(
-        "entryDate"
-      ).value = getToday();
-
-
-      document.getElementById(
-        "durationValue"
-      ).textContent =
-        "0 min";
-
-
-      document.getElementById(
-        "durationNote"
-      ).textContent =
-        "Select entry and exit time";
-
-
-      setTimeout(
-        function () {
-
-          window.location.href =
-            "/pages/dashboard.html";
-
-        },
-        900
-      );
-
-    }
-
-
-    function initializePage() {
-
-      const currentUser =
-        getCurrentUser();
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
+        document.getElementById(
+          "contractor"
+        ).value = "";
 
         return;
-
       }
 
-
       document.getElementById(
-        "entryDate"
+        "vehicleNumber"
       ).value =
-        getToday();
-
-
-      loadVehicles();
-
+        vehicle.vehicle_number || "";
 
       document.getElementById(
-        "entryVehicle"
-      ).addEventListener(
-        "change",
-        updateVehicleDetails
-      );
-
+        "vehicleType"
+      ).value =
+        vehicle.vehicle_type || "";
 
       document.getElementById(
-        "entryTime"
-      ).addEventListener(
-        "change",
-        updateDuration
-      );
-
+        "driverName"
+      ).value =
+        vehicle.driver_name || "";
 
       document.getElementById(
-        "exitTime"
-      ).addEventListener(
-        "change",
-        updateDuration
-      );
-
-
-      document.getElementById(
-        "entryForm"
-      ).addEventListener(
-        "submit",
-        saveEntry
-      );
+        "contractor"
+      ).value =
+        vehicle.contractor || "";
 
     }
+  );
 
+  function updateDuration() {
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializePage
+    const minutes =
+      MyHomeGroup.calculateDuration(
+        entryTime.value,
+        exitTime.value
+      );
+
+    durationDisplay.textContent =
+      MyHomeGroup.minutesToDuration(
+        minutes
+      );
+
+  }
+
+  entryTime.addEventListener(
+    "input",
+    updateDuration
+  );
+
+  exitTime.addEventListener(
+    "input",
+    updateDuration
+  );
+
+  document
+    .getElementById("entryForm")
+    .addEventListener(
+      "submit",
+      async event => {
+
+        event.preventDefault();
+
+        const message =
+          document.getElementById(
+            "entryMessage"
+          );
+
+        const button =
+          document.getElementById(
+            "saveEntryButton"
+          );
+
+        const vehicle =
+          vehicles.find(
+            item =>
+              String(item.id) ===
+              String(vehicleSelect.value)
+          );
+
+        if (!vehicle) {
+
+          MyHomeGroup.setFormMessage(
+            message,
+            "Please select a vehicle.",
+            "error"
+          );
+
+          return;
+        }
+
+        const exit =
+          exitTime.value || null;
+
+        const duration =
+          MyHomeGroup.calculateDuration(
+            entryTime.value,
+            exit
+          );
+
+        try {
+
+          MyHomeGroup.setButtonLoading(
+            button,
+            true,
+            "Saving..."
+          );
+
+          await MyHomeGroup.createEntry({
+
+            vehicle_id:
+              vehicle.id,
+
+            vehicle_number:
+              vehicle.vehicle_number,
+
+            vehicle_type:
+              vehicle.vehicle_type,
+
+            driver_name:
+              document
+                .getElementById(
+                  "driverName"
+                )
+                .value
+                .trim(),
+
+            contractor:
+              document
+                .getElementById(
+                  "contractor"
+                )
+                .value
+                .trim(),
+
+            entry_date:
+              dateInput.value,
+
+            entry_time:
+              entryTime.value,
+
+            exit_time:
+              exit,
+
+            duration,
+
+            purpose:
+              document
+                .getElementById(
+                  "purpose"
+                )
+                .value
+                .trim(),
+
+            notes:
+              document
+                .getElementById(
+                  "notes"
+                )
+                .value
+                .trim()
+
+          });
+
+          MyHomeGroup.showToast(
+            "Vehicle entry saved.",
+            "success"
+          );
+
+          setTimeout(() => {
+
+            window.location.href =
+              "/pages/dashboard.html";
+
+          }, 700);
+
+        } catch (error) {
+
+          MyHomeGroup.setFormMessage(
+            message,
+            error.message ||
+              "Unable to save entry.",
+            "error"
+          );
+
+          MyHomeGroup.setButtonLoading(
+            button,
+            false
+          );
+
+        }
+
+      }
     );
 
-  </script>
+  await loadVehicles();
+
+});
+</script>
 
 </body>
-
 </html>
