@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -9,537 +9,510 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Reports - My-Home-Group</title>
+  <title>Reports - My Home Group</title>
 
   <link
     rel="stylesheet"
     href="../style.css"
   >
 
-  <style>
-    .reports-page {
-      min-height: 100vh;
-      padding: 20px 16px 100px;
-      background: #f5f7fa;
-    }
-
-    .reports-container {
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .reports-header {
-      margin-bottom: 18px;
-    }
-
-    .reports-header h1 {
-      margin: 0 0 6px;
-      font-size: 26px;
-    }
-
-    .reports-header p {
-      margin: 0;
-      color: #6b7280;
-    }
-
-    .report-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-    }
-
-    .filter-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-    }
-
-    .field-group {
-      display: grid;
-      gap: 7px;
-    }
-
-    .field-group label {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .field-group input,
-    .field-group select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #d6dbe0;
-      border-radius: 10px;
-      background: #fff;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .field-group input:focus,
-    .field-group select:focus {
-      border-color: #f5a400;
-      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
-    }
-
-    .report-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .secondary-btn {
-      border: 1px solid #d5d9df;
-      background: #fff;
-      color: #333;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    .summary-item {
-      background: #f7f8fa;
-      border-radius: 13px;
-      padding: 14px;
-      text-align: center;
-    }
-
-    .summary-icon {
-      font-size: 22px;
-    }
-
-    .summary-number {
-      margin-top: 4px;
-      font-size: 21px;
-      font-weight: 800;
-    }
-
-    .summary-label {
-      margin-top: 3px;
-      color: #737b84;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .section-title {
-      margin: 0 0 14px;
-      font-size: 19px;
-    }
-
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 600px;
-    }
-
-    th,
-    td {
-      padding: 11px 9px;
-      border-bottom: 1px solid #e6e8eb;
-      text-align: left;
-      font-size: 13px;
-    }
-
-    th {
-      background: #f7f8fa;
-      font-weight: 800;
-      color: #444;
-    }
-
-    td {
-      color: #444;
-    }
-
-    .duration-cell {
-      font-weight: 800;
-      color: #a86f00;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 30px 10px;
-      color: #777;
-    }
-
-    .empty-icon {
-      font-size: 40px;
-      margin-bottom: 8px;
-    }
-
-    .empty-state h3 {
-      margin: 0 0 5px;
-      color: #333;
-    }
-
-    .empty-state p {
-      margin: 0;
-      font-size: 13px;
-    }
-
-    .report-message {
-      min-height: 20px;
-      margin-top: 10px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .report-message.error {
-      color: #c62828;
-    }
-
-    .report-message.success {
-      color: #16803c;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      background: #fff;
-      border-top: 1px solid #ddd;
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .bottom-nav a {
-      text-decoration: none;
-      color: #555;
-      text-align: center;
-      padding: 9px 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .bottom-nav a span {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-
-    .bottom-nav a.active {
-      color: #d88900;
-    }
-
-    .add-main-btn {
-      width: 46px;
-      height: 46px;
-      margin: -16px auto 0;
-      border-radius: 50%;
-      background: #f5a400;
-      color: #fff !important;
-      border: 4px solid #fff;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-    }
-
-    .add-main-btn span {
-      margin: 0 !important;
-      font-size: 26px !important;
-    }
-
-    @media (max-width: 700px) {
-      .filter-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .reports-page {
-        padding: 16px 12px 100px;
-      }
-
-      .reports-header h1 {
-        font-size: 23px;
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .report-buttons {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
-  <main class="reports-page">
+<header class="app-header">
 
-    <div class="reports-container">
+  <div class="app-header-inner">
 
-      <header class="reports-header">
+    <a
+      href="/pages/dashboard.html"
+      class="app-brand"
+    >
 
-        <h1>📊 Reports</h1>
+      <div class="app-brand-mark">
+        MH
+      </div>
 
-        <p>
-          Vehicle duration and activity reports
-        </p>
+      <div class="app-brand-text">
 
-      </header>
+        <div class="app-brand-name">
+          My Home Group
+        </div>
 
+        <div class="app-brand-subtitle">
+          Vehicle Duration Management
+        </div>
 
-      <!-- FILTER -->
+      </div>
 
-      <section class="report-card">
+    </a>
 
-        <div class="filter-grid">
+    <div class="header-actions">
 
-          <div class="field-group">
+      <a
+        href="/pages/notifications.html"
+        class="header-icon-btn"
+      >
+        🔔
+        <span
+          class="notification-badge hidden"
+          data-notification-count
+        ></span>
+      </a>
 
-            <label for="reportType">
-              Report Period
-            </label>
+      <a
+        href="/pages/profile.html"
+        class="header-icon-btn"
+      >
+        👤
+      </a>
 
-            <select id="reportType">
+    </div>
 
-              <option value="daily">
-                Daily
-              </option>
+  </div>
 
-              <option value="weekly">
-                Weekly
-              </option>
+</header>
 
-              <option value="monthly">
-                Monthly
-              </option>
+<div class="app-layout">
 
-              <option value="custom">
-                Custom
-              </option>
+  <aside class="sidebar">
 
-            </select>
+    <nav class="sidebar-nav">
 
-          </div>
+      <a
+        href="/pages/dashboard.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🏠</span>
+        Dashboard
+      </a>
 
+      <a
+        href="/pages/vehicles.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🚛</span>
+        Vehicles
+      </a>
 
-          <div class="field-group">
+      <a
+        href="/pages/add-entry.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">➕</span>
+        Add Entry
+      </a>
 
-            <label for="reportFrom">
-              From Date
-            </label>
+      <a
+        href="/pages/calendar.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📅</span>
+        Calendar
+      </a>
 
-            <input
-              id="reportFrom"
-              type="date"
-            >
+      <a
+        href="/pages/reports.html"
+        class="nav-link active"
+      >
+        <span class="nav-icon">📊</span>
+        Reports
+      </a>
 
-          </div>
+      <a
+        href="/pages/notifications.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🔔</span>
+        Notifications
+      </a>
 
+      <a
+        href="/pages/profile.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
 
-          <div class="field-group">
+      <a
+        href="#"
+        class="nav-link logout-btn"
+      >
+        <span class="nav-icon">🚪</span>
+        Logout
+      </a>
 
-            <label for="reportTo">
-              To Date
-            </label>
+    </nav>
 
-            <input
-              id="reportTo"
-              type="date"
-            >
+  </aside>
 
-          </div>
+  <main class="main-content">
+
+    <div class="content-inner">
+
+      <div class="page-heading">
+
+        <div class="page-heading-text">
+
+          <h1>
+            Reports
+          </h1>
+
+          <p>
+            Analyse vehicle duration and activity
+          </p>
 
         </div>
 
+      </div>
 
-        <div class="report-buttons">
+      <div class="filter-bar">
+
+        <div class="filter-group">
+
+          <label class="filter-label">
+            Preset
+          </label>
+
+          <select
+            id="preset"
+            class="form-control"
+          >
+
+            <option value="today">
+              Today
+            </option>
+
+            <option value="week">
+              This Week
+            </option>
+
+            <option value="month">
+              This Month
+            </option>
+
+            <option value="custom">
+              Custom
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="filter-group">
+
+          <label class="filter-label">
+            From
+          </label>
+
+          <input
+            id="fromDate"
+            type="date"
+            class="form-control"
+          >
+
+        </div>
+
+        <div class="filter-group">
+
+          <label class="filter-label">
+            To
+          </label>
+
+          <input
+            id="toDate"
+            type="date"
+            class="form-control"
+          >
+
+        </div>
+
+        <div
+          style="
+            display:flex;
+            align-items:end;
+          "
+        >
 
           <button
-            id="generateReport"
-            class="primary-btn"
-            type="button"
+            id="applyReport"
+            class="btn btn-primary btn-block"
           >
-            Generate Report
-          </button>
-
-          <button
-            id="todayReport"
-            class="secondary-btn"
-            type="button"
-          >
-            Today's Report
+            Apply
           </button>
 
         </div>
 
+      </div>
 
-        <div
-          id="reportMessage"
-          class="report-message"
-        ></div>
+      <div class="filter-bar">
 
-      </section>
+        <div class="filter-group">
 
+          <label class="filter-label">
+            Vehicle Type
+          </label>
 
-      <!-- SUMMARY -->
+          <select
+            id="typeFilter"
+            class="form-control"
+          >
 
-      <section class="report-card">
+            <option value="">
+              All Types
+            </option>
 
-        <div class="summary-grid">
+            <option>TM / Transit Mixer</option>
+            <option>Truck</option>
+            <option>Dumper</option>
+            <option>Excavator</option>
+            <option>JCB</option>
+            <option>Loader</option>
+            <option>Crane</option>
+            <option>Tractor</option>
+            <option>Water Tanker</option>
+            <option>Other</option>
 
-          <div class="summary-item">
+          </select>
 
-            <div class="summary-icon">
-              🚛
-            </div>
+        </div>
 
-            <div
-              id="summaryVehicles"
-              class="summary-number"
-            >
-              0
-            </div>
+        <div class="filter-group">
 
-            <div class="summary-label">
-              VEHICLES
-            </div>
+          <label class="filter-label">
+            Vehicle
+          </label>
 
+          <select
+            id="vehicleFilter"
+            class="form-control"
+          >
+
+            <option value="">
+              All Vehicles
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="filter-group">
+
+          <label class="filter-label">
+            Driver
+          </label>
+
+          <input
+            id="driverFilter"
+            type="text"
+            class="form-control"
+            placeholder="Driver"
+          >
+
+        </div>
+
+        <div class="filter-group">
+
+          <label class="filter-label">
+            Contractor
+          </label>
+
+          <input
+            id="contractorFilter"
+            type="text"
+            class="form-control"
+            placeholder="Contractor"
+          >
+
+        </div>
+
+      </div>
+
+      <div class="report-summary">
+
+        <div class="report-box">
+
+          <div class="report-box-label">
+            Entries
           </div>
 
-
-          <div class="summary-item">
-
-            <div class="summary-icon">
-              📝
-            </div>
-
-            <div
-              id="summaryEntries"
-              class="summary-number"
-            >
-              0
-            </div>
-
-            <div class="summary-label">
-              ENTRIES
-            </div>
-
+          <div
+            id="totalEntries"
+            class="report-box-value"
+          >
+            0
           </div>
 
+        </div>
 
-          <div class="summary-item">
+        <div class="report-box">
 
-            <div class="summary-icon">
-              👨‍🔧
-            </div>
-
-            <div
-              id="summaryDrivers"
-              class="summary-number"
-            >
-              0
-            </div>
-
-            <div class="summary-label">
-              DRIVERS
-            </div>
-
+          <div class="report-box-label">
+            Vehicles
           </div>
 
-
-          <div class="summary-item">
-
-            <div class="summary-icon">
-              ⏱️
-            </div>
-
-            <div
-              id="summaryDuration"
-              class="summary-number"
-            >
-              0 min
-            </div>
-
-            <div class="summary-label">
-              TOTAL TIME
-            </div>
-
+          <div
+            id="totalVehicles"
+            class="report-box-value"
+          >
+            0
           </div>
+
+        </div>
+
+        <div class="report-box">
+
+          <div class="report-box-label">
+            Running
+          </div>
+
+          <div
+            id="totalRunning"
+            class="report-box-value"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="report-box">
+
+          <div class="report-box-label">
+            Duration
+          </div>
+
+          <div
+            id="totalDuration"
+            class="report-box-value"
+          >
+            0m
+          </div>
+
+        </div>
+
+      </div>
+
+      <section class="card">
+
+        <div class="card-header">
+
+          <div class="card-title">
+            Vehicle-wise Report
+          </div>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Vehicle</th>
+                <th>Type</th>
+                <th>Entries</th>
+                <th>Duration</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="vehicleReportBody">
+
+              <tr>
+                <td colspan="4">
+                  <div class="loading">
+                    Loading...
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
 
         </div>
 
       </section>
 
+      <section
+        class="card"
+        style="margin-top:18px;"
+      >
 
-      <!-- VEHICLE REPORT -->
+        <div class="card-header">
 
-      <section class="report-card">
+          <div class="card-title">
+            Driver-wise Report
+          </div>
 
-        <h2 class="section-title">
-          🚛 Vehicle-wise Report
-        </h2>
+        </div>
 
-        <div
-          id="vehicleReport"
-          class="table-wrap"
-        ></div>
+        <div class="table-wrap">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Driver</th>
+                <th>Entries</th>
+                <th>Duration</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="driverReportBody">
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </section>
 
+      <section
+        class="card"
+        style="margin-top:18px;"
+      >
 
-      <!-- DRIVER REPORT -->
+        <div class="card-header">
 
-      <section class="report-card">
+          <div class="card-title">
+            Contractor-wise Report
+          </div>
 
-        <h2 class="section-title">
-          👨‍🔧 Driver-wise Report
-        </h2>
+        </div>
 
-        <div
-          id="driverReport"
-          class="table-wrap"
-        ></div>
+        <div class="table-wrap">
 
-      </section>
+          <table class="data-table">
 
+            <thead>
 
-      <!-- CONTRACTOR REPORT -->
+              <tr>
 
-      <section class="report-card">
+                <th>Contractor</th>
+                <th>Entries</th>
+                <th>Duration</th>
 
-        <h2 class="section-title">
-          🏢 Contractor-wise Report
-        </h2>
+              </tr>
 
-        <div
-          id="contractorReport"
-          class="table-wrap"
-        ></div>
+            </thead>
+
+            <tbody id="contractorReportBody">
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </section>
 
@@ -547,845 +520,516 @@
 
   </main>
 
+</div>
 
-  <!-- BOTTOM NAV -->
+<nav class="mobile-bottom-nav">
 
-  <nav class="bottom-nav">
+  <div class="mobile-nav-inner">
 
-    <a href="/pages/dashboard.html">
-      <span>🏠</span>
+    <a
+      href="/pages/dashboard.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🏠</span>
       Home
     </a>
 
-    <a href="/pages/vehicles.html">
-      <span>🚛</span>
+    <a
+      href="/pages/vehicles.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🚛</span>
       Vehicles
     </a>
 
     <a
       href="/pages/add-entry.html"
-      class="add-main-btn"
+      class="mobile-nav-item add"
     >
-      <span>+</span>
+      <span class="mobile-nav-add">+</span>
+      Entry
     </a>
 
-    <a href="/pages/calendar.html">
-      <span>📅</span>
+    <a
+      href="/pages/calendar.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">📅</span>
       Calendar
     </a>
 
     <a
       href="/pages/profile.html"
-      class="active"
+      class="mobile-nav-item"
     >
-      <span>👤</span>
+      <span class="mobile-nav-icon">👤</span>
       You
     </a>
 
-  </nav>
+  </div>
 
+</nav>
 
-  <script>
+<script src="../app.js"></script>
 
-    const STORAGE = {
-      entries: "hyma_entries",
-      currentUser: "hyma_current_user"
-    };
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
 
+  const preset =
+    document.getElementById("preset");
 
-    function readJSON(
-      key,
-      fallback
-    ) {
+  const fromDate =
+    document.getElementById("fromDate");
 
-      try {
+  const toDate =
+    document.getElementById("toDate");
 
-        const value =
-          localStorage.getItem(key);
+  const vehicleFilter =
+    document.getElementById("vehicleFilter");
 
-        return value
-          ? JSON.parse(value)
-          : fallback;
+  const typeFilter =
+    document.getElementById("typeFilter");
 
-      } catch (error) {
+  const driverFilter =
+    document.getElementById("driverFilter");
 
-        return fallback;
-
-      }
-
-    }
-
-
-    function getEntries() {
-
-      return readJSON(
-        STORAGE.entries,
-        []
-      );
-
-    }
-
-
-    function getCurrentUser() {
-
-      return readJSON(
-        STORAGE.currentUser,
-        null
-      );
-
-    }
-
-
-    function getToday() {
-
-      const now =
-        new Date();
-
-      const year =
-        now.getFullYear();
-
-      const month =
-        String(
-          now.getMonth() + 1
-        ).padStart(2, "0");
-
-      const day =
-        String(
-          now.getDate()
-        ).padStart(2, "0");
-
-      return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
-      );
-
-    }
-
-
-    function addDays(
-      dateString,
-      amount
-    ) {
-
-      const date =
-        new Date(
-          dateString +
-          "T00:00:00"
-        );
-
-      date.setDate(
-        date.getDate() +
-        amount
-      );
-
-      const year =
-        date.getFullYear();
-
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(2, "0");
-
-      const day =
-        String(
-          date.getDate()
-        ).padStart(2, "0");
-
-      return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
-      );
-
-    }
-
-
-    function formatDuration(
-      minutes
-    ) {
-
-      minutes =
-        Number(minutes) || 0;
-
-      const hours =
-        Math.floor(
-          minutes / 60
-        );
-
-      const mins =
-        minutes % 60;
-
-      if (hours === 0) {
-        return `${mins} min`;
-      }
-
-      if (mins === 0) {
-        return `${hours} hr`;
-      }
-
-      return `${hours} hr ${mins} min`;
-
-    }
-
-
-    function escapeHTML(
-      value
-    ) {
-
-      return String(
-        value || ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-
-    }
-
-
-    function setMessage(
-      message,
-      type
-    ) {
-
-      const element =
-        document.getElementById(
-          "reportMessage"
-        );
-
-      element.textContent =
-        message;
-
-      element.className =
-        "report-message " +
-        (type || "");
-
-    }
-
-
-    function getDateRange() {
-
-      const type =
-        document.getElementById(
-          "reportType"
-        ).value;
-
-      const today =
-        getToday();
-
-      let from =
-        document.getElementById(
-          "reportFrom"
-        ).value;
-
-      let to =
-        document.getElementById(
-          "reportTo"
-        ).value;
-
-
-      if (type === "daily") {
-
-        from = today;
-        to = today;
-
-      }
-
-
-      if (type === "weekly") {
-
-        from =
-          addDays(
-            today,
-            -6
-          );
-
-        to = today;
-
-      }
-
-
-      if (type === "monthly") {
-
-        const date =
-          new Date(
-            today +
-            "T00:00:00"
-          );
-
-        date.setDate(1);
-
-        const year =
-          date.getFullYear();
-
-        const month =
-          String(
-            date.getMonth() + 1
-          ).padStart(2, "0");
-
-        from =
-          `${year}-${month}-01`;
-
-        to = today;
-
-      }
-
-
-      return {
-        from,
-        to
-      };
-
-    }
-
-
-    function generateReport() {
-
-      const range =
-        getDateRange();
-
-
-      if (
-        !range.from ||
-        !range.to
-      ) {
-
-        setMessage(
-          "Please select From and To dates.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (
-        range.from >
-        range.to
-      ) {
-
-        setMessage(
-          "From date cannot be after To date.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      const entries =
-        getEntries();
-
-
-      const filtered =
-        entries.filter(
-          function (entry) {
-
-            return (
-              entry.date >=
-              range.from &&
-              entry.date <=
-              range.to
-            );
-
-          }
-        );
-
-
-      renderSummary(
-        filtered
-      );
-
-      renderVehicleReport(
-        filtered
-      );
-
-      renderDriverReport(
-        filtered
-      );
-
-      renderContractorReport(
-        filtered
-      );
-
-
-      setMessage(
-        `${filtered.length} entries found.`,
-        "success"
-      );
-
-    }
-
-
-    function renderSummary(
-      entries
-    ) {
-
-      const vehicles =
-        new Set();
-
-      const drivers =
-        new Set();
-
-
-      let duration = 0;
-
-
-      entries.forEach(
-        function (entry) {
-
-          if (
-            entry.vehicleId
-          ) {
-
-            vehicles.add(
-              entry.vehicleId
-            );
-
-          } else if (
-            entry.vehicleNumber
-          ) {
-
-            vehicles.add(
-              entry.vehicleNumber
-            );
-
-          }
-
-
-          if (
-            entry.driverName
-          ) {
-
-            drivers.add(
-              entry.driverName
-            );
-
-          }
-
-
-          duration +=
-            Number(
-              entry.duration
-            ) || 0;
-
-        }
-      );
-
-
-      document.getElementById(
-        "summaryVehicles"
-      ).textContent =
-        vehicles.size;
-
-
-      document.getElementById(
-        "summaryEntries"
-      ).textContent =
-        entries.length;
-
-
-      document.getElementById(
-        "summaryDrivers"
-      ).textContent =
-        drivers.size;
-
-
-      document.getElementById(
-        "summaryDuration"
-      ).textContent =
-        formatDuration(
-          duration
-        );
-
-    }
-
-
-    function groupEntries(
-      entries,
-      keyFunction
-    ) {
-
-      const groups = {};
-
-
-      entries.forEach(
-        function (entry) {
-
-          const key =
-            keyFunction(entry) ||
-            "Not specified";
-
-
-          if (!groups[key]) {
-
-            groups[key] = {
-              name: key,
-              entries: 0,
-              duration: 0
-            };
-
-          }
-
-
-          groups[key].entries += 1;
-
-
-          groups[key].duration +=
-            Number(
-              entry.duration
-            ) || 0;
-
-        }
-      );
-
-
-      return Object.values(
-        groups
-      ).sort(
-        function (a, b) {
-
-          return (
-            b.duration -
-            a.duration
-          );
-
-        }
-      );
-
-    }
-
-
-    function createTable(
-      rows,
-      firstColumn
-    ) {
-
-      if (
-        rows.length === 0
-      ) {
-
-        return `
-
-          <div class="empty-state">
-
-            <div class="empty-icon">
-              📭
-            </div>
-
-            <h3>
-              No data
-            </h3>
-
-            <p>
-              Selected period mein data available nahi hai.
-            </p>
-
-          </div>
-
-        `;
-
-      }
-
-
-      return `
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>
-                ${firstColumn}
-              </th>
-
-              <th>
-                Entries
-              </th>
-
-              <th>
-                Total Duration
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            ${rows
-              .map(
-                function (row) {
-
-                  return `
-
-                    <tr>
-
-                      <td>
-                        ${escapeHTML(
-                          row.name
-                        )}
-                      </td>
-
-                      <td>
-                        ${row.entries}
-                      </td>
-
-                      <td class="duration-cell">
-                        ${formatDuration(
-                          row.duration
-                        )}
-                      </td>
-
-                    </tr>
-
-                  `;
-
-                }
-              )
-              .join("")}
-
-          </tbody>
-
-        </table>
-
-      `;
-
-    }
-
-
-    function renderVehicleReport(
-      entries
-    ) {
-
-      const rows =
-        groupEntries(
-          entries,
-          function (entry) {
-
-            return (
-              entry.vehicleNumber ||
-              "Vehicle"
-            );
-
-          }
-        );
-
-
-      document.getElementById(
-        "vehicleReport"
-      ).innerHTML =
-        createTable(
-          rows,
-          "Vehicle"
-        );
-
-    }
-
-
-    function renderDriverReport(
-      entries
-    ) {
-
-      const rows =
-        groupEntries(
-          entries,
-          function (entry) {
-
-            return entry.driverName;
-
-          }
-        );
-
-
-      document.getElementById(
-        "driverReport"
-      ).innerHTML =
-        createTable(
-          rows,
-          "Driver"
-        );
-
-    }
-
-
-    function renderContractorReport(
-      entries
-    ) {
-
-      const rows =
-        groupEntries(
-          entries,
-          function (entry) {
-
-            return (
-              entry.contractor ||
-              "Not specified"
-            );
-
-          }
-        );
-
-
-      document.getElementById(
-        "contractorReport"
-      ).innerHTML =
-        createTable(
-          rows,
-          "Contractor"
-        );
-
-    }
-
-
-    function setTodayReport() {
-
-      const today =
-        getToday();
-
-
-      document.getElementById(
-        "reportType"
-      ).value =
-        "daily";
-
-
-      document.getElementById(
-        "reportFrom"
-      ).value =
-        today;
-
-
-      document.getElementById(
-        "reportTo"
-      ).value =
-        today;
-
-
-      generateReport();
-
-    }
-
-
-    function initializeReports() {
-
-      const currentUser =
-        getCurrentUser();
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      const today =
-        getToday();
-
-
-      document.getElementById(
-        "reportFrom"
-      ).value =
-        today;
-
-
-      document.getElementById(
-        "reportTo"
-      ).value =
-        today;
-
-
-      document.getElementById(
-        "reportType"
-      ).addEventListener(
-        "change",
-        function () {
-
-          const type =
-            this.value;
-
-
-          if (
-            type !== "custom"
-          ) {
-
-            const range =
-              getDateRange();
-
-
-            document.getElementById(
-              "reportFrom"
-            ).value =
-              range.from;
-
-
-            document.getElementById(
-              "reportTo"
-            ).value =
-              range.to;
-
-          }
-
-        }
-      );
-
-
-      document.getElementById(
-        "generateReport"
-      ).addEventListener(
-        "click",
-        generateReport
-      );
-
-
-      document.getElementById(
-        "todayReport"
-      ).addEventListener(
-        "click",
-        setTodayReport
-      );
-
-
-      generateReport();
-
-    }
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializeReports
+  const contractorFilter =
+    document.getElementById(
+      "contractorFilter"
     );
 
-  </script>
+  let allEntries = [];
+  let vehicles = [];
+
+  function applyPreset() {
+
+    const today =
+      MyHomeGroup.todayString();
+
+    if (preset.value === "today") {
+
+      fromDate.value = today;
+      toDate.value = today;
+
+    } else if (
+      preset.value === "week"
+    ) {
+
+      fromDate.value =
+        MyHomeGroup.getWeekStart();
+
+      toDate.value = today;
+
+    } else if (
+      preset.value === "month"
+    ) {
+
+      fromDate.value =
+        MyHomeGroup.getMonthStart();
+
+      toDate.value = today;
+
+    }
+
+  }
+
+  function aggregate(
+    entries,
+    key
+  ) {
+
+    const map =
+      new Map();
+
+    entries.forEach(entry => {
+
+      const name =
+        entry[key] ||
+        "Unknown";
+
+      const existing =
+        map.get(name) || {
+          name,
+          entries: 0,
+          duration: 0
+        };
+
+      existing.entries += 1;
+
+      existing.duration +=
+        Number(
+          entry.duration || 0
+        );
+
+      map.set(
+        name,
+        existing
+      );
+
+    });
+
+    return Array.from(
+      map.values()
+    ).sort(
+      (a, b) =>
+        b.duration - a.duration
+    );
+
+  }
+
+  function render() {
+
+    let entries =
+      [...allEntries];
+
+    const type =
+      typeFilter.value;
+
+    const vehicleId =
+      vehicleFilter.value;
+
+    const driver =
+      driverFilter.value
+        .trim()
+        .toLowerCase();
+
+    const contractor =
+      contractorFilter.value
+        .trim()
+        .toLowerCase();
+
+    entries =
+      entries.filter(entry => {
+
+        if (
+          type &&
+          entry.vehicle_type !== type
+        ) {
+          return false;
+        }
+
+        if (
+          vehicleId &&
+          String(entry.vehicle_id) !==
+          String(vehicleId)
+        ) {
+          return false;
+        }
+
+        if (
+          driver &&
+          !String(
+            entry.driver_name || ""
+          )
+            .toLowerCase()
+            .includes(driver)
+        ) {
+          return false;
+        }
+
+        if (
+          contractor &&
+          !String(
+            entry.contractor || ""
+          )
+            .toLowerCase()
+            .includes(contractor)
+        ) {
+          return false;
+        }
+
+        return true;
+
+      });
+
+    const total =
+      entries.reduce(
+        (sum, entry) =>
+          sum +
+          Number(entry.duration || 0),
+        0
+      );
+
+    const running =
+      entries.filter(
+        entry => !entry.exit_time
+      ).length;
+
+    const uniqueVehicles =
+      new Set(
+        entries.map(
+          entry =>
+            entry.vehicle_id ||
+            entry.vehicle_number
+        )
+      ).size;
+
+    document.getElementById(
+      "totalEntries"
+    ).textContent =
+      entries.length;
+
+    document.getElementById(
+      "totalVehicles"
+    ).textContent =
+      uniqueVehicles;
+
+    document.getElementById(
+      "totalRunning"
+    ).textContent =
+      running;
+
+    document.getElementById(
+      "totalDuration"
+    ).textContent =
+      MyHomeGroup.minutesToDuration(
+        total
+      );
+
+    const vehicleRows =
+      aggregate(
+        entries,
+        "vehicle_number"
+      );
+
+    document.getElementById(
+      "vehicleReportBody"
+    ).innerHTML =
+      vehicleRows.length
+        ? vehicleRows.map(item => {
+
+            const entry =
+              entries.find(
+                e =>
+                  e.vehicle_number ===
+                  item.name
+              );
+
+            return `
+              <tr>
+
+                <td>
+                  <strong>
+                    ${MyHomeGroup.escapeHtml(
+                      item.name
+                    )}
+                  </strong>
+                </td>
+
+                <td>
+                  ${MyHomeGroup.escapeHtml(
+                    entry?.vehicle_type || "-"
+                  )}
+                </td>
+
+                <td>
+                  ${item.entries}
+                </td>
+
+                <td>
+                  ${MyHomeGroup.minutesToDuration(
+                    item.duration
+                  )}
+                </td>
+
+              </tr>
+            `;
+
+          }).join("")
+        : `
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                No data found.
+              </div>
+            </td>
+          </tr>
+        `;
+
+    const driverRows =
+      aggregate(
+        entries,
+        "driver_name"
+      );
+
+    document.getElementById(
+      "driverReportBody"
+    ).innerHTML =
+      driverRows.length
+        ? driverRows.map(item => `
+          <tr>
+
+            <td>
+              ${MyHomeGroup.escapeHtml(
+                item.name
+              )}
+            </td>
+
+            <td>
+              ${item.entries}
+            </td>
+
+            <td>
+              ${MyHomeGroup.minutesToDuration(
+                item.duration
+              )}
+            </td>
+
+          </tr>
+        `).join("")
+        : `
+          <tr>
+            <td colspan="3">
+              <div class="empty-state">
+                No data found.
+              </div>
+            </td>
+          </tr>
+        `;
+
+    const contractorRows =
+      aggregate(
+        entries,
+        "contractor"
+      );
+
+    document.getElementById(
+      "contractorReportBody"
+    ).innerHTML =
+      contractorRows.length
+        ? contractorRows.map(item => `
+          <tr>
+
+            <td>
+              ${MyHomeGroup.escapeHtml(
+                item.name
+              )}
+            </td>
+
+            <td>
+              ${item.entries}
+            </td>
+
+            <td>
+              ${MyHomeGroup.minutesToDuration(
+                item.duration
+              )}
+            </td>
+
+          </tr>
+        `).join("")
+        : `
+          <tr>
+            <td colspan="3">
+              <div class="empty-state">
+                No data found.
+              </div>
+            </td>
+          </tr>
+        `;
+
+  }
+
+  async function load() {
+
+    try {
+
+      const [
+        entries,
+        vehicleList
+      ] = await Promise.all([
+
+        MyHomeGroup.getEntries({
+          from_date:
+            fromDate.value,
+          to_date:
+            toDate.value
+        }),
+
+        MyHomeGroup.getVehicles()
+
+      ]);
+
+      allEntries =
+        entries;
+
+      vehicles =
+        vehicleList;
+
+      vehicleFilter.innerHTML = `
+        <option value="">
+          All Vehicles
+        </option>
+
+        ${
+          vehicles.map(vehicle => `
+            <option value="${vehicle.id}">
+              ${MyHomeGroup.escapeHtml(
+                vehicle.vehicle_number
+              )}
+            </option>
+          `).join("")
+        }
+      `;
+
+      render();
+
+    } catch (error) {
+
+      MyHomeGroup.showToast(
+        error.message,
+        "error"
+      );
+
+    }
+
+  }
+
+  preset.addEventListener(
+    "change",
+    () => {
+
+      if (
+        preset.value !== "custom"
+      ) {
+        applyPreset();
+      }
+
+    }
+  );
+
+  [
+    typeFilter,
+    vehicleFilter,
+    driverFilter,
+    contractorFilter
+  ].forEach(element => {
+
+    element.addEventListener(
+      "input",
+      render
+    );
+
+    element.addEventListener(
+      "change",
+      render
+    );
+
+  });
+
+  document
+    .getElementById("applyReport")
+    .addEventListener(
+      "click",
+      load
+    );
+
+  applyPreset();
+
+  await load();
+
+});
+</script>
 
 </body>
-
 </html>
