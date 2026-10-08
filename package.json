@@ -1,26 +1,16 @@
 {
   "name": "my-home-group",
   "version": "1.0.0",
-  "description": "My Home Group Vehicle Duration Management Website",
+  "description": "My Home Group - Vehicle Duration Management System",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": [
-    "my-home-group",
-    "vehicle",
-    "duration",
-    "construction",
-    "vehicle-management"
-  ],
-  "author": "My Home Group",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18"
-  },
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3"
