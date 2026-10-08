@@ -2,173 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - My Home Group</title>
-  <link rel="stylesheet" href="../style.css">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Login — MY HOME GROUP</title>
+
+  <link
+    rel="stylesheet"
+    href="/style.css"
+  >
 </head>
 
 <body>
 
-<div class="auth-page">
+  <main class="auth-page">
 
-  <div class="auth-card">
+    <section class="auth-card">
 
-    <div class="auth-logo">MH</div>
+      <div class="auth-brand">
+        <div class="brand-logo">MH</div>
 
-    <h1 class="auth-title">Welcome Back</h1>
+        <h1>MY HOME GROUP</h1>
 
-    <p class="auth-subtitle">
-      Sign in to My Home Group Vehicle Management
-    </p>
-
-    <div id="loginMessage"></div>
-
-    <form id="loginForm" class="auth-form">
-
-      <div class="form-group">
-        <label class="form-label">
-          Email or Mobile
-        </label>
-
-        <input
-          id="login"
-          name="login"
-          type="text"
-          class="form-control"
-          placeholder="Enter email or mobile"
-          autocomplete="username"
-          required
-        >
+        <p>
+          Vehicle Duration Management
+        </p>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">
-          Password
-        </label>
+      <h2>Welcome Back</h2>
 
-        <input
-          id="password"
-          name="password"
-          type="password"
-          class="form-control"
-          placeholder="Enter password"
-          autocomplete="current-password"
-          required
-        >
-      </div>
+      <form id="loginForm">
 
-      <button
-        id="loginButton"
-        type="submit"
-        class="btn btn-primary btn-block"
-      >
-        Login
-      </button>
+        <div class="form-group">
+          <label for="loginValue">
+            Mobile / Email
+          </label>
 
-    </form>
+          <input
+            id="loginValue"
+            class="form-control"
+            type="text"
+            placeholder="Mobile / Email"
+            autocomplete="username"
+            required
+          >
+        </div>
 
-    <div class="auth-bottom">
-      <div>
+        <div class="form-group">
+          <label for="loginPassword">
+            Password
+          </label>
+
+          <input
+            id="loginPassword"
+            class="form-control"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+            required
+          >
+
+          <a
+            href="#"
+            class="forgot-link"
+            onclick="alert('Password reset will be connected next.'); return false;"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        <div class="form-actions">
+
+          <button
+            id="loginButton"
+            class="btn btn-primary"
+            type="submit"
+          >
+            Login
+          </button>
+
+        </div>
+
+      </form>
+
+      <div class="auth-links">
         Don't have an account?
-        <a href="/pages/register.html">
-          Register
+        <a href="/register">
+          Create Account
         </a>
       </div>
 
-      <div style="margin-top:8px;">
-        <a href="#" id="forgotPassword">
-          Forgot password?
-        </a>
-      </div>
-    </div>
+    </section>
 
-  </div>
+  </main>
 
-</div>
-
-<script src="../app.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const form = document.getElementById("loginForm");
-  const button = document.getElementById("loginButton");
-  const message = document.getElementById("loginMessage");
-
-  form.addEventListener("submit", async (event) => {
-
-    event.preventDefault();
-
-    message.innerHTML = "";
-
-    const login =
-      document.getElementById("login").value.trim();
-
-    const password =
-      document.getElementById("password").value;
-
-    if (!login || !password) {
-      MyHomeGroup.setFormMessage(
-        message,
-        "Please enter your email/mobile and password.",
-        "error"
-      );
-      return;
-    }
-
-    try {
-
-      MyHomeGroup.setButtonLoading(
-        button,
-        true,
-        "Signing in..."
-      );
-
-      await MyHomeGroup.loginUser(
-        login,
-        password
-      );
-
-      MyHomeGroup.showToast(
-        "Login successful.",
-        "success"
-      );
-
-      window.location.href =
-        "/pages/dashboard.html";
-
-    } catch (error) {
-
-      MyHomeGroup.setFormMessage(
-        message,
-        error.message ||
-          "Login failed.",
-        "error"
-      );
-
-      MyHomeGroup.setButtonLoading(
-        button,
-        false
-      );
-    }
-
-  });
-
-  document
-    .getElementById("forgotPassword")
-    .addEventListener("click", (event) => {
-
-      event.preventDefault();
-
-      MyHomeGroup.showToast(
-        "Please contact your site administrator to reset your password.",
-        "warning"
-      );
-
-    });
-
-});
-</script>
+  <script src="/app.js"></script>
 
 </body>
 </html>
