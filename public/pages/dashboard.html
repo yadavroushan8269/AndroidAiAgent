@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Dashboard - My-Home-Group</title>
+  <title>Dashboard - My Home Group</title>
 
   <link
     rel="stylesheet"
@@ -22,341 +16,392 @@
   >
 
   <style>
-    body {
-      margin: 0;
-      background: #f5f7fa;
+    .page-wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:20px;
+      padding-bottom:105px;
     }
 
-    .dashboard-page {
-      min-height: 100vh;
-      padding-bottom: 90px;
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      margin-bottom:22px;
     }
 
-    .dashboard-header {
-      background: #fff;
-      padding: 18px 16px;
-      border-bottom: 1px solid #e8eaed;
+    .welcome h1{
+      margin:0;
+      font-size:27px;
     }
 
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+    .welcome p{
+      margin:6px 0 0;
+      opacity:.7;
+      font-size:14px;
     }
 
-    .greeting {
-      min-width: 0;
+    .top-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
     }
 
-    .greeting small {
-      display: block;
-      color: #777;
-      font-size: 12px;
-      margin-bottom: 3px;
+    .icon-btn{
+      width:42px;
+      height:42px;
+      border:0;
+      border-radius:11px;
+      background:#eef1f4;
+      cursor:pointer;
+      font-size:19px;
+      position:relative;
     }
 
-    .greeting h1 {
-      margin: 0;
-      font-size: 22px;
-      color: #222;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .notification-badge{
+      position:absolute;
+      top:-4px;
+      right:-4px;
+      min-width:18px;
+      height:18px;
+      padding:0 4px;
+      border-radius:20px;
+      background:#dc3545;
+      color:#fff;
+      font-size:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
     }
 
-    .notification-btn {
-      position: relative;
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      border: 1px solid #e1e4e7;
-      border-radius: 13px;
-      background: #fff;
-      cursor: pointer;
-      font-size: 21px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .logout-btn{
+      border:0;
+      background:#ffe5e7;
+      color:#b42332;
+      border-radius:10px;
+      padding:10px 13px;
+      font-weight:700;
+      cursor:pointer;
     }
 
-    .notification-badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      min-width: 19px;
-      height: 19px;
-      padding: 0 5px;
-      border-radius: 20px;
-      background: #e53935;
-      color: #fff;
-      font-size: 10px;
-      font-weight: 800;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #fff;
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+      margin-bottom:20px;
     }
 
-    .date-line {
-      margin-top: 6px;
-      color: #888;
-      font-size: 12px;
+    .stat-card{
+      background:#fff;
+      border:1px solid #e3e7eb;
+      border-radius:15px;
+      padding:17px;
+      box-shadow:0 3px 12px rgba(0,0,0,.04);
     }
 
-    .dashboard-content {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 16px;
+    .stat-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
     }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 11px;
+    .stat-icon{
+      width:40px;
+      height:40px;
+      border-radius:11px;
+      background:#fff5d4;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
     }
 
-    .stat-card {
-      background: #fff;
-      border: 1px solid #eceff1;
-      border-radius: 15px;
-      padding: 16px;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
+    .stat-label{
+      margin-top:13px;
+      font-size:12px;
+      opacity:.65;
     }
 
-    .stat-icon {
-      font-size: 22px;
-      margin-bottom: 8px;
+    .stat-value{
+      margin-top:3px;
+      font-size:26px;
+      font-weight:800;
     }
 
-    .stat-value {
-      font-size: 25px;
-      font-weight: 800;
-      color: #222;
+    .quick-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-bottom:20px;
     }
 
-    .stat-label {
-      margin-top: 3px;
-      color: #777;
-      font-size: 12px;
+    .quick-btn{
+      border:1px solid #e3e7eb;
+      background:#fff;
+      border-radius:13px;
+      padding:15px;
+      text-align:left;
+      cursor:pointer;
+      box-shadow:0 2px 9px rgba(0,0,0,.03);
     }
 
-    .section {
-      margin-top: 18px;
+    .quick-btn:hover{
+      border-color:#f5b400;
     }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
+    .quick-icon{
+      font-size:23px;
+      margin-bottom:7px;
     }
 
-    .section-header h2 {
-      margin: 0;
-      font-size: 18px;
-      color: #222;
+    .quick-title{
+      font-weight:800;
+      font-size:14px;
     }
 
-    .section-header a {
-      color: #c27d00;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700;
+    .quick-sub{
+      font-size:11px;
+      opacity:.6;
+      margin-top:3px;
     }
 
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 11px;
+    .section-card{
+      background:#fff;
+      border:1px solid #e3e7eb;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:18px;
+      box-shadow:0 3px 12px rgba(0,0,0,.04);
     }
 
-    .quick-action {
-      min-height: 80px;
-      padding: 15px;
-      border-radius: 15px;
-      border: 1px solid #eceff1;
-      background: #fff;
-      text-decoration: none;
-      color: #222;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
+    .section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:15px;
     }
 
-    .quick-action strong {
-      font-size: 14px;
+    .section-head h2{
+      margin:0;
+      font-size:18px;
     }
 
-    .quick-action span {
-      font-size: 11px;
-      color: #777;
+    .section-head button{
+      border:0;
+      background:none;
+      color:#8a6500;
+      font-weight:700;
+      cursor:pointer;
     }
 
-    .quick-icon {
-      font-size: 23px;
+    .activity-list{
+      display:grid;
+      gap:9px;
     }
 
-    .duration-card {
-      background: #fff;
-      border: 1px solid #eceff1;
-      border-radius: 17px;
-      padding: 16px;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
+    .activity-item{
+      border:1px solid #edf0f2;
+      border-radius:11px;
+      padding:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
     }
 
-    .duration-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .activity-main{
+      min-width:0;
     }
 
-    .duration-field label {
-      display: block;
-      margin-bottom: 6px;
-      color: #555;
-      font-size: 12px;
-      font-weight: 700;
+    .activity-title{
+      font-weight:800;
+      font-size:14px;
     }
 
-    .duration-field input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px 10px;
-      border: 1px solid #d8dde1;
-      border-radius: 10px;
-      font-size: 15px;
+    .activity-meta{
+      margin-top:4px;
+      font-size:11px;
+      opacity:.65;
+      line-height:1.6;
     }
 
-    .duration-result {
-      margin-top: 12px;
-      padding: 13px;
-      border-radius: 11px;
-      background: #fff7df;
-      text-align: center;
+    .activity-duration{
+      white-space:nowrap;
+      font-weight:800;
+      font-size:13px;
     }
 
-    .duration-result small {
-      display: block;
-      color: #777;
-      font-size: 11px;
+    .running{
+      color:#16803c;
     }
 
-    .duration-result strong {
-      display: block;
-      margin-top: 3px;
-      color: #a96c00;
-      font-size: 22px;
+    .empty{
+      text-align:center;
+      padding:28px 15px;
+      opacity:.7;
     }
 
-    .activity-list {
-      display: grid;
-      gap: 10px;
+    .duration-card{
+      background:#fff8df;
+      border:1px solid #f0d46d;
+      border-radius:16px;
+      padding:18px;
     }
 
-    .activity-card {
-      background: #fff;
-      border: 1px solid #eceff1;
-      border-radius: 14px;
-      padding: 14px;
+    .duration-card h2{
+      margin:0;
+      font-size:18px;
     }
 
-    .activity-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+    .duration-card p{
+      margin:5px 0 15px;
+      font-size:12px;
+      opacity:.7;
     }
 
-    .vehicle-name {
-      font-weight: 800;
-      font-size: 15px;
+    .duration-form{
+      display:grid;
+      grid-template-columns:1fr 1fr auto;
+      gap:10px;
+      align-items:end;
     }
 
-    .activity-duration {
-      font-weight: 800;
-      color: #b77700;
-      font-size: 13px;
+    .duration-group label{
+      display:block;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:5px;
     }
 
-    .activity-details {
-      margin-top: 6px;
-      color: #777;
-      font-size: 12px;
-      line-height: 1.5;
+    .duration-group input{
+      width:100%;
+      box-sizing:border-box;
+      border:1px solid #d8c675;
+      border-radius:10px;
+      padding:11px;
+      background:#fff;
     }
 
-    .empty-card {
-      padding: 30px 15px;
-      background: #fff;
-      border: 1px solid #eceff1;
-      border-radius: 15px;
-      text-align: center;
-      color: #777;
-      font-size: 13px;
+    .duration-result{
+      margin-top:15px;
+      font-size:23px;
+      font-weight:800;
     }
 
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 100;
-      height: 68px;
-      background: #fff;
-      border-top: 1px solid #e5e7e9;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
+    .date-display{
+      font-size:13px;
+      opacity:.65;
     }
 
-    .bottom-nav a {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      text-decoration: none;
-      color: #777;
-      font-size: 10px;
-      font-weight: 700;
+    .bottom-nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:5000;
+      display:flex;
+      justify-content:space-around;
+      background:#fff;
+      border-top:1px solid #ddd;
+      padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+      box-shadow:0 -3px 12px rgba(0,0,0,.06);
     }
 
-    .bottom-nav a span {
-      font-size: 21px;
-      line-height: 1;
+    .bottom-nav a{
+      text-decoration:none;
+      color:#555;
+      font-size:11px;
+      text-align:center;
+      padding:6px 8px;
     }
 
-    .bottom-nav a.active {
-      color: #d18a00;
+    .bottom-nav a.active{
+      color:#111;
+      font-weight:800;
     }
 
-    @media (min-width: 700px) {
+    .loading{
+      text-align:center;
+      padding:25px;
+      opacity:.7;
+    }
 
-      .stats-grid {
-        grid-template-columns: repeat(4, 1fr);
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:25px;
+      transform:translateX(-50%) translateY(100px);
+      background:#16191d;
+      color:#fff;
+      padding:12px 18px;
+      border-radius:10px;
+      font-size:14px;
+      z-index:9999;
+      transition:.25s ease;
+    }
+
+    .toast.show{
+      transform:translateX(-50%) translateY(0);
+    }
+
+    @media(max-width:900px){
+      .stats-grid{
+        grid-template-columns:repeat(2,1fr);
       }
 
-      .quick-actions {
-        grid-template-columns: repeat(4, 1fr);
+      .quick-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:650px){
+      .page-wrap{
+        padding:15px;
+        padding-bottom:100px;
       }
 
-      .dashboard-header {
-        padding-left: calc((100% - 968px) / 2);
-        padding-right: calc((100% - 968px) / 2);
+      .topbar{
+        align-items:flex-start;
       }
 
-      .bottom-nav {
-        left: 50%;
-        right: auto;
-        width: 100%;
-        max-width: 700px;
-        transform: translateX(-50%);
-        border-radius: 16px 16px 0 0;
+      .welcome h1{
+        font-size:22px;
+      }
+
+      .logout-btn{
+        display:none;
+      }
+
+      .stats-grid{
+        gap:9px;
+      }
+
+      .stat-card{
+        padding:13px;
+      }
+
+      .stat-value{
+        font-size:23px;
+      }
+
+      .quick-grid{
+        gap:9px;
+      }
+
+      .quick-btn{
+        padding:13px;
+      }
+
+      .duration-form{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .duration-form .btn{
+        grid-column:1 / -1;
       }
     }
   </style>
@@ -364,29 +409,34 @@
 
 <body>
 
-  <main class="dashboard-page">
+  <main class="page-wrap">
 
-    <header class="dashboard-header">
 
-      <div class="header-top">
+    <!-- HEADER -->
 
-        <div class="greeting">
+    <header class="topbar">
 
-          <small>
-            Welcome back
-          </small>
+      <div class="welcome">
 
-          <h1 id="userName">
-            User
-          </h1>
+        <h1>
+          Hello, <span id="userName">User</span> 👋
+        </h1>
 
-        </div>
+        <p>
+          <span id="todayText"></span>
+          ·
+          My Home Group
+        </p>
 
+      </div>
+
+
+      <div class="top-actions">
 
         <button
-          id="notificationBtn"
-          class="notification-btn"
+          class="icon-btn"
           type="button"
+          onclick="window.location.href='notifications.html'"
           aria-label="Notifications"
         >
 
@@ -395,581 +445,903 @@
           <span
             id="notificationBadge"
             class="notification-badge"
+            style="display:none;"
           >
             0
           </span>
 
         </button>
 
+
+        <button
+          class="logout-btn"
+          type="button"
+          id="logoutButton"
+        >
+          Logout
+        </button>
+
       </div>
-
-
-      <div
-        id="todayDate"
-        class="date-line"
-      ></div>
 
     </header>
 
 
-    <section class="dashboard-content">
+    <!-- STATS -->
+
+    <section class="stats-grid">
 
 
-      <!-- STATS -->
+      <div class="stat-card">
 
-      <div class="stats-grid">
+        <div class="stat-top">
 
-        <div class="stat-card">
+          <strong>
+            Vehicles
+          </strong>
 
           <div class="stat-icon">
             🚚
           </div>
 
-          <div
-            id="vehicleCount"
-            class="stat-value"
-          >
-            0
-          </div>
-
-          <div class="stat-label">
-            Vehicles
-          </div>
-
         </div>
 
-
-        <div class="stat-card">
-
-          <div class="stat-icon">
-            🟢
-          </div>
-
-          <div
-            id="runningCount"
-            class="stat-value"
-          >
-            0
-          </div>
-
-          <div class="stat-label">
-            Running
-          </div>
-
+        <div class="stat-label">
+          Total registered
         </div>
 
-
-        <div class="stat-card">
-
-          <div class="stat-icon">
-            ⏱️
-          </div>
-
-          <div
-            id="entryCount"
-            class="stat-value"
-          >
-            0
-          </div>
-
-          <div class="stat-label">
-            Today's Entries
-          </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-icon">
-            🕒
-          </div>
-
-          <div
-            id="totalDuration"
-            class="stat-value"
-          >
-            0m
-          </div>
-
-          <div class="stat-label">
-            Total Duration
-          </div>
-
+        <div
+          id="vehicleCount"
+          class="stat-value"
+        >
+          0
         </div>
 
       </div>
 
 
-      <!-- QUICK ACTIONS -->
+      <div class="stat-card">
 
-      <section class="section">
+        <div class="stat-top">
 
-        <div class="section-header">
+          <strong>
+            Running
+          </strong>
 
-          <h2>
-            Quick Actions
-          </h2>
-
-        </div>
-
-
-        <div class="quick-actions">
-
-          <a
-            class="quick-action"
-            href="/pages/add-entry.html"
-          >
-
-            <div class="quick-icon">
-              ➕
-            </div>
-
-            <strong>
-              Add Entry
-            </strong>
-
-            <span>
-              Record vehicle entry
-            </span>
-
-          </a>
-
-
-          <a
-            class="quick-action"
-            href="/pages/vehicles.html"
-          >
-
-            <div class="quick-icon">
-              🚚
-            </div>
-
-            <strong>
-              Vehicles
-            </strong>
-
-            <span>
-              Manage vehicles
-            </span>
-
-          </a>
-
-
-          <a
-            class="quick-action"
-            href="/pages/calendar.html"
-          >
-
-            <div class="quick-icon">
-              📅
-            </div>
-
-            <strong>
-              Calendar
-            </strong>
-
-            <span>
-              View daily activity
-            </span>
-
-          </a>
-
-
-          <a
-            class="quick-action"
-            href="/pages/reports.html"
-          >
-
-            <div class="quick-icon">
-              📊
-            </div>
-
-            <strong>
-              Reports
-            </strong>
-
-            <span>
-              View duration reports
-            </span>
-
-          </a>
-
-        </div>
-
-      </section>
-
-
-      <!-- PERSONAL DURATION -->
-
-      <section class="section">
-
-        <div class="section-header">
-
-          <h2>
-            Only Duration
-          </h2>
-
-        </div>
-
-
-        <div class="duration-card">
-
-          <div class="duration-grid">
-
-            <div class="duration-field">
-
-              <label for="personalInTime">
-                In Time
-              </label>
-
-              <input
-                id="personalInTime"
-                type="time"
-              >
-
-            </div>
-
-
-            <div class="duration-field">
-
-              <label for="personalOutTime">
-                Out Time
-              </label>
-
-              <input
-                id="personalOutTime"
-                type="time"
-              >
-
-            </div>
-
-          </div>
-
-
-          <div class="duration-result">
-
-            <small>
-              Duration
-            </small>
-
-            <strong
-              id="personalDuration"
-            >
-              0 min
-            </strong>
-
+          <div class="stat-icon">
+            🟢
           </div>
 
         </div>
 
-      </section>
+        <div class="stat-label">
+          Without exit time
+        </div>
+
+        <div
+          id="runningCount"
+          class="stat-value"
+        >
+          0
+        </div>
+
+      </div>
 
 
-      <!-- TODAY ACTIVITY -->
+      <div class="stat-card">
 
-      <section class="section">
+        <div class="stat-top">
 
-        <div class="section-header">
+          <strong>
+            Today
+          </strong>
+
+          <div class="stat-icon">
+            📋
+          </div>
+
+        </div>
+
+        <div class="stat-label">
+          Today's entries
+        </div>
+
+        <div
+          id="todayCount"
+          class="stat-value"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-top">
+
+          <strong>
+            Duration
+          </strong>
+
+          <div class="stat-icon">
+            ⏱️
+          </div>
+
+        </div>
+
+        <div class="stat-label">
+          Today's total
+        </div>
+
+        <div
+          id="totalDuration"
+          class="stat-value"
+        >
+          0 min
+        </div>
+
+      </div>
+
+
+    </section>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <section class="quick-grid">
+
+
+      <button
+        class="quick-btn"
+        onclick="window.location.href='add-entry.html'"
+      >
+
+        <div class="quick-icon">
+          ➕
+        </div>
+
+        <div class="quick-title">
+          Add Entry
+        </div>
+
+        <div class="quick-sub">
+          Record vehicle movement
+        </div>
+
+      </button>
+
+
+      <button
+        class="quick-btn"
+        onclick="window.location.href='vehicles.html'"
+      >
+
+        <div class="quick-icon">
+          🚚
+        </div>
+
+        <div class="quick-title">
+          Vehicles
+        </div>
+
+        <div class="quick-sub">
+          Manage vehicles
+        </div>
+
+      </button>
+
+
+      <button
+        class="quick-btn"
+        onclick="window.location.href='calendar.html'"
+      >
+
+        <div class="quick-icon">
+          📅
+        </div>
+
+        <div class="quick-title">
+          Calendar
+        </div>
+
+        <div class="quick-sub">
+          View date-wise activity
+        </div>
+
+      </button>
+
+
+      <button
+        class="quick-btn"
+        onclick="window.location.href='reports.html'"
+      >
+
+        <div class="quick-icon">
+          📊
+        </div>
+
+        <div class="quick-title">
+          Reports
+        </div>
+
+        <div class="quick-sub">
+          Analyze durations
+        </div>
+
+      </button>
+
+
+    </section>
+
+
+    <!-- ONLY DURATION -->
+
+    <section class="duration-card">
+
+      <h2>
+        ⏱️ Only Duration
+      </h2>
+
+      <p>
+        Calculate time between In Time and Out Time without saving a vehicle entry.
+      </p>
+
+
+      <div class="duration-form">
+
+
+        <div class="duration-group">
+
+          <label for="onlyInTime">
+            In Time
+          </label>
+
+          <input
+            id="onlyInTime"
+            type="time"
+          >
+
+        </div>
+
+
+        <div class="duration-group">
+
+          <label for="onlyOutTime">
+            Out Time
+          </label>
+
+          <input
+            id="onlyOutTime"
+            type="time"
+          >
+
+        </div>
+
+
+        <button
+          id="calculateOnlyDuration"
+          class="btn btn-primary"
+          type="button"
+        >
+          Calculate
+        </button>
+
+
+      </div>
+
+
+      <div
+        id="onlyDurationResult"
+        class="duration-result"
+      >
+        0 min
+      </div>
+
+    </section>
+
+
+    <!-- TODAY ACTIVITY -->
+
+    <section class="section-card">
+
+      <div class="section-head">
+
+        <div>
 
           <h2>
             Today's Activity
           </h2>
 
-          <a
-            href="/pages/calendar.html"
-          >
-            View All
-          </a>
+          <div
+            id="activityDate"
+            class="date-display"
+          ></div>
 
         </div>
 
 
-        <div
-          id="activityList"
-          class="activity-list"
-        ></div>
+        <button
+          type="button"
+          onclick="window.location.href='calendar.html'"
+        >
+          View All
+        </button>
 
-      </section>
+      </div>
+
+
+      <div
+        id="activityList"
+        class="activity-list"
+      >
+
+        <div class="loading">
+          Loading activity...
+        </div>
+
+      </div>
 
     </section>
+
+
+    <!-- PROFILE CARD -->
+
+    <section class="section-card">
+
+      <div class="section-head">
+
+        <h2>
+          My Profile
+        </h2>
+
+        <button
+          type="button"
+          onclick="window.location.href='profile.html'"
+        >
+          Open Profile
+        </button>
+
+      </div>
+
+
+      <div
+        id="profileSummary"
+        style="font-size:14px;line-height:1.8;"
+      >
+        Loading...
+      </div>
+
+    </section>
+
 
   </main>
 
 
-  <!-- BOTTOM NAV -->
+  <!-- MOBILE NAV -->
 
   <nav class="bottom-nav">
 
     <a
-      href="/pages/dashboard.html"
+      href="dashboard.html"
       class="active"
     >
-      <span>⌂</span>
+      🏠<br>
       Home
     </a>
 
-    <a href="/pages/vehicles.html">
-      <span>🚚</span>
+    <a href="vehicles.html">
+      🚚<br>
       Vehicles
     </a>
 
-    <a href="/pages/add-entry.html">
-      <span>＋</span>
+    <a href="add-entry.html">
+      ➕<br>
       Entry
     </a>
 
-    <a href="/pages/calendar.html">
-      <span>▣</span>
+    <a href="calendar.html">
+      📅<br>
       Calendar
     </a>
 
-    <a href="/pages/profile.html">
-      <span>👤</span>
+    <a href="profile.html">
+      👤<br>
       You
     </a>
 
   </nav>
 
 
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <script src="../app.js"></script>
+
+
   <script>
-
-    const STORAGE = {
-
-      currentUser:
-        "hyma_current_user",
-
-      vehicles:
-        "hyma_vehicles",
-
-      entries:
-        "hyma_entries",
-
-      notifications:
-        "hyma_notifications"
-
-    };
+    "use strict";
 
 
-    function readJSON(
-      key,
-      fallback
-    ) {
+    let vehicles = [];
 
-      try {
+    let entries = [];
 
-        const value =
-          localStorage.getItem(key);
 
-        return value
-          ? JSON.parse(value)
-          : fallback;
+    /* =====================================================
+       HELPERS
+    ===================================================== */
 
-      } catch (error) {
+    function escapeHTML(value){
 
-        return fallback;
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.textContent =
+        value == null
+          ? ""
+          : String(value);
+
+      return div.innerHTML;
+
+    }
+
+
+    function getEntryDate(entry){
+
+      return (
+        entry.entry_date ||
+        entry.entryDate ||
+        entry.date ||
+        ""
+      );
+
+    }
+
+
+    function getEntryTime(entry){
+
+      return (
+        entry.entry_time ||
+        entry.entryTime ||
+        ""
+      );
+
+    }
+
+
+    function getExitTime(entry){
+
+      return (
+        entry.exit_time ||
+        entry.exitTime ||
+        ""
+      );
+
+    }
+
+
+    function getVehicleNumber(entry){
+
+      return (
+        entry.vehicle_number ||
+        entry.vehicleNumber ||
+        "Unknown"
+      );
+
+    }
+
+
+    function getDriver(entry){
+
+      return (
+        entry.driver_name ||
+        entry.driverName ||
+        "-"
+      );
+
+    }
+
+
+    function getPurpose(entry){
+
+      return (
+        entry.purpose ||
+        "-"
+      );
+
+    }
+
+
+    function getDuration(entry){
+
+      return (
+        Number(
+          entry.duration
+        ) || 0
+      );
+
+    }
+
+
+    /* =====================================================
+       DATE DISPLAY
+    ===================================================== */
+
+    function setDateText(){
+
+      const now =
+        new Date();
+
+
+      const formatted =
+        now.toLocaleDateString(
+          "en-IN",
+          {
+            weekday:"long",
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+          }
+        );
+
+
+      document.getElementById(
+        "todayText"
+      ).textContent =
+        formatted;
+
+
+      document.getElementById(
+        "activityDate"
+      ).textContent =
+        formatted;
+
+    }
+
+
+    /* =====================================================
+       LOAD DASHBOARD
+    ===================================================== */
+
+    async function loadDashboard(){
+
+      try{
+
+        const results =
+          await Promise.all([
+            window.MyHomeGroup
+              .getVehicles(),
+
+            window.MyHomeGroup
+              .getEntries()
+          ]);
+
+
+        vehicles =
+          results[0] || [];
+
+        entries =
+          results[1] || [];
+
+
+        updateStats();
+
+        renderActivity();
+
+        renderProfile();
+
+      }catch(error){
+
+        console.error(
+          "Dashboard:",
+          error
+        );
+
+
+        document.getElementById(
+          "activityList"
+        ).innerHTML = `
+          <div class="empty">
+            Unable to load today's activity.
+            <br>
+            <small>
+              ${escapeHTML(
+                error.message
+              )}
+            </small>
+          </div>
+        `;
 
       }
 
     }
 
 
-    function getCurrentUser() {
+    /* =====================================================
+       STATS
+    ===================================================== */
 
-      return readJSON(
-        STORAGE.currentUser,
-        null
-      );
+    function updateStats(){
+
+      const today =
+        window.MyHomeGroup.today();
+
+
+      const todayEntries =
+        entries.filter(
+          entry =>
+            getEntryDate(
+              entry
+            ) === today
+        );
+
+
+      const running =
+        entries.filter(
+          entry =>
+            !getExitTime(
+              entry
+            )
+        );
+
+
+      const todayDuration =
+        todayEntries.reduce(
+          (
+            total,
+            entry
+          ) => {
+
+            return (
+              total +
+              getDuration(
+                entry
+              )
+            );
+
+          },
+          0
+        );
+
+
+      document.getElementById(
+        "vehicleCount"
+      ).textContent =
+        vehicles.length;
+
+
+      document.getElementById(
+        "runningCount"
+      ).textContent =
+        running.length;
+
+
+      document.getElementById(
+        "todayCount"
+      ).textContent =
+        todayEntries.length;
+
+
+      document.getElementById(
+        "totalDuration"
+      ).textContent =
+        window.MyHomeGroup
+          .durationText(
+            todayDuration
+          );
 
     }
 
 
-    function escapeHTML(
-      value
-    ) {
+    /* =====================================================
+       ACTIVITY
+    ===================================================== */
 
-      return String(
-        value ?? ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
+    function renderActivity(){
+
+      const today =
+        window.MyHomeGroup.today();
+
+
+      const todayEntries =
+        entries
+          .filter(
+            entry =>
+              getEntryDate(
+                entry
+              ) === today
+          )
+          .sort(
+            (
+              a,
+              b
+            ) => {
+
+              return getEntryTime(
+                b
+              ).localeCompare(
+                getEntryTime(
+                  a
+                )
+              );
+
+            }
+          );
+
+
+      const container =
+        document.getElementById(
+          "activityList"
         );
 
-    }
+
+      if(
+        todayEntries.length === 0
+      ){
+
+        container.innerHTML = `
+          <div class="empty">
+
+            <div style="font-size:35px;">
+              📋
+            </div>
+
+            <div>
+              No entries for today.
+            </div>
+
+            <button
+              class="btn btn-primary"
+              style="margin-top:12px;"
+              onclick="window.location.href='add-entry.html'"
+            >
+              + Add First Entry
+            </button>
+
+          </div>
+        `;
+
+        return;
+
+      }
 
 
-    function todayISO() {
-
-      const date =
-        new Date();
-
-      const year =
-        date.getFullYear();
-
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(
-          2,
-          "0"
-        );
-
-      const day =
-        String(
-          date.getDate()
-        ).padStart(
-          2,
-          "0"
-        );
-
-      return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
-      );
-
-    }
+      container.innerHTML =
+        "";
 
 
-    function formatDate() {
+      todayEntries
+        .slice(0,10)
+        .forEach(
+          entry => {
 
-      return new Date()
-        .toLocaleDateString(
-          "en-IN",
-          {
-            weekday: "long",
-            day: "2-digit",
-            month: "long",
-            year: "numeric"
+            const item =
+              document.createElement(
+                "div"
+              );
+
+            item.className =
+              "activity-item";
+
+
+            const exitTime =
+              getExitTime(
+                entry
+              );
+
+
+            const duration =
+              getDuration(
+                entry
+              );
+
+
+            const running =
+              !exitTime;
+
+
+            item.innerHTML = `
+
+              <div class="activity-main">
+
+                <div class="activity-title">
+
+                  ${escapeHTML(
+                    getVehicleNumber(
+                      entry
+                    )
+                  )}
+
+                  ${running
+                    ? `<span class="running"> · Running</span>`
+                    : ""
+                  }
+
+                </div>
+
+                <div class="activity-meta">
+
+                  ${escapeHTML(
+                    getDriver(
+                      entry
+                    )
+                  )}
+
+                  ·
+
+                  Entry:
+                  ${escapeHTML(
+                    getEntryTime(
+                      entry
+                    )
+                  )}
+
+                  ·
+
+                  Exit:
+                  ${escapeHTML(
+                    exitTime ||
+                    "—"
+                  )}
+
+                  <br>
+
+                  ${escapeHTML(
+                    getPurpose(
+                      entry
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+
+              <div class="activity-duration">
+
+                ${
+                  running
+                    ? "Running"
+                    : window.MyHomeGroup
+                        .durationText(
+                          duration
+                        )
+                }
+
+              </div>
+
+            `;
+
+
+            container.appendChild(
+              item
+            );
+
           }
         );
 
     }
 
 
-    function durationText(
-      minutes
-    ) {
+    /* =====================================================
+       PROFILE
+    ===================================================== */
 
-      minutes =
-        Math.max(
-          0,
-          Number(minutes) || 0
-        );
+    function renderProfile(){
 
-
-      const hours =
-        Math.floor(
-          minutes / 60
-        );
+      const user =
+        window.MyHomeGroup
+          .getCurrentUser();
 
 
-      const mins =
-        minutes % 60;
-
-
-      if (hours > 0) {
-
-        return (
-          hours +
-          "h " +
-          mins +
-          "m"
-        );
-
-      }
-
-
-      return mins + "m";
-
-    }
-
-
-    function calculateDuration(
-      inTime,
-      outTime
-    ) {
-
-      if (
-        !inTime ||
-        !outTime
-      ) {
-
-        return 0;
-
-      }
-
-
-      const start =
-        inTime
-          .split(":")
-          .map(Number);
-
-
-      const end =
-        outTime
-          .split(":")
-          .map(Number);
-
-
-      let startMinutes =
-        start[0] * 60 +
-        start[1];
-
-
-      let endMinutes =
-        end[0] * 60 +
-        end[1];
-
-
-      if (
-        endMinutes <
-        startMinutes
-      ) {
-
-        endMinutes +=
-          24 * 60;
-
-      }
-
-
-      return (
-        endMinutes -
-        startMinutes
-      );
-
-    }
-
-
-    function loadDashboard() {
-
-      const currentUser =
-        getCurrentUser();
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
+      if(
+        !user
+      ){
 
         return;
 
@@ -979,357 +1351,136 @@
       document.getElementById(
         "userName"
       ).textContent =
-        currentUser.name ||
+        user.name ||
         "User";
 
 
       document.getElementById(
-        "todayDate"
-      ).textContent =
-        formatDate();
+        "profileSummary"
+      ).innerHTML = `
+
+        <strong>
+          ${escapeHTML(
+            user.name ||
+            "-"
+          )}
+        </strong>
+
+        <br>
+
+        ${escapeHTML(
+          user.email ||
+          "-"
+        )}
+
+        <br>
+
+        ${escapeHTML(
+          user.role ||
+          "-"
+        )}
+
+        ·
+
+        ${escapeHTML(
+          user.company ||
+          "No company/site"
+        )}
+
+      `;
+
+    }
 
 
-      const vehicles =
-        readJSON(
-          STORAGE.vehicles,
-          []
-        );
+    /* =====================================================
+       ONLY DURATION
+    ===================================================== */
+
+    document
+      .getElementById(
+        "calculateOnlyDuration"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          const inTime =
+            document.getElementById(
+              "onlyInTime"
+            ).value;
 
 
-      const entries =
-        readJSON(
-          STORAGE.entries,
-          []
-        );
+          const outTime =
+            document.getElementById(
+              "onlyOutTime"
+            ).value;
 
 
-      const today =
-        todayISO();
-
-
-      const userEntries =
-        entries.filter(
-          function (entry) {
-
-            return (
-              entry.date === today
+          const result =
+            document.getElementById(
+              "onlyDurationResult"
             );
 
-          }
-        );
 
+          if(
+            !inTime ||
+            !outTime
+          ){
 
-      const activeVehicles =
-        vehicles.filter(
-          function (vehicle) {
-
-            return (
-              vehicle.status !==
-              "Inactive"
-            );
-
-          }
-        );
-
-
-      const runningVehicles =
-        userEntries.filter(
-          function (entry) {
-
-            return (
-              entry.entryTime &&
-              !entry.exitTime
-            );
-
-          }
-        );
-
-
-      let totalMinutes = 0;
-
-
-      userEntries.forEach(
-        function (entry) {
-
-          if (
-            entry.duration
-          ) {
-
-            totalMinutes +=
-              Number(
-                entry.duration
-              );
+            result.textContent =
+              "Please select both times.";
 
             return;
 
           }
 
 
-          if (
-            entry.entryTime &&
-            entry.exitTime
-          ) {
-
-            totalMinutes +=
-              calculateDuration(
-                entry.entryTime,
-                entry.exitTime
+          const minutes =
+            window.MyHomeGroup
+              .calculateDuration(
+                inTime,
+                outTime
               );
 
-          }
+
+          result.textContent =
+            window.MyHomeGroup
+              .durationText(
+                minutes
+              );
 
         }
       );
 
 
-      document.getElementById(
-        "vehicleCount"
-      ).textContent =
-        activeVehicles.length;
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
 
+    document
+      .getElementById(
+        "logoutButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
 
-      document.getElementById(
-        "runningCount"
-      ).textContent =
-        runningVehicles.length;
+          window.MyHomeGroup
+            .logout();
 
-
-      document.getElementById(
-        "entryCount"
-      ).textContent =
-        userEntries.length;
-
-
-      document.getElementById(
-        "totalDuration"
-      ).textContent =
-        durationText(
-          totalMinutes
-        );
-
-
-      renderActivity(
-        userEntries
+        }
       );
 
 
-      updateNotificationBadge(
-        currentUser
-      );
+    /* =====================================================
+       NOTIFICATION BADGE
+    ===================================================== */
 
-    }
+    function updateNotificationBadge(){
 
-
-    function renderActivity(
-      entries
-    ) {
-
-      const list =
-        document.getElementById(
-          "activityList"
-        );
-
-
-      if (
-        entries.length === 0
-      ) {
-
-        list.innerHTML = `
-
-          <div class="empty-card">
-
-            No vehicle activity recorded today.
-
-            <br><br>
-
-            Add your first vehicle entry.
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      const latest =
-        entries
-          .slice()
-          .sort(
-            function (a, b) {
-
-              return (
-                String(
-                  b.entryTime ||
-                  ""
-                ).localeCompare(
-                  String(
-                    a.entryTime ||
-                    ""
-                  )
-                )
-              );
-
-            }
-          )
-          .slice(
-            0,
-            8
-          );
-
-
-      list.innerHTML =
-        latest
-          .map(
-            function (entry) {
-
-              let duration = 0;
-
-
-              if (
-                entry.duration
-              ) {
-
-                duration =
-                  Number(
-                    entry.duration
-                  );
-
-              } else if (
-                entry.entryTime &&
-                entry.exitTime
-              ) {
-
-                duration =
-                  calculateDuration(
-                    entry.entryTime,
-                    entry.exitTime
-                  );
-
-              }
-
-
-              const status =
-                entry.exitTime
-                  ? (
-                    entry.entryTime +
-                    " → " +
-                    entry.exitTime
-                  )
-                  : (
-                    entry.entryTime +
-                    " → Running"
-                  );
-
-
-              return `
-
-                <article
-                  class="activity-card"
-                >
-
-                  <div class="activity-top">
-
-                    <div class="vehicle-name">
-
-                      ${escapeHTML(
-                        entry.vehicleNumber ||
-                        "Vehicle"
-                      )}
-
-                    </div>
-
-                    <div class="activity-duration">
-
-                      ${durationText(
-                        duration
-                      )}
-
-                    </div>
-
-                  </div>
-
-
-                  <div class="activity-details">
-
-                    ${
-                      escapeHTML(
-                        entry.vehicleType ||
-                        ""
-                      )
-                    }
-
-                    <br>
-
-                    ${escapeHTML(
-                      status
-                    )}
-
-                    ${
-                      entry.driverName
-                        ? (
-                          "<br>Driver: " +
-                          escapeHTML(
-                            entry.driverName
-                          )
-                        )
-                        : ""
-                    }
-
-                    ${
-                      entry.contractor
-                        ? (
-                          "<br>Contractor: " +
-                          escapeHTML(
-                            entry.contractor
-                          )
-                        )
-                        : ""
-                    }
-
-                  </div>
-
-                </article>
-
-              `;
-
-            }
-          )
-          .join("");
-
-    }
-
-
-    function updateNotificationBadge(
-      currentUser
-    ) {
-
-      const notifications =
-        readJSON(
-          STORAGE.notifications,
-          []
-        );
-
-
-      const userId =
-        currentUser.id ||
-        currentUser.email ||
-        currentUser.mobile;
-
-
-      const unread =
-        notifications.filter(
-          function (item) {
-
-            return (
-              item.userId ===
-              userId &&
-              !item.read
-            );
-
-          }
-        ).length;
+      const count =
+        window.MyHomeGroup
+          .unreadNotificationCount();
 
 
       const badge =
@@ -1338,17 +1489,19 @@
         );
 
 
-      if (unread > 0) {
+      if(
+        count > 0
+      ){
 
         badge.textContent =
-          unread > 99
+          count > 99
             ? "99+"
-            : unread;
+            : count;
 
         badge.style.display =
           "flex";
 
-      } else {
+      }else{
 
         badge.style.display =
           "none";
@@ -1358,109 +1511,19 @@
     }
 
 
-    function calculatePersonalDuration() {
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
 
-      const inTime =
-        document.getElementById(
-          "personalInTime"
-        ).value;
+    setDateText();
 
+    updateNotificationBadge();
 
-      const outTime =
-        document.getElementById(
-          "personalOutTime"
-        ).value;
+    renderProfile();
 
-
-      const result =
-        document.getElementById(
-          "personalDuration"
-        );
-
-
-      if (
-        !inTime ||
-        !outTime
-      ) {
-
-        result.textContent =
-          "0 min";
-
-        return;
-
-      }
-
-
-      const minutes =
-        calculateDuration(
-          inTime,
-          outTime
-        );
-
-
-      result.textContent =
-        durationText(
-          minutes
-        );
-
-    }
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      function () {
-
-        const currentUser =
-          getCurrentUser();
-
-
-        if (!currentUser) {
-
-          window.location.href =
-            "/pages/login.html";
-
-          return;
-
-        }
-
-
-        document.getElementById(
-          "notificationBtn"
-        ).addEventListener(
-          "click",
-          function () {
-
-            window.location.href =
-              "/pages/notifications.html";
-
-          }
-        );
-
-
-        document.getElementById(
-          "personalInTime"
-        ).addEventListener(
-          "input",
-          calculatePersonalDuration
-        );
-
-
-        document.getElementById(
-          "personalOutTime"
-        ).addEventListener(
-          "input",
-          calculatePersonalDuration
-        );
-
-
-        loadDashboard();
-
-      }
-    );
-
+    loadDashboard();
 
   </script>
 
 </body>
-
 </html>
