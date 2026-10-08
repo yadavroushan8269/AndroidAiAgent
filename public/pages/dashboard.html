@@ -1,1529 +1,632 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
   >
 
-  <title>Dashboard - My Home Group</title>
+  <meta
+    name="theme-color"
+    content="#f5a400"
+  >
+
+  <title>Dashboard - Hyma RMC Kokapet</title>
 
   <link
     rel="stylesheet"
     href="../style.css"
   >
-
-  <style>
-    .page-wrap{
-      max-width:1200px;
-      margin:0 auto;
-      padding:20px;
-      padding-bottom:105px;
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:15px;
-      margin-bottom:22px;
-    }
-
-    .welcome h1{
-      margin:0;
-      font-size:27px;
-    }
-
-    .welcome p{
-      margin:6px 0 0;
-      opacity:.7;
-      font-size:14px;
-    }
-
-    .top-actions{
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-
-    .icon-btn{
-      width:42px;
-      height:42px;
-      border:0;
-      border-radius:11px;
-      background:#eef1f4;
-      cursor:pointer;
-      font-size:19px;
-      position:relative;
-    }
-
-    .notification-badge{
-      position:absolute;
-      top:-4px;
-      right:-4px;
-      min-width:18px;
-      height:18px;
-      padding:0 4px;
-      border-radius:20px;
-      background:#dc3545;
-      color:#fff;
-      font-size:10px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:800;
-    }
-
-    .logout-btn{
-      border:0;
-      background:#ffe5e7;
-      color:#b42332;
-      border-radius:10px;
-      padding:10px 13px;
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .stats-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
-      margin-bottom:20px;
-    }
-
-    .stat-card{
-      background:#fff;
-      border:1px solid #e3e7eb;
-      border-radius:15px;
-      padding:17px;
-      box-shadow:0 3px 12px rgba(0,0,0,.04);
-    }
-
-    .stat-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .stat-icon{
-      width:40px;
-      height:40px;
-      border-radius:11px;
-      background:#fff5d4;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:20px;
-    }
-
-    .stat-label{
-      margin-top:13px;
-      font-size:12px;
-      opacity:.65;
-    }
-
-    .stat-value{
-      margin-top:3px;
-      font-size:26px;
-      font-weight:800;
-    }
-
-    .quick-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-bottom:20px;
-    }
-
-    .quick-btn{
-      border:1px solid #e3e7eb;
-      background:#fff;
-      border-radius:13px;
-      padding:15px;
-      text-align:left;
-      cursor:pointer;
-      box-shadow:0 2px 9px rgba(0,0,0,.03);
-    }
-
-    .quick-btn:hover{
-      border-color:#f5b400;
-    }
-
-    .quick-icon{
-      font-size:23px;
-      margin-bottom:7px;
-    }
-
-    .quick-title{
-      font-weight:800;
-      font-size:14px;
-    }
-
-    .quick-sub{
-      font-size:11px;
-      opacity:.6;
-      margin-top:3px;
-    }
-
-    .section-card{
-      background:#fff;
-      border:1px solid #e3e7eb;
-      border-radius:16px;
-      padding:18px;
-      margin-bottom:18px;
-      box-shadow:0 3px 12px rgba(0,0,0,.04);
-    }
-
-    .section-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:15px;
-    }
-
-    .section-head h2{
-      margin:0;
-      font-size:18px;
-    }
-
-    .section-head button{
-      border:0;
-      background:none;
-      color:#8a6500;
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .activity-list{
-      display:grid;
-      gap:9px;
-    }
-
-    .activity-item{
-      border:1px solid #edf0f2;
-      border-radius:11px;
-      padding:12px;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-    }
-
-    .activity-main{
-      min-width:0;
-    }
-
-    .activity-title{
-      font-weight:800;
-      font-size:14px;
-    }
-
-    .activity-meta{
-      margin-top:4px;
-      font-size:11px;
-      opacity:.65;
-      line-height:1.6;
-    }
-
-    .activity-duration{
-      white-space:nowrap;
-      font-weight:800;
-      font-size:13px;
-    }
-
-    .running{
-      color:#16803c;
-    }
-
-    .empty{
-      text-align:center;
-      padding:28px 15px;
-      opacity:.7;
-    }
-
-    .duration-card{
-      background:#fff8df;
-      border:1px solid #f0d46d;
-      border-radius:16px;
-      padding:18px;
-    }
-
-    .duration-card h2{
-      margin:0;
-      font-size:18px;
-    }
-
-    .duration-card p{
-      margin:5px 0 15px;
-      font-size:12px;
-      opacity:.7;
-    }
-
-    .duration-form{
-      display:grid;
-      grid-template-columns:1fr 1fr auto;
-      gap:10px;
-      align-items:end;
-    }
-
-    .duration-group label{
-      display:block;
-      font-size:12px;
-      font-weight:700;
-      margin-bottom:5px;
-    }
-
-    .duration-group input{
-      width:100%;
-      box-sizing:border-box;
-      border:1px solid #d8c675;
-      border-radius:10px;
-      padding:11px;
-      background:#fff;
-    }
-
-    .duration-result{
-      margin-top:15px;
-      font-size:23px;
-      font-weight:800;
-    }
-
-    .date-display{
-      font-size:13px;
-      opacity:.65;
-    }
-
-    .bottom-nav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:5000;
-      display:flex;
-      justify-content:space-around;
-      background:#fff;
-      border-top:1px solid #ddd;
-      padding:8px 5px calc(8px + env(safe-area-inset-bottom));
-      box-shadow:0 -3px 12px rgba(0,0,0,.06);
-    }
-
-    .bottom-nav a{
-      text-decoration:none;
-      color:#555;
-      font-size:11px;
-      text-align:center;
-      padding:6px 8px;
-    }
-
-    .bottom-nav a.active{
-      color:#111;
-      font-weight:800;
-    }
-
-    .loading{
-      text-align:center;
-      padding:25px;
-      opacity:.7;
-    }
-
-    .toast{
-      position:fixed;
-      left:50%;
-      bottom:25px;
-      transform:translateX(-50%) translateY(100px);
-      background:#16191d;
-      color:#fff;
-      padding:12px 18px;
-      border-radius:10px;
-      font-size:14px;
-      z-index:9999;
-      transition:.25s ease;
-    }
-
-    .toast.show{
-      transform:translateX(-50%) translateY(0);
-    }
-
-    @media(max-width:900px){
-      .stats-grid{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .quick-grid{
-        grid-template-columns:repeat(2,1fr);
-      }
-    }
-
-    @media(max-width:650px){
-      .page-wrap{
-        padding:15px;
-        padding-bottom:100px;
-      }
-
-      .topbar{
-        align-items:flex-start;
-      }
-
-      .welcome h1{
-        font-size:22px;
-      }
-
-      .logout-btn{
-        display:none;
-      }
-
-      .stats-grid{
-        gap:9px;
-      }
-
-      .stat-card{
-        padding:13px;
-      }
-
-      .stat-value{
-        font-size:23px;
-      }
-
-      .quick-grid{
-        gap:9px;
-      }
-
-      .quick-btn{
-        padding:13px;
-      }
-
-      .duration-form{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .duration-form .btn{
-        grid-column:1 / -1;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
-  <main class="page-wrap">
+  <div class="app-page">
 
 
-    <!-- HEADER -->
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-    <header class="topbar">
+    <header class="top-header">
 
-      <div class="welcome">
+      <div>
 
-        <h1>
-          Hello, <span id="userName">User</span> 👋
+        <h1 id="dashboardTitle">
+          Dashboard
         </h1>
 
-        <p>
-          <span id="todayText"></span>
-          ·
-          My Home Group
+        <p id="dashboardDate">
+          Today
         </p>
 
       </div>
 
 
-      <div class="top-actions">
-
-        <button
-          class="icon-btn"
-          type="button"
-          onclick="window.location.href='notifications.html'"
-          aria-label="Notifications"
-        >
-
-          🔔
-
-          <span
-            id="notificationBadge"
-            class="notification-badge"
-            style="display:none;"
-          >
-            0
-          </span>
-
-        </button>
-
-
-        <button
-          class="logout-btn"
-          type="button"
-          id="logoutButton"
-        >
-          Logout
-        </button>
-
-      </div>
+      <button
+        id="notificationBtn"
+        class="header-action notification-badge"
+        type="button"
+      >
+        🔔
+      </button>
 
     </header>
 
 
-    <!-- STATS -->
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
-    <section class="stats-grid">
+    <main class="page-content">
 
 
-      <div class="stat-card">
+      <!-- WELCOME -->
 
-        <div class="stat-top">
+      <section class="dashboard-welcome">
 
-          <strong>
-            Vehicles
-          </strong>
-
-          <div class="stat-icon">
-            🚚
-          </div>
-
-        </div>
-
-        <div class="stat-label">
-          Total registered
-        </div>
-
-        <div
-          id="vehicleCount"
-          class="stat-value"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-top">
-
-          <strong>
-            Running
-          </strong>
-
-          <div class="stat-icon">
-            🟢
-          </div>
-
-        </div>
-
-        <div class="stat-label">
-          Without exit time
-        </div>
-
-        <div
-          id="runningCount"
-          class="stat-value"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-top">
-
-          <strong>
-            Today
-          </strong>
-
-          <div class="stat-icon">
-            📋
-          </div>
-
-        </div>
-
-        <div class="stat-label">
-          Today's entries
-        </div>
-
-        <div
-          id="todayCount"
-          class="stat-value"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-top">
-
-          <strong>
-            Duration
-          </strong>
-
-          <div class="stat-icon">
-            ⏱️
-          </div>
-
-        </div>
-
-        <div class="stat-label">
-          Today's total
-        </div>
-
-        <div
-          id="totalDuration"
-          class="stat-value"
-        >
-          0 min
-        </div>
-
-      </div>
-
-
-    </section>
-
-
-    <!-- QUICK ACTIONS -->
-
-    <section class="quick-grid">
-
-
-      <button
-        class="quick-btn"
-        onclick="window.location.href='add-entry.html'"
-      >
-
-        <div class="quick-icon">
-          ➕
-        </div>
-
-        <div class="quick-title">
-          Add Entry
-        </div>
-
-        <div class="quick-sub">
-          Record vehicle movement
-        </div>
-
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="window.location.href='vehicles.html'"
-      >
-
-        <div class="quick-icon">
-          🚚
-        </div>
-
-        <div class="quick-title">
-          Vehicles
-        </div>
-
-        <div class="quick-sub">
-          Manage vehicles
-        </div>
-
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="window.location.href='calendar.html'"
-      >
-
-        <div class="quick-icon">
-          📅
-        </div>
-
-        <div class="quick-title">
-          Calendar
-        </div>
-
-        <div class="quick-sub">
-          View date-wise activity
-        </div>
-
-      </button>
-
-
-      <button
-        class="quick-btn"
-        onclick="window.location.href='reports.html'"
-      >
-
-        <div class="quick-icon">
-          📊
-        </div>
-
-        <div class="quick-title">
-          Reports
-        </div>
-
-        <div class="quick-sub">
-          Analyze durations
-        </div>
-
-      </button>
-
-
-    </section>
-
-
-    <!-- ONLY DURATION -->
-
-    <section class="duration-card">
-
-      <h2>
-        ⏱️ Only Duration
-      </h2>
-
-      <p>
-        Calculate time between In Time and Out Time without saving a vehicle entry.
-      </p>
-
-
-      <div class="duration-form">
-
-
-        <div class="duration-group">
-
-          <label for="onlyInTime">
-            In Time
-          </label>
-
-          <input
-            id="onlyInTime"
-            type="time"
-          >
-
-        </div>
-
-
-        <div class="duration-group">
-
-          <label for="onlyOutTime">
-            Out Time
-          </label>
-
-          <input
-            id="onlyOutTime"
-            type="time"
-          >
-
-        </div>
-
-
-        <button
-          id="calculateOnlyDuration"
-          class="btn btn-primary"
-          type="button"
-        >
-          Calculate
-        </button>
-
-
-      </div>
-
-
-      <div
-        id="onlyDurationResult"
-        class="duration-result"
-      >
-        0 min
-      </div>
-
-    </section>
-
-
-    <!-- TODAY ACTIVITY -->
-
-    <section class="section-card">
-
-      <div class="section-head">
-
-        <div>
-
-          <h2>
-            Today's Activity
-          </h2>
-
-          <div
-            id="activityDate"
-            class="date-display"
-          ></div>
-
-        </div>
-
-
-        <button
-          type="button"
-          onclick="window.location.href='calendar.html'"
-        >
-          View All
-        </button>
-
-      </div>
-
-
-      <div
-        id="activityList"
-        class="activity-list"
-      >
-
-        <div class="loading">
-          Loading activity...
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PROFILE CARD -->
-
-    <section class="section-card">
-
-      <div class="section-head">
-
-        <h2>
-          My Profile
+        <h2 id="welcomeName">
+          Welcome
         </h2>
 
+        <p>
+          Vehicle duration management
+        </p>
+
+      </section>
+
+
+      <!-- STATS -->
+
+      <section class="stats-grid">
+
+
+        <div class="stat-card">
+
+          <strong id="dashboardVehicleCount">
+            0
+          </strong>
+
+          <span>
+            Vehicles
+          </span>
+
+        </div>
+
+
+        <div class="stat-card green">
+
+          <strong id="dashboardRunningCount">
+            0
+          </strong>
+
+          <span>
+            Running
+          </span>
+
+        </div>
+
+
+        <div class="stat-card orange">
+
+          <strong id="dashboardEntryCount">
+            0
+          </strong>
+
+          <span>
+            Today's Entries
+          </span>
+
+        </div>
+
+
+        <div class="stat-card blue">
+
+          <strong id="dashboardDuration">
+            0h 0m
+          </strong>
+
+          <span>
+            Total Duration
+          </span>
+
+        </div>
+
+
+      </section>
+
+
+      <!-- =====================================================
+           PERSONAL DURATION CALCULATOR
+      ====================================================== -->
+
+      <section class="personal-duration-card">
+
+
+        <div class="personal-duration-header">
+
+          <div>
+
+            <h2>
+              ⏱️ Only Duration
+            </h2>
+
+            <p>
+              Calculate time between In and Out
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="duration-input-grid">
+
+
+          <div>
+
+            <label for="personalInTime">
+              In Time
+            </label>
+
+            <input
+              id="personalInTime"
+              type="time"
+            >
+
+          </div>
+
+
+          <div>
+
+            <label for="personalOutTime">
+              Out Time
+            </label>
+
+            <input
+              id="personalOutTime"
+              type="time"
+            >
+
+          </div>
+
+
+        </div>
+
+
         <button
+          id="calculatePersonalDuration"
+          class="primary-btn full-width"
           type="button"
-          onclick="window.location.href='profile.html'"
         >
-          Open Profile
+          Calculate Duration
         </button>
 
-      </div>
+
+        <div
+          id="personalDurationResult"
+          class="personal-duration-result"
+        >
+
+          <span>
+            Duration
+          </span>
+
+          <strong>
+            0h 0m
+          </strong>
+
+        </div>
 
 
-      <div
-        id="profileSummary"
-        style="font-size:14px;line-height:1.8;"
+      </section>
+
+
+      <!-- =====================================================
+           QUICK ACTIONS
+      ====================================================== -->
+
+      <section>
+
+        <div class="section-heading">
+
+          <div>
+
+            <h2>
+              Quick Actions
+            </h2>
+
+            <p>
+              Frequently used options
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+
+          <!-- ADD ENTRY -->
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/add-entry.html'"
+          >
+
+            <span>
+              ➕
+            </span>
+
+            <strong>
+              Add Entry
+            </strong>
+
+            <span>
+              Record vehicle entry
+            </span>
+
+          </button>
+
+
+          <!-- VEHICLES -->
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/vehicles.html'"
+          >
+
+            <span>
+              🚚
+            </span>
+
+            <strong>
+              Vehicles
+            </strong>
+
+            <span>
+              Manage vehicles
+            </span>
+
+          </button>
+
+
+          <!-- CALENDAR -->
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/calendar.html'"
+          >
+
+            <span>
+              📅
+            </span>
+
+            <strong>
+              Calendar
+            </strong>
+
+            <span>
+              View daily activity
+            </span>
+
+          </button>
+
+
+          <!-- REPORTS -->
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/reports.html'"
+          >
+
+            <span>
+              📊
+            </span>
+
+            <strong>
+              Reports
+            </strong>
+
+            <span>
+              View duration reports
+            </span>
+
+          </button>
+
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           TODAY ACTIVITY
+      ====================================================== -->
+
+      <section>
+
+        <div class="section-heading">
+
+          <div>
+
+            <h2>
+              Today's Activity
+            </h2>
+
+            <p>
+              Latest vehicle entries
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="dashboardActivityList"
+          class="activity-list"
+        ></div>
+
+      </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+    ====================================================== -->
+
+    <nav class="bottom-nav">
+
+
+      <button
+        class="nav-item active"
+        type="button"
+        onclick="window.location.href='/pages/dashboard.html'"
       >
-        Loading...
-      </div>
 
-    </section>
+        <span>
+          ⌂
+        </span>
 
+        <small>
+          Home
+        </small>
 
-  </main>
-
-
-  <!-- MOBILE NAV -->
-
-  <nav class="bottom-nav">
-
-    <a
-      href="dashboard.html"
-      class="active"
-    >
-      🏠<br>
-      Home
-    </a>
-
-    <a href="vehicles.html">
-      🚚<br>
-      Vehicles
-    </a>
-
-    <a href="add-entry.html">
-      ➕<br>
-      Entry
-    </a>
-
-    <a href="calendar.html">
-      📅<br>
-      Calendar
-    </a>
-
-    <a href="profile.html">
-      👤<br>
-      You
-    </a>
-
-  </nav>
+      </button>
 
 
-  <div
-    id="toast"
-    class="toast"
-  ></div>
+      <button
+        class="nav-item"
+        type="button"
+        onclick="window.location.href='/pages/vehicles.html'"
+      >
+
+        <span>
+          🚚
+        </span>
+
+        <small>
+          Vehicles
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item add-nav"
+        type="button"
+        onclick="window.location.href='/pages/add-entry.html'"
+        aria-label="Add Entry"
+      >
+
+        <span>
+          +
+        </span>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        onclick="window.location.href='/pages/calendar.html'"
+      >
+
+        <span>
+          ▣
+        </span>
+
+        <small>
+          Calendar
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        onclick="window.location.href='/pages/profile.html'"
+      >
+
+        <span>
+          👤
+        </span>
+
+        <small>
+          You
+        </small>
+
+      </button>
+
+
+    </nav>
+
+
+  </div>
+
+
+  <script>
+
+    /* =====================================================
+       PERSONAL ONLY DURATION
+    ====================================================== */
+
+    const personalInTime =
+      document.getElementById(
+        "personalInTime"
+      );
+
+    const personalOutTime =
+      document.getElementById(
+        "personalOutTime"
+      );
+
+    const calculatePersonalDuration =
+      document.getElementById(
+        "calculatePersonalDuration"
+      );
+
+    const personalDurationResult =
+      document.getElementById(
+        "personalDurationResult"
+      );
+
+
+    calculatePersonalDuration.addEventListener(
+      "click",
+      function () {
+
+        const inTime =
+          personalInTime.value;
+
+        const outTime =
+          personalOutTime.value;
+
+
+        if (!inTime || !outTime) {
+
+          personalDurationResult.innerHTML = `
+            <span>
+              Please select In Time and Out Time
+            </span>
+
+            <strong>
+              —
+            </strong>
+          `;
+
+          return;
+        }
+
+
+        const inParts =
+          inTime
+            .split(":")
+            .map(Number);
+
+
+        const outParts =
+          outTime
+            .split(":")
+            .map(Number);
+
+
+        let start =
+          inParts[0] * 60 +
+          inParts[1];
+
+
+        let end =
+          outParts[0] * 60 +
+          outParts[1];
+
+
+        /*
+          If Out Time is earlier than
+          In Time, assume it crossed midnight.
+        */
+
+        if (end < start) {
+          end += 24 * 60;
+        }
+
+
+        const totalMinutes =
+          end - start;
+
+
+        const hours =
+          Math.floor(
+            totalMinutes / 60
+          );
+
+
+        const minutes =
+          totalMinutes % 60;
+
+
+        personalDurationResult.innerHTML = `
+          <span>
+            Total Duration
+          </span>
+
+          <strong>
+            ${hours}h ${minutes}m
+          </strong>
+        `;
+
+      }
+    );
+
+
+    /* =====================================================
+       LIVE RECALCULATION
+    ====================================================== */
+
+    personalInTime.addEventListener(
+      "change",
+      function () {
+
+        if (
+          personalOutTime.value
+        ) {
+          calculatePersonalDuration.click();
+        }
+
+      }
+    );
+
+
+    personalOutTime.addEventListener(
+      "change",
+      function () {
+
+        if (
+          personalInTime.value
+        ) {
+          calculatePersonalDuration.click();
+        }
+
+      }
+    );
+
+  </script>
 
 
   <script src="../app.js"></script>
 
-
-  <script>
-    "use strict";
-
-
-    let vehicles = [];
-
-    let entries = [];
-
-
-    /* =====================================================
-       HELPERS
-    ===================================================== */
-
-    function escapeHTML(value){
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-      div.textContent =
-        value == null
-          ? ""
-          : String(value);
-
-      return div.innerHTML;
-
-    }
-
-
-    function getEntryDate(entry){
-
-      return (
-        entry.entry_date ||
-        entry.entryDate ||
-        entry.date ||
-        ""
-      );
-
-    }
-
-
-    function getEntryTime(entry){
-
-      return (
-        entry.entry_time ||
-        entry.entryTime ||
-        ""
-      );
-
-    }
-
-
-    function getExitTime(entry){
-
-      return (
-        entry.exit_time ||
-        entry.exitTime ||
-        ""
-      );
-
-    }
-
-
-    function getVehicleNumber(entry){
-
-      return (
-        entry.vehicle_number ||
-        entry.vehicleNumber ||
-        "Unknown"
-      );
-
-    }
-
-
-    function getDriver(entry){
-
-      return (
-        entry.driver_name ||
-        entry.driverName ||
-        "-"
-      );
-
-    }
-
-
-    function getPurpose(entry){
-
-      return (
-        entry.purpose ||
-        "-"
-      );
-
-    }
-
-
-    function getDuration(entry){
-
-      return (
-        Number(
-          entry.duration
-        ) || 0
-      );
-
-    }
-
-
-    /* =====================================================
-       DATE DISPLAY
-    ===================================================== */
-
-    function setDateText(){
-
-      const now =
-        new Date();
-
-
-      const formatted =
-        now.toLocaleDateString(
-          "en-IN",
-          {
-            weekday:"long",
-            day:"numeric",
-            month:"long",
-            year:"numeric"
-          }
-        );
-
-
-      document.getElementById(
-        "todayText"
-      ).textContent =
-        formatted;
-
-
-      document.getElementById(
-        "activityDate"
-      ).textContent =
-        formatted;
-
-    }
-
-
-    /* =====================================================
-       LOAD DASHBOARD
-    ===================================================== */
-
-    async function loadDashboard(){
-
-      try{
-
-        const results =
-          await Promise.all([
-            window.MyHomeGroup
-              .getVehicles(),
-
-            window.MyHomeGroup
-              .getEntries()
-          ]);
-
-
-        vehicles =
-          results[0] || [];
-
-        entries =
-          results[1] || [];
-
-
-        updateStats();
-
-        renderActivity();
-
-        renderProfile();
-
-      }catch(error){
-
-        console.error(
-          "Dashboard:",
-          error
-        );
-
-
-        document.getElementById(
-          "activityList"
-        ).innerHTML = `
-          <div class="empty">
-            Unable to load today's activity.
-            <br>
-            <small>
-              ${escapeHTML(
-                error.message
-              )}
-            </small>
-          </div>
-        `;
-
-      }
-
-    }
-
-
-    /* =====================================================
-       STATS
-    ===================================================== */
-
-    function updateStats(){
-
-      const today =
-        window.MyHomeGroup.today();
-
-
-      const todayEntries =
-        entries.filter(
-          entry =>
-            getEntryDate(
-              entry
-            ) === today
-        );
-
-
-      const running =
-        entries.filter(
-          entry =>
-            !getExitTime(
-              entry
-            )
-        );
-
-
-      const todayDuration =
-        todayEntries.reduce(
-          (
-            total,
-            entry
-          ) => {
-
-            return (
-              total +
-              getDuration(
-                entry
-              )
-            );
-
-          },
-          0
-        );
-
-
-      document.getElementById(
-        "vehicleCount"
-      ).textContent =
-        vehicles.length;
-
-
-      document.getElementById(
-        "runningCount"
-      ).textContent =
-        running.length;
-
-
-      document.getElementById(
-        "todayCount"
-      ).textContent =
-        todayEntries.length;
-
-
-      document.getElementById(
-        "totalDuration"
-      ).textContent =
-        window.MyHomeGroup
-          .durationText(
-            todayDuration
-          );
-
-    }
-
-
-    /* =====================================================
-       ACTIVITY
-    ===================================================== */
-
-    function renderActivity(){
-
-      const today =
-        window.MyHomeGroup.today();
-
-
-      const todayEntries =
-        entries
-          .filter(
-            entry =>
-              getEntryDate(
-                entry
-              ) === today
-          )
-          .sort(
-            (
-              a,
-              b
-            ) => {
-
-              return getEntryTime(
-                b
-              ).localeCompare(
-                getEntryTime(
-                  a
-                )
-              );
-
-            }
-          );
-
-
-      const container =
-        document.getElementById(
-          "activityList"
-        );
-
-
-      if(
-        todayEntries.length === 0
-      ){
-
-        container.innerHTML = `
-          <div class="empty">
-
-            <div style="font-size:35px;">
-              📋
-            </div>
-
-            <div>
-              No entries for today.
-            </div>
-
-            <button
-              class="btn btn-primary"
-              style="margin-top:12px;"
-              onclick="window.location.href='add-entry.html'"
-            >
-              + Add First Entry
-            </button>
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        "";
-
-
-      todayEntries
-        .slice(0,10)
-        .forEach(
-          entry => {
-
-            const item =
-              document.createElement(
-                "div"
-              );
-
-            item.className =
-              "activity-item";
-
-
-            const exitTime =
-              getExitTime(
-                entry
-              );
-
-
-            const duration =
-              getDuration(
-                entry
-              );
-
-
-            const running =
-              !exitTime;
-
-
-            item.innerHTML = `
-
-              <div class="activity-main">
-
-                <div class="activity-title">
-
-                  ${escapeHTML(
-                    getVehicleNumber(
-                      entry
-                    )
-                  )}
-
-                  ${running
-                    ? `<span class="running"> · Running</span>`
-                    : ""
-                  }
-
-                </div>
-
-                <div class="activity-meta">
-
-                  ${escapeHTML(
-                    getDriver(
-                      entry
-                    )
-                  )}
-
-                  ·
-
-                  Entry:
-                  ${escapeHTML(
-                    getEntryTime(
-                      entry
-                    )
-                  )}
-
-                  ·
-
-                  Exit:
-                  ${escapeHTML(
-                    exitTime ||
-                    "—"
-                  )}
-
-                  <br>
-
-                  ${escapeHTML(
-                    getPurpose(
-                      entry
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-
-              <div class="activity-duration">
-
-                ${
-                  running
-                    ? "Running"
-                    : window.MyHomeGroup
-                        .durationText(
-                          duration
-                        )
-                }
-
-              </div>
-
-            `;
-
-
-            container.appendChild(
-              item
-            );
-
-          }
-        );
-
-    }
-
-
-    /* =====================================================
-       PROFILE
-    ===================================================== */
-
-    function renderProfile(){
-
-      const user =
-        window.MyHomeGroup
-          .getCurrentUser();
-
-
-      if(
-        !user
-      ){
-
-        return;
-
-      }
-
-
-      document.getElementById(
-        "userName"
-      ).textContent =
-        user.name ||
-        "User";
-
-
-      document.getElementById(
-        "profileSummary"
-      ).innerHTML = `
-
-        <strong>
-          ${escapeHTML(
-            user.name ||
-            "-"
-          )}
-        </strong>
-
-        <br>
-
-        ${escapeHTML(
-          user.email ||
-          "-"
-        )}
-
-        <br>
-
-        ${escapeHTML(
-          user.role ||
-          "-"
-        )}
-
-        ·
-
-        ${escapeHTML(
-          user.company ||
-          "No company/site"
-        )}
-
-      `;
-
-    }
-
-
-    /* =====================================================
-       ONLY DURATION
-    ===================================================== */
-
-    document
-      .getElementById(
-        "calculateOnlyDuration"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          const inTime =
-            document.getElementById(
-              "onlyInTime"
-            ).value;
-
-
-          const outTime =
-            document.getElementById(
-              "onlyOutTime"
-            ).value;
-
-
-          const result =
-            document.getElementById(
-              "onlyDurationResult"
-            );
-
-
-          if(
-            !inTime ||
-            !outTime
-          ){
-
-            result.textContent =
-              "Please select both times.";
-
-            return;
-
-          }
-
-
-          const minutes =
-            window.MyHomeGroup
-              .calculateDuration(
-                inTime,
-                outTime
-              );
-
-
-          result.textContent =
-            window.MyHomeGroup
-              .durationText(
-                minutes
-              );
-
-        }
-      );
-
-
-    /* =====================================================
-       LOGOUT
-    ===================================================== */
-
-    document
-      .getElementById(
-        "logoutButton"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          window.MyHomeGroup
-            .logout();
-
-        }
-      );
-
-
-    /* =====================================================
-       NOTIFICATION BADGE
-    ===================================================== */
-
-    function updateNotificationBadge(){
-
-      const count =
-        window.MyHomeGroup
-          .unreadNotificationCount();
-
-
-      const badge =
-        document.getElementById(
-          "notificationBadge"
-        );
-
-
-      if(
-        count > 0
-      ){
-
-        badge.textContent =
-          count > 99
-            ? "99+"
-            : count;
-
-        badge.style.display =
-          "flex";
-
-      }else{
-
-        badge.style.display =
-          "none";
-
-      }
-
-    }
-
-
-    /* =====================================================
-       INITIALIZE
-    ===================================================== */
-
-    setDateText();
-
-    updateNotificationBadge();
-
-    renderProfile();
-
-    loadDashboard();
-
-  </script>
-
 </body>
+
 </html>
