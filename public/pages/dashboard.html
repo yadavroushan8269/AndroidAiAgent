@@ -1,632 +1,844 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
+  <title>Dashboard - My Home Group</title>
 
-  <title>Dashboard - Hyma RMC Kokapet</title>
-
-  <link
-    rel="stylesheet"
-    href="../style.css"
-  >
+  <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
-  <div class="app-page">
+<header class="app-header">
 
+  <div class="app-header-inner">
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
+    <a
+      href="/pages/dashboard.html"
+      class="app-brand"
+    >
 
-    <header class="top-header">
+      <div class="app-brand-mark">
+        MH
+      </div>
 
-      <div>
+      <div class="app-brand-text">
 
-        <h1 id="dashboardTitle">
-          Dashboard
-        </h1>
+        <div class="app-brand-name">
+          My Home Group
+        </div>
 
-        <p id="dashboardDate">
-          Today
-        </p>
+        <div class="app-brand-subtitle">
+          Vehicle Duration Management
+        </div>
 
       </div>
 
+    </a>
 
-      <button
-        id="notificationBtn"
-        class="header-action notification-badge"
-        type="button"
+    <div class="header-actions">
+
+      <a
+        href="/pages/notifications.html"
+        class="header-icon-btn"
+        aria-label="Notifications"
       >
+
         🔔
-      </button>
 
-    </header>
+        <span
+          class="notification-badge hidden"
+          data-notification-count
+        ></span>
 
+      </a>
 
-    <!-- =====================================================
-         MAIN
-    ====================================================== -->
-
-    <main class="page-content">
-
-
-      <!-- WELCOME -->
-
-      <section class="dashboard-welcome">
-
-        <h2 id="welcomeName">
-          Welcome
-        </h2>
-
-        <p>
-          Vehicle duration management
-        </p>
-
-      </section>
-
-
-      <!-- STATS -->
-
-      <section class="stats-grid">
-
-
-        <div class="stat-card">
-
-          <strong id="dashboardVehicleCount">
-            0
-          </strong>
-
-          <span>
-            Vehicles
-          </span>
-
-        </div>
-
-
-        <div class="stat-card green">
-
-          <strong id="dashboardRunningCount">
-            0
-          </strong>
-
-          <span>
-            Running
-          </span>
-
-        </div>
-
-
-        <div class="stat-card orange">
-
-          <strong id="dashboardEntryCount">
-            0
-          </strong>
-
-          <span>
-            Today's Entries
-          </span>
-
-        </div>
-
-
-        <div class="stat-card blue">
-
-          <strong id="dashboardDuration">
-            0h 0m
-          </strong>
-
-          <span>
-            Total Duration
-          </span>
-
-        </div>
-
-
-      </section>
-
-
-      <!-- =====================================================
-           PERSONAL DURATION CALCULATOR
-      ====================================================== -->
-
-      <section class="personal-duration-card">
-
-
-        <div class="personal-duration-header">
-
-          <div>
-
-            <h2>
-              ⏱️ Only Duration
-            </h2>
-
-            <p>
-              Calculate time between In and Out
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="duration-input-grid">
-
-
-          <div>
-
-            <label for="personalInTime">
-              In Time
-            </label>
-
-            <input
-              id="personalInTime"
-              type="time"
-            >
-
-          </div>
-
-
-          <div>
-
-            <label for="personalOutTime">
-              Out Time
-            </label>
-
-            <input
-              id="personalOutTime"
-              type="time"
-            >
-
-          </div>
-
-
-        </div>
-
-
-        <button
-          id="calculatePersonalDuration"
-          class="primary-btn full-width"
-          type="button"
-        >
-          Calculate Duration
-        </button>
-
-
-        <div
-          id="personalDurationResult"
-          class="personal-duration-result"
-        >
-
-          <span>
-            Duration
-          </span>
-
-          <strong>
-            0h 0m
-          </strong>
-
-        </div>
-
-
-      </section>
-
-
-      <!-- =====================================================
-           QUICK ACTIONS
-      ====================================================== -->
-
-      <section>
-
-        <div class="section-heading">
-
-          <div>
-
-            <h2>
-              Quick Actions
-            </h2>
-
-            <p>
-              Frequently used options
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="quick-actions">
-
-
-          <!-- ADD ENTRY -->
-
-          <button
-            class="quick-action"
-            type="button"
-            onclick="window.location.href='/pages/add-entry.html'"
-          >
-
-            <span>
-              ➕
-            </span>
-
-            <strong>
-              Add Entry
-            </strong>
-
-            <span>
-              Record vehicle entry
-            </span>
-
-          </button>
-
-
-          <!-- VEHICLES -->
-
-          <button
-            class="quick-action"
-            type="button"
-            onclick="window.location.href='/pages/vehicles.html'"
-          >
-
-            <span>
-              🚚
-            </span>
-
-            <strong>
-              Vehicles
-            </strong>
-
-            <span>
-              Manage vehicles
-            </span>
-
-          </button>
-
-
-          <!-- CALENDAR -->
-
-          <button
-            class="quick-action"
-            type="button"
-            onclick="window.location.href='/pages/calendar.html'"
-          >
-
-            <span>
-              📅
-            </span>
-
-            <strong>
-              Calendar
-            </strong>
-
-            <span>
-              View daily activity
-            </span>
-
-          </button>
-
-
-          <!-- REPORTS -->
-
-          <button
-            class="quick-action"
-            type="button"
-            onclick="window.location.href='/pages/reports.html'"
-          >
-
-            <span>
-              📊
-            </span>
-
-            <strong>
-              Reports
-            </strong>
-
-            <span>
-              View duration reports
-            </span>
-
-          </button>
-
-
-        </div>
-
-      </section>
-
-
-      <!-- =====================================================
-           TODAY ACTIVITY
-      ====================================================== -->
-
-      <section>
-
-        <div class="section-heading">
-
-          <div>
-
-            <h2>
-              Today's Activity
-            </h2>
-
-            <p>
-              Latest vehicle entries
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div
-          id="dashboardActivityList"
-          class="activity-list"
-        ></div>
-
-      </section>
-
-
-    </main>
-
-
-    <!-- =====================================================
-         BOTTOM NAVIGATION
-    ====================================================== -->
-
-    <nav class="bottom-nav">
-
-
-      <button
-        class="nav-item active"
-        type="button"
-        onclick="window.location.href='/pages/dashboard.html'"
+      <a
+        href="/pages/profile.html"
+        class="header-icon-btn"
+        aria-label="Profile"
       >
+        👤
+      </a>
 
-        <span>
-          ⌂
-        </span>
-
-        <small>
-          Home
-        </small>
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        onclick="window.location.href='/pages/vehicles.html'"
-      >
-
-        <span>
-          🚚
-        </span>
-
-        <small>
-          Vehicles
-        </small>
-
-      </button>
-
-
-      <button
-        class="nav-item add-nav"
-        type="button"
-        onclick="window.location.href='/pages/add-entry.html'"
-        aria-label="Add Entry"
-      >
-
-        <span>
-          +
-        </span>
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        onclick="window.location.href='/pages/calendar.html'"
-      >
-
-        <span>
-          ▣
-        </span>
-
-        <small>
-          Calendar
-        </small>
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        onclick="window.location.href='/pages/profile.html'"
-      >
-
-        <span>
-          👤
-        </span>
-
-        <small>
-          You
-        </small>
-
-      </button>
-
-
-    </nav>
-
+    </div>
 
   </div>
 
+</header>
 
-  <script>
+<div class="app-layout">
 
-    /* =====================================================
-       PERSONAL ONLY DURATION
-    ====================================================== */
+  <aside class="sidebar">
 
-    const personalInTime =
-      document.getElementById(
-        "personalInTime"
-      );
+    <nav class="sidebar-nav">
 
-    const personalOutTime =
-      document.getElementById(
-        "personalOutTime"
-      );
+      <a
+        href="/pages/dashboard.html"
+        class="nav-link active"
+      >
+        <span class="nav-icon">🏠</span>
+        Dashboard
+      </a>
 
-    const calculatePersonalDuration =
-      document.getElementById(
-        "calculatePersonalDuration"
-      );
+      <a
+        href="/pages/vehicles.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🚛</span>
+        Vehicles
+      </a>
 
-    const personalDurationResult =
-      document.getElementById(
-        "personalDurationResult"
-      );
+      <a
+        href="/pages/add-entry.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">➕</span>
+        Add Entry
+      </a>
 
+      <a
+        href="/pages/calendar.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📅</span>
+        Calendar
+      </a>
 
-    calculatePersonalDuration.addEventListener(
-      "click",
-      function () {
+      <a
+        href="/pages/reports.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📊</span>
+        Reports
+      </a>
 
-        const inTime =
-          personalInTime.value;
+      <a
+        href="/pages/notifications.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🔔</span>
+        Notifications
+      </a>
 
-        const outTime =
-          personalOutTime.value;
+      <a
+        href="/pages/profile.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
 
+      <a
+        href="#"
+        class="nav-link logout-btn"
+      >
+        <span class="nav-icon">🚪</span>
+        Logout
+      </a>
 
-        if (!inTime || !outTime) {
+    </nav>
 
-          personalDurationResult.innerHTML = `
-            <span>
-              Please select In Time and Out Time
+  </aside>
+
+  <main class="main-content">
+
+    <div class="content-inner">
+
+      <div class="page-heading">
+
+        <div class="page-heading-text">
+
+          <h1>
+            Dashboard
+          </h1>
+
+          <p>
+            Welcome,
+            <strong data-user-name>
+              User
+            </strong>
+          </p>
+
+        </div>
+
+        <div class="page-heading-actions">
+
+          <a
+            href="/pages/add-entry.html"
+            class="btn btn-primary"
+          >
+            + Add Entry
+          </a>
+
+        </div>
+
+      </div>
+
+      <div
+        id="dashboardMessage"
+      ></div>
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-card-top">
+
+            <span class="stat-card-label">
+              Vehicles
             </span>
 
-            <strong>
-              —
-            </strong>
+            <span class="stat-card-icon">
+              🚛
+            </span>
+
+          </div>
+
+          <div
+            id="vehicleCount"
+            class="stat-card-value"
+          >
+            0
+          </div>
+
+          <div class="stat-card-note">
+            Registered vehicles
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-card-top">
+
+            <span class="stat-card-label">
+              Running
+            </span>
+
+            <span class="stat-card-icon">
+              🟢
+            </span>
+
+          </div>
+
+          <div
+            id="runningCount"
+            class="stat-card-value"
+          >
+            0
+          </div>
+
+          <div class="stat-card-note">
+            Currently inside
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-card-top">
+
+            <span class="stat-card-label">
+              Today's Entries
+            </span>
+
+            <span class="stat-card-icon">
+              📝
+            </span>
+
+          </div>
+
+          <div
+            id="todayEntryCount"
+            class="stat-card-value"
+          >
+            0
+          </div>
+
+          <div class="stat-card-note">
+            Vehicle movements
+          </div>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-card-top">
+
+            <span class="stat-card-label">
+              Total Duration
+            </span>
+
+            <span class="stat-card-icon">
+              ⏱️
+            </span>
+
+          </div>
+
+          <div
+            id="todayDuration"
+            class="stat-card-value"
+          >
+            0m
+          </div>
+
+          <div class="stat-card-note">
+            Today's total
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="quick-actions">
+
+        <a
+          href="/pages/add-entry.html"
+          class="quick-action"
+        >
+
+          <div class="quick-action-icon">
+            ➕
+          </div>
+
+          <div class="quick-action-title">
+            Add Entry
+          </div>
+
+          <div class="quick-action-description">
+            Record vehicle entry
+          </div>
+
+        </a>
+
+        <a
+          href="/pages/vehicles.html"
+          class="quick-action"
+        >
+
+          <div class="quick-action-icon">
+            🚛
+          </div>
+
+          <div class="quick-action-title">
+            Vehicles
+          </div>
+
+          <div class="quick-action-description">
+            Manage vehicles
+          </div>
+
+        </a>
+
+        <a
+          href="/pages/calendar.html"
+          class="quick-action"
+        >
+
+          <div class="quick-action-icon">
+            📅
+          </div>
+
+          <div class="quick-action-title">
+            Calendar
+          </div>
+
+          <div class="quick-action-description">
+            View date-wise entries
+          </div>
+
+        </a>
+
+        <a
+          href="/pages/reports.html"
+          class="quick-action"
+        >
+
+          <div class="quick-action-icon">
+            📊
+          </div>
+
+          <div class="quick-action-title">
+            Reports
+          </div>
+
+          <div class="quick-action-description">
+            Analyse durations
+          </div>
+
+        </a>
+
+      </div>
+
+      <div class="grid-2">
+
+        <section class="card">
+
+          <div class="card-header">
+
+            <div>
+
+              <div class="card-title">
+                Only Duration Calculator
+              </div>
+
+              <div class="card-subtitle">
+                Calculate time without saving an entry
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="card-body">
+
+            <div
+              data-duration-calculator
+              class="form-grid"
+            >
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  In Time
+                </label>
+
+                <input
+                  type="time"
+                  class="form-control"
+                  data-duration-entry
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Out Time
+                </label>
+
+                <input
+                  type="time"
+                  class="form-control"
+                  data-duration-exit
+                >
+
+              </div>
+
+              <div class="form-group full">
+
+                <div class="duration-result">
+
+                  <div class="duration-result-label">
+                    Duration
+                  </div>
+
+                  <div
+                    class="duration-result-value"
+                    data-duration-result
+                  >
+                    0m
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="card">
+
+          <div class="card-header">
+
+            <div>
+
+              <div class="card-title">
+                My Profile
+              </div>
+
+              <div class="card-subtitle">
+                Account information
+              </div>
+
+            </div>
+
+            <a
+              href="/pages/profile.html"
+              class="btn btn-sm btn-secondary"
+            >
+              View
+            </a>
+
+          </div>
+
+          <div class="card-body">
+
+            <div class="profile-header">
+
+              <div
+                class="profile-avatar"
+                data-user-initials
+              >
+                U
+              </div>
+
+              <div>
+
+                <div
+                  class="profile-name"
+                  data-user-name
+                >
+                  User
+                </div>
+
+                <div
+                  class="profile-meta"
+                  data-user-email
+                >
+                  -
+                </div>
+
+                <div
+                  class="profile-meta"
+                  data-user-role
+                >
+                  Security Guard
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+      <section
+        class="card"
+        style="margin-top:18px;"
+      >
+
+        <div class="card-header">
+
+          <div>
+
+            <div class="card-title">
+              Today's Activity
+            </div>
+
+            <div class="card-subtitle">
+              Latest vehicle movements
+            </div>
+
+          </div>
+
+          <span
+            id="todayDate"
+            class="badge badge-warning"
+          ></span>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Vehicle</th>
+                <th>Type</th>
+                <th>Driver</th>
+                <th>Entry</th>
+                <th>Exit</th>
+                <th>Duration</th>
+                <th>Status</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="activityBody">
+
+              <tr>
+                <td colspan="7">
+                  <div class="loading">
+                    Loading...
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+<nav class="mobile-bottom-nav">
+
+  <div class="mobile-nav-inner">
+
+    <a
+      href="/pages/dashboard.html"
+      class="mobile-nav-item active"
+      data-page="dashboard.html"
+    >
+      <span class="mobile-nav-icon">🏠</span>
+      Home
+    </a>
+
+    <a
+      href="/pages/vehicles.html"
+      class="mobile-nav-item"
+      data-page="vehicles.html"
+    >
+      <span class="mobile-nav-icon">🚛</span>
+      Vehicles
+    </a>
+
+    <a
+      href="/pages/add-entry.html"
+      class="mobile-nav-item add"
+    >
+      <span class="mobile-nav-add">+</span>
+      Entry
+    </a>
+
+    <a
+      href="/pages/calendar.html"
+      class="mobile-nav-item"
+      data-page="calendar.html"
+    >
+      <span class="mobile-nav-icon">📅</span>
+      Calendar
+    </a>
+
+    <a
+      href="/pages/profile.html"
+      class="mobile-nav-item"
+      data-page="profile.html"
+    >
+      <span class="mobile-nav-icon">👤</span>
+      You
+    </a>
+
+  </div>
+
+</nav>
+
+<script src="../app.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const vehicleCount =
+    document.getElementById("vehicleCount");
+
+  const runningCount =
+    document.getElementById("runningCount");
+
+  const todayEntryCount =
+    document.getElementById("todayEntryCount");
+
+  const todayDuration =
+    document.getElementById("todayDuration");
+
+  const activityBody =
+    document.getElementById("activityBody");
+
+  const todayDate =
+    document.getElementById("todayDate");
+
+  todayDate.textContent =
+    MyHomeGroup.formatDate(
+      MyHomeGroup.todayString()
+    );
+
+  try {
+
+    const [
+      vehicles,
+      entries
+    ] = await Promise.all([
+      MyHomeGroup.getVehicles(),
+      MyHomeGroup.getEntries({
+        date: MyHomeGroup.todayString()
+      })
+    ]);
+
+    vehicleCount.textContent =
+      vehicles.length;
+
+    const running =
+      entries.filter(
+        entry => !entry.exit_time
+      );
+
+    runningCount.textContent =
+      running.length;
+
+    todayEntryCount.textContent =
+      entries.length;
+
+    const totalMinutes =
+      entries.reduce(
+        (sum, entry) => {
+          return (
+            sum +
+            Number(entry.duration || 0)
+          );
+        },
+        0
+      );
+
+    todayDuration.textContent =
+      MyHomeGroup.minutesToDuration(
+        totalMinutes
+      );
+
+    if (!entries.length) {
+
+      activityBody.innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <div class="empty-icon">📝</div>
+              <div class="empty-title">
+                No activity today
+              </div>
+              <div class="empty-text">
+                Add your first vehicle entry.
+              </div>
+              <a
+                href="/pages/add-entry.html"
+                class="btn btn-primary"
+              >
+                + Add Entry
+              </a>
+            </div>
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    activityBody.innerHTML =
+      entries
+        .slice(0, 20)
+        .map(entry => {
+
+          const running =
+            !entry.exit_time;
+
+          return `
+            <tr>
+
+              <td>
+                <strong>
+                  ${MyHomeGroup.escapeHtml(
+                    entry.vehicle_number
+                  )}
+                </strong>
+              </td>
+
+              <td>
+                ${MyHomeGroup.escapeHtml(
+                  entry.vehicle_type || "-"
+                )}
+              </td>
+
+              <td>
+                ${MyHomeGroup.escapeHtml(
+                  entry.driver_name || "-"
+                )}
+              </td>
+
+              <td>
+                ${MyHomeGroup.formatTime(
+                  entry.entry_time
+                )}
+              </td>
+
+              <td>
+                ${MyHomeGroup.formatTime(
+                  entry.exit_time
+                )}
+              </td>
+
+              <td>
+                ${MyHomeGroup.minutesToDuration(
+                  Number(entry.duration || 0)
+                )}
+              </td>
+
+              <td>
+                ${
+                  running
+                    ? `
+                      <span class="badge badge-success">
+                        Running
+                      </span>
+                    `
+                    : `
+                      <span class="badge badge-gray">
+                        Completed
+                      </span>
+                    `
+                }
+              </td>
+
+            </tr>
           `;
 
-          return;
-        }
+        })
+        .join("");
 
+  } catch (error) {
 
-        const inParts =
-          inTime
-            .split(":")
-            .map(Number);
+    activityBody.innerHTML = `
+      <tr>
+        <td colspan="7">
+          <div class="empty-state">
+            <div class="empty-icon">⚠️</div>
+            <div class="empty-title">
+              Unable to load activity
+            </div>
+            <div class="empty-text">
+              ${MyHomeGroup.escapeHtml(
+                error.message
+              )}
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
 
+  }
 
-        const outParts =
-          outTime
-            .split(":")
-            .map(Number);
-
-
-        let start =
-          inParts[0] * 60 +
-          inParts[1];
-
-
-        let end =
-          outParts[0] * 60 +
-          outParts[1];
-
-
-        /*
-          If Out Time is earlier than
-          In Time, assume it crossed midnight.
-        */
-
-        if (end < start) {
-          end += 24 * 60;
-        }
-
-
-        const totalMinutes =
-          end - start;
-
-
-        const hours =
-          Math.floor(
-            totalMinutes / 60
-          );
-
-
-        const minutes =
-          totalMinutes % 60;
-
-
-        personalDurationResult.innerHTML = `
-          <span>
-            Total Duration
-          </span>
-
-          <strong>
-            ${hours}h ${minutes}m
-          </strong>
-        `;
-
-      }
-    );
-
-
-    /* =====================================================
-       LIVE RECALCULATION
-    ====================================================== */
-
-    personalInTime.addEventListener(
-      "change",
-      function () {
-
-        if (
-          personalOutTime.value
-        ) {
-          calculatePersonalDuration.click();
-        }
-
-      }
-    );
-
-
-    personalOutTime.addEventListener(
-      "change",
-      function () {
-
-        if (
-          personalInTime.value
-        ) {
-          calculatePersonalDuration.click();
-        }
-
-      }
-    );
-
-  </script>
-
-
-  <script src="../app.js"></script>
+});
+</script>
 
 </body>
-
 </html>
