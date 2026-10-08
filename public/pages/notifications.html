@@ -1,625 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>Notifications - My Home Group</title>
-  <link rel="stylesheet" href="../style.css">
 
-  <style>
-    body {
-      margin: 0;
-      background: #f5f7fa;
-      color: #1f2937;
-      font-family: Arial, sans-serif;
-    }
+  <link
+    rel="stylesheet"
+    href="../style.css"
+  >
 
-    .page {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px 16px 100px;
-    }
-
-    .topbar {
-      background: #fff;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-    }
-
-    .title-wrap h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .title-wrap p {
-      margin: 5px 0 0;
-      color: #6b7280;
-      font-size: 13px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .btn-primary {
-      background: #f59e0b;
-      color: #fff;
-    }
-
-    .btn-light {
-      background: #eef2f7;
-      color: #374151;
-    }
-
-    .btn-danger {
-      background: #ef4444;
-      color: #fff;
-    }
-
-    .summary {
-      background: #fff;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-    }
-
-    .summary-box {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 14px;
-      text-align: center;
-    }
-
-    .summary-number {
-      display: block;
-      font-size: 25px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .summary-label {
-      color: #6b7280;
-      font-size: 13px;
-    }
-
-    #notificationsList {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .notification {
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-      border-left: 4px solid #d1d5db;
-      position: relative;
-    }
-
-    .notification.unread {
-      border-left-color: #f59e0b;
-      background: #fffdf5;
-    }
-
-    .notification-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .notification-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin: 0 0 5px;
-    }
-
-    .notification-message {
-      margin: 0;
-      color: #4b5563;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .notification-time {
-      color: #9ca3af;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .notification-type {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #eef2f7;
-      color: #4b5563;
-      font-size: 11px;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .notification-buttons {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-
-    .empty {
-      background: #fff;
-      border-radius: 16px;
-      padding: 50px 20px;
-      text-align: center;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-    }
-
-    .empty-icon {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
-
-    .empty h3 {
-      margin: 0 0 6px;
-    }
-
-    .empty p {
-      margin: 0;
-      color: #6b7280;
-    }
-
-    .loading {
-      background: #fff;
-      border-radius: 16px;
-      padding: 35px;
-      text-align: center;
-      color: #6b7280;
-    }
-
-    .error-box {
-      background: #fee2e2;
-      color: #991b1b;
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 16px;
-      display: none;
-    }
-
-    .badge {
-      display: inline-flex;
-      min-width: 20px;
-      height: 20px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: #ef4444;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 0 5px;
-      vertical-align: middle;
-    }
-
-    @media (max-width: 600px) {
-      .page {
-        padding: 12px 12px 90px;
-      }
-
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .actions {
-        width: 100%;
-      }
-
-      .actions button {
-        flex: 1;
-      }
-
-      .summary {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .summary-box:last-child {
-        grid-column: span 2;
-      }
-
-      .notification-header {
-        flex-direction: column;
-        gap: 5px;
-      }
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 64px;
-      background: #fff;
-      border-top: 1px solid #e5e7eb;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-      box-shadow: 0 -3px 12px rgba(0,0,0,.08);
-    }
-
-    .bottom-nav a {
-      text-decoration: none;
-      color: #6b7280;
-      font-size: 11px;
-      text-align: center;
-      min-width: 60px;
-    }
-
-    .bottom-nav a.active {
-      color: #f59e0b;
-      font-weight: 700;
-    }
-
-    .nav-icon {
-      display: block;
-      font-size: 21px;
-      margin-bottom: 2px;
-    }
-  </style>
 </head>
 
 <body>
 
-  <main class="page">
+<header class="app-header">
 
-    <section class="topbar">
-      <div class="title-wrap">
-        <h1>🔔 Notifications</h1>
-        <p>Your latest alerts and updates</p>
+  <div class="app-header-inner">
+
+    <a
+      href="/pages/dashboard.html"
+      class="app-brand"
+    >
+
+      <div class="app-brand-mark">
+        MH
       </div>
 
-      <div class="actions">
-        <button class="btn-light" id="markAllBtn">
-          Mark All Read
-        </button>
+      <div class="app-brand-text">
 
-        <button class="btn-danger" id="clearAllBtn">
-          Clear All
-        </button>
-      </div>
-    </section>
+        <div class="app-brand-name">
+          My Home Group
+        </div>
 
-    <div class="error-box" id="errorBox"></div>
+        <div class="app-brand-subtitle">
+          Vehicle Duration Management
+        </div>
 
-    <section class="summary">
-      <div class="summary-box">
-        <span class="summary-number" id="totalCount">0</span>
-        <span class="summary-label">Total</span>
       </div>
 
-      <div class="summary-box">
-        <span class="summary-number" id="unreadCount">0</span>
-        <span class="summary-label">Unread</span>
+    </a>
+
+    <div class="header-actions">
+
+      <a
+        href="/pages/notifications.html"
+        class="header-icon-btn"
+      >
+        🔔
+        <span
+          class="notification-badge hidden"
+          data-notification-count
+        ></span>
+      </a>
+
+      <a
+        href="/pages/profile.html"
+        class="header-icon-btn"
+      >
+        👤
+      </a>
+
+    </div>
+
+  </div>
+
+</header>
+
+<div class="app-layout">
+
+  <aside class="sidebar">
+
+    <nav class="sidebar-nav">
+
+      <a
+        href="/pages/dashboard.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🏠</span>
+        Dashboard
+      </a>
+
+      <a
+        href="/pages/vehicles.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🚛</span>
+        Vehicles
+      </a>
+
+      <a
+        href="/pages/add-entry.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">➕</span>
+        Add Entry
+      </a>
+
+      <a
+        href="/pages/calendar.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📅</span>
+        Calendar
+      </a>
+
+      <a
+        href="/pages/reports.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📊</span>
+        Reports
+      </a>
+
+      <a
+        href="/pages/notifications.html"
+        class="nav-link active"
+      >
+        <span class="nav-icon">🔔</span>
+        Notifications
+      </a>
+
+      <a
+        href="/pages/profile.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
+
+      <a
+        href="#"
+        class="nav-link logout-btn"
+      >
+        <span class="nav-icon">🚪</span>
+        Logout
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <main class="main-content">
+
+    <div class="content-inner">
+
+      <div class="page-heading">
+
+        <div class="page-heading-text">
+
+          <h1>
+            Notifications
+          </h1>
+
+          <p>
+            Your account notifications
+          </p>
+
+        </div>
+
+        <div
+          class="page-heading-actions"
+          style="
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+          "
+        >
+
+          <button
+            id="markAll"
+            class="btn btn-secondary"
+          >
+            Mark All Read
+          </button>
+
+          <button
+            id="clearAll"
+            class="btn btn-danger"
+          >
+            Clear All
+          </button>
+
+        </div>
+
       </div>
 
-      <div class="summary-box">
-        <span class="summary-number" id="readCount">0</span>
-        <span class="summary-label">Read</span>
-      </div>
-    </section>
+      <section class="card">
 
-    <section id="notificationsContainer">
-      <div class="loading">
-        Loading notifications...
-      </div>
-    </section>
+        <div
+          id="notificationList"
+          class="notification-list"
+        >
+
+          <div class="loading">
+            Loading notifications...
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
 
   </main>
 
-  <nav class="bottom-nav">
-    <a href="dashboard.html">
-      <span class="nav-icon">🏠</span>
+</div>
+
+<nav class="mobile-bottom-nav">
+
+  <div class="mobile-nav-inner">
+
+    <a
+      href="/pages/dashboard.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🏠</span>
       Home
     </a>
 
-    <a href="vehicles.html">
-      <span class="nav-icon">🚚</span>
+    <a
+      href="/pages/vehicles.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🚛</span>
       Vehicles
     </a>
 
-    <a href="add-entry.html">
-      <span class="nav-icon">➕</span>
+    <a
+      href="/pages/add-entry.html"
+      class="mobile-nav-item add"
+    >
+      <span class="mobile-nav-add">+</span>
       Entry
     </a>
 
-    <a href="calendar.html">
-      <span class="nav-icon">📅</span>
+    <a
+      href="/pages/calendar.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">📅</span>
       Calendar
     </a>
 
-    <a href="profile.html">
-      <span class="nav-icon">👤</span>
+    <a
+      href="/pages/profile.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">👤</span>
       You
     </a>
-  </nav>
 
-  <script src="../app.js"></script>
+  </div>
 
-  <script>
-    let notifications = [];
+</nav>
 
-    const container = document.getElementById("notificationsContainer");
-    const errorBox = document.getElementById("errorBox");
+<script src="../app.js"></script>
 
-    const totalCount = document.getElementById("totalCount");
-    const unreadCount = document.getElementById("unreadCount");
-    const readCount = document.getElementById("readCount");
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
 
-    const markAllBtn = document.getElementById("markAllBtn");
-    const clearAllBtn = document.getElementById("clearAllBtn");
+  const list =
+    document.getElementById(
+      "notificationList"
+    );
 
-    function showError(message) {
-      errorBox.textContent = message || "Something went wrong.";
-      errorBox.style.display = "block";
-    }
+  async function load() {
 
-    function hideError() {
-      errorBox.style.display = "none";
-    }
+    try {
 
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function formatDateTime(value) {
-      if (!value) return "";
-
-      const date = new Date(value);
-
-      if (Number.isNaN(date.getTime())) {
-        return String(value);
-      }
-
-      return date.toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
-
-    function renderSummary() {
-      const total = notifications.length;
-
-      const unread = notifications.filter(
-        item => !item.is_read
-      ).length;
-
-      const read = total - unread;
-
-      totalCount.textContent = total;
-      unreadCount.textContent = unread;
-      readCount.textContent = read;
-    }
-
-    function renderNotifications() {
-      renderSummary();
+      const notifications =
+        await MyHomeGroup
+          .getNotifications();
 
       if (!notifications.length) {
-        container.innerHTML = `
-          <div class="empty">
-            <div class="empty-icon">🔔</div>
-            <h3>No notifications</h3>
-            <p>You're all caught up.</p>
+
+        list.innerHTML = `
+          <div class="empty-state">
+
+            <div class="empty-icon">
+              🔔
+            </div>
+
+            <div class="empty-title">
+              No notifications
+            </div>
+
+            <div class="empty-text">
+              You're all caught up.
+            </div>
+
           </div>
         `;
+
         return;
+
       }
 
-      container.innerHTML = notifications.map(notification => {
-        const unreadClass = notification.is_read ? "" : "unread";
+      list.innerHTML =
+        notifications.map(
+          notification => {
 
-        const readButton = notification.is_read
-          ? ""
-          : `
-            <button
-              class="btn-primary"
-              onclick="markRead(${Number(notification.id)})"
-            >
-              Mark as Read
-            </button>
-          `;
+            const unread =
+              !notification.is_read;
 
-        return `
-          <article class="notification ${unreadClass}">
-            <div class="notification-header">
-
-              <div>
-                <h3 class="notification-title">
-                  ${escapeHtml(notification.title || "Notification")}
-                </h3>
-
-                <p class="notification-message">
-                  ${escapeHtml(notification.message || "")}
-                </p>
-              </div>
-
-              <span class="notification-time">
-                ${escapeHtml(formatDateTime(notification.created_at))}
-              </span>
-
-            </div>
-
-            <span class="notification-type">
-              ${escapeHtml(notification.type || "general")}
-            </span>
-
-            <div class="notification-buttons">
-              ${readButton}
-
-              <button
-                class="btn-light"
-                onclick="deleteOne(${Number(notification.id)})"
+            return `
+              <div
+                class="
+                  notification-item
+                  ${unread ? "unread" : ""}
+                "
+                data-id="${notification.id}"
               >
-                Delete
-              </button>
-            </div>
-          </article>
-        `;
-      }).join("");
-    }
 
-    async function loadNotifications() {
-      hideError();
+                <div class="notification-icon">
+                  ${
+                    notification.type === "error"
+                      ? "⚠️"
+                      : notification.type === "success"
+                        ? "✅"
+                        : "🔔"
+                  }
+                </div>
 
-      container.innerHTML = `
-        <div class="loading">
-          Loading notifications...
+                <div class="notification-content">
+
+                  <div class="notification-title">
+                    ${MyHomeGroup.escapeHtml(
+                      notification.title ||
+                      "Notification"
+                    )}
+                  </div>
+
+                  <div class="notification-message">
+                    ${MyHomeGroup.escapeHtml(
+                      notification.message ||
+                      ""
+                    )}
+                  </div>
+
+                  <div class="notification-time">
+                    ${
+                      notification.created_at
+                        ? new Date(
+                            notification.created_at
+                          ).toLocaleString()
+                        : ""
+                    }
+                  </div>
+
+                </div>
+
+                <div
+                  style="
+                    display:flex;
+                    flex-direction:column;
+                    gap:5px;
+                  "
+                >
+
+                  ${
+                    unread
+                      ? `
+                        <button
+                          class="btn btn-sm btn-secondary read-btn"
+                          data-id="${notification.id}"
+                        >
+                          Read
+                        </button>
+                      `
+                      : ""
+                  }
+
+                  <button
+                    class="btn btn-sm btn-outline delete-btn"
+                    data-id="${notification.id}"
+                  >
+                    Delete
+                  </button>
+
+                </div>
+
+              </div>
+            `;
+
+          }
+        ).join("");
+
+      document
+        .querySelectorAll(".read-btn")
+        .forEach(button => {
+
+          button.addEventListener(
+            "click",
+            async () => {
+
+              try {
+
+                await MyHomeGroup
+                  .markNotificationRead(
+                    button.dataset.id
+                  );
+
+                await load();
+
+                MyHomeGroup
+                  .updateNotificationBadge();
+
+              } catch (error) {
+
+                MyHomeGroup.showToast(
+                  error.message,
+                  "error"
+                );
+
+              }
+
+            }
+          );
+
+        });
+
+      document
+        .querySelectorAll(".delete-btn")
+        .forEach(button => {
+
+          button.addEventListener(
+            "click",
+            async () => {
+
+              try {
+
+                await MyHomeGroup
+                  .deleteNotification(
+                    button.dataset.id
+                  );
+
+                await load();
+
+                MyHomeGroup
+                  .updateNotificationBadge();
+
+              } catch (error) {
+
+                MyHomeGroup.showToast(
+                  error.message,
+                  "error"
+                );
+
+              }
+
+            }
+          );
+
+        });
+
+    } catch (error) {
+
+      list.innerHTML = `
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            ⚠️
+          </div>
+
+          <div class="empty-title">
+            Unable to load notifications
+          </div>
+
+          <div class="empty-text">
+            ${MyHomeGroup.escapeHtml(
+              error.message
+            )}
+          </div>
+
         </div>
       `;
 
-      try {
-        notifications = await MyHomeGroup.getNotifications();
+    }
 
-        if (!Array.isArray(notifications)) {
-          notifications = [];
+  }
+
+  document
+    .getElementById("markAll")
+    .addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          await MyHomeGroup
+            .markAllNotificationsRead();
+
+          await load();
+
+          MyHomeGroup
+            .updateNotificationBadge();
+
+          MyHomeGroup.showToast(
+            "All notifications marked as read.",
+            "success"
+          );
+
+        } catch (error) {
+
+          MyHomeGroup.showToast(
+            error.message,
+            "error"
+          );
+
         }
 
-        renderNotifications();
+      }
+    );
 
-        if (typeof MyHomeGroup.updateNotificationBadges === "function") {
-          await MyHomeGroup.updateNotificationBadges();
+  document
+    .getElementById("clearAll")
+    .addEventListener(
+      "click",
+      async () => {
+
+        if (
+          !confirm(
+            "Clear all notifications?"
+          )
+        ) {
+          return;
         }
 
-      } catch (error) {
-        console.error("Notifications load error:", error);
+        try {
 
-        notifications = [];
-        renderSummary();
+          await MyHomeGroup
+            .clearNotifications();
 
-        container.innerHTML = `
-          <div class="empty">
-            <div class="empty-icon">⚠️</div>
-            <h3>Unable to load notifications</h3>
-            <p>Please refresh the page and try again.</p>
-          </div>
-        `;
+          await load();
 
-        showError(error.message || "Failed to load notifications.");
+          MyHomeGroup
+            .updateNotificationBadge();
+
+          MyHomeGroup.showToast(
+            "Notifications cleared.",
+            "success"
+          );
+
+        } catch (error) {
+
+          MyHomeGroup.showToast(
+            error.message,
+            "error"
+          );
+
+        }
+
       }
-    }
+    );
 
-    async function markRead(id) {
-      try {
-        await MyHomeGroup.markNotificationRead(id);
-        await loadNotifications();
+  await load();
 
-      } catch (error) {
-        console.error("Mark notification read error:", error);
-        showError(error.message || "Failed to mark notification as read.");
-      }
-    }
-
-    async function markAllRead() {
-      if (!notifications.some(item => !item.is_read)) {
-        return;
-      }
-
-      try {
-        markAllBtn.disabled = true;
-        markAllBtn.textContent = "Marking...";
-
-        await MyHomeGroup.markAllNotificationsRead();
-
-        await loadNotifications();
-
-      } catch (error) {
-        console.error("Mark all read error:", error);
-        showError(error.message || "Failed to mark all notifications as read.");
-
-      } finally {
-        markAllBtn.disabled = false;
-        markAllBtn.textContent = "Mark All Read";
-      }
-    }
-
-    async function deleteOne(id) {
-      try {
-        await MyHomeGroup.deleteNotification(id);
-        await loadNotifications();
-
-      } catch (error) {
-        console.error("Delete notification error:", error);
-        showError(error.message || "Failed to delete notification.");
-      }
-    }
-
-    async function clearAll() {
-      if (!notifications.length) {
-        return;
-      }
-
-      const confirmed = confirm(
-        "Are you sure you want to delete all notifications?"
-      );
-
-      if (!confirmed) {
-        return;
-      }
-
-      try {
-        clearAllBtn.disabled = true;
-        clearAllBtn.textContent = "Clearing...";
-
-        await MyHomeGroup.clearNotifications();
-
-        await loadNotifications();
-
-      } catch (error) {
-        console.error("Clear notifications error:", error);
-        showError(error.message || "Failed to clear notifications.");
-
-      } finally {
-        clearAllBtn.disabled = false;
-        clearAllBtn.textContent = "Clear All";
-      }
-    }
-
-    markAllBtn.addEventListener("click", markAllRead);
-    clearAllBtn.addEventListener("click", clearAll);
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadNotifications();
-    });
-  </script>
+});
+</script>
 
 </body>
 </html>
