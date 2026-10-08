@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -9,692 +9,235 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Vehicles - My-Home-Group</title>
+  <title>Vehicles - My Home Group</title>
 
   <link
     rel="stylesheet"
     href="../style.css"
   >
 
-  <style>
-    .vehicles-page {
-      min-height: 100vh;
-      padding: 20px 16px 100px;
-      background: #f5f7fa;
-    }
-
-    .vehicles-container {
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .vehicles-header {
-      margin-bottom: 18px;
-    }
-
-    .vehicles-header h1 {
-      margin: 0 0 6px;
-      font-size: 26px;
-    }
-
-    .vehicles-header p {
-      margin: 0;
-      color: #6b7280;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-    }
-
-    .section-title {
-      margin: 0 0 14px;
-      font-size: 19px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .field-group {
-      display: grid;
-      gap: 7px;
-    }
-
-    .field-group.full {
-      grid-column: 1 / -1;
-    }
-
-    .field-group label {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .field-group input,
-    .field-group select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px 12px;
-      border: 1px solid #d5dbe0;
-      border-radius: 11px;
-      background: #fff;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .field-group input:focus,
-    .field-group select:focus {
-      border-color: #f5a400;
-      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
-    }
-
-    .form-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .secondary-btn {
-      border: 1px solid #d5d9df;
-      background: #fff;
-      color: #333;
-      border-radius: 11px;
-      padding: 13px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .message {
-      min-height: 20px;
-      margin-top: 10px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .message.success {
-      color: #16803c;
-    }
-
-    .message.error {
-      color: #c62828;
-    }
-
-    .filters {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr;
-      gap: 10px;
-    }
-
-    .filters input,
-    .filters select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #d5dbe0;
-      border-radius: 10px;
-      background: #fff;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .vehicle-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .vehicle-card {
-      border: 1px solid #e1e5e9;
-      border-radius: 15px;
-      padding: 15px;
-      background: #fff;
-    }
-
-    .vehicle-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .vehicle-number {
-      font-size: 19px;
-      font-weight: 800;
-      color: #222;
-    }
-
-    .vehicle-type {
-      margin-top: 4px;
-      color: #777;
-      font-size: 13px;
-    }
-
-    .status {
-      padding: 6px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .status.active {
-      background: #e8f7ed;
-      color: #16803c;
-    }
-
-    .status.inactive {
-      background: #fdecec;
-      color: #c62828;
-    }
-
-    .vehicle-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 13px;
-    }
-
-    .detail {
-      padding: 10px;
-      background: #f6f7f8;
-      border-radius: 10px;
-    }
-
-    .detail-label {
-      font-size: 10px;
-      color: #7b8289;
-      font-weight: 800;
-      margin-bottom: 3px;
-    }
-
-    .detail-value {
-      font-size: 13px;
-      color: #333;
-      font-weight: 700;
-      word-break: break-word;
-    }
-
-    .vehicle-actions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .action-btn {
-      border: 1px solid #d9dde1;
-      background: #fff;
-      border-radius: 9px;
-      padding: 9px 5px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .action-btn.delete {
-      color: #c62828;
-      border-color: #efc2c2;
-    }
-
-    .action-btn.history {
-      color: #a66d00;
-      border-color: #ead39a;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 35px 15px;
-      color: #777;
-    }
-
-    .empty-icon {
-      font-size: 42px;
-      margin-bottom: 8px;
-    }
-
-    .empty-state h3 {
-      margin: 0 0 5px;
-      color: #333;
-    }
-
-    .empty-state p {
-      margin: 0;
-      font-size: 13px;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.5);
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-card {
-      width: 100%;
-      max-width: 600px;
-      max-height: 85vh;
-      overflow-y: auto;
-      background: #fff;
-      border-radius: 18px;
-      padding: 20px;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .close-btn {
-      border: none;
-      background: #f1f2f3;
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      font-size: 19px;
-      cursor: pointer;
-    }
-
-    .history-item {
-      border: 1px solid #e3e6e9;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 9px;
-    }
-
-    .history-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 13px;
-      margin-bottom: 5px;
-    }
-
-    .history-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .history-label {
-      color: #777;
-    }
-
-    .history-value {
-      color: #222;
-      font-weight: 700;
-      text-align: right;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      background: #fff;
-      border-top: 1px solid #ddd;
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .bottom-nav a {
-      text-decoration: none;
-      color: #555;
-      text-align: center;
-      padding: 9px 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .bottom-nav a span {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-
-    .bottom-nav a.active {
-      color: #d88900;
-    }
-
-    .add-main-btn {
-      width: 46px;
-      height: 46px;
-      margin: -16px auto 0;
-      border-radius: 50%;
-      background: #f5a400;
-      color: #fff !important;
-      border: 4px solid #fff;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-    }
-
-    .add-main-btn span {
-      margin: 0 !important;
-      font-size: 26px !important;
-    }
-
-    @media (max-width: 700px) {
-      .form-grid,
-      .filters {
-        grid-template-columns: 1fr;
-      }
-
-      .field-group.full {
-        grid-column: auto;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .vehicles-page {
-        padding: 16px 12px 100px;
-      }
-
-      .vehicles-header h1 {
-        font-size: 23px;
-      }
-
-      .vehicle-details {
-        grid-template-columns: 1fr;
-      }
-
-      .form-buttons {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
-  <main class="vehicles-page">
+<header class="app-header">
+
+  <div class="app-header-inner">
+
+    <a
+      href="/pages/dashboard.html"
+      class="app-brand"
+    >
+
+      <div class="app-brand-mark">
+        MH
+      </div>
+
+      <div class="app-brand-text">
+
+        <div class="app-brand-name">
+          My Home Group
+        </div>
+
+        <div class="app-brand-subtitle">
+          Vehicle Duration Management
+        </div>
+
+      </div>
+
+    </a>
+
+    <div class="header-actions">
+
+      <a
+        href="/pages/notifications.html"
+        class="header-icon-btn"
+      >
+        🔔
+        <span
+          class="notification-badge hidden"
+          data-notification-count
+        ></span>
+      </a>
+
+      <a
+        href="/pages/profile.html"
+        class="header-icon-btn"
+      >
+        👤
+      </a>
+
+    </div>
+
+  </div>
+
+</header>
+
+<div class="app-layout">
+
+  <aside class="sidebar">
+
+    <nav class="sidebar-nav">
+
+      <a
+        href="/pages/dashboard.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🏠</span>
+        Dashboard
+      </a>
+
+      <a
+        href="/pages/vehicles.html"
+        class="nav-link active"
+      >
+        <span class="nav-icon">🚛</span>
+        Vehicles
+      </a>
+
+      <a
+        href="/pages/add-entry.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">➕</span>
+        Add Entry
+      </a>
+
+      <a
+        href="/pages/calendar.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📅</span>
+        Calendar
+      </a>
+
+      <a
+        href="/pages/reports.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📊</span>
+        Reports
+      </a>
+
+      <a
+        href="/pages/notifications.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🔔</span>
+        Notifications
+      </a>
 
-    <div class="vehicles-container">
+      <a
+        href="/pages/profile.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
 
-      <header class="vehicles-header">
+      <a
+        href="#"
+        class="nav-link logout-btn"
+      >
+        <span class="nav-icon">🚪</span>
+        Logout
+      </a>
 
-        <h1>🚛 Vehicles</h1>
+    </nav>
 
-        <p>
-          Manage My-Home-Group site vehicles
-        </p>
+  </aside>
 
-      </header>
+  <main class="main-content">
 
+    <div class="content-inner">
 
-      <!-- ADD / EDIT -->
+      <div class="page-heading">
 
-      <section class="card">
+        <div class="page-heading-text">
 
-        <h2
-          id="formTitle"
-          class="section-title"
-        >
-          Add Vehicle
-        </h2>
+          <h1>
+            Vehicles
+          </h1>
 
+          <p>
+            Manage registered vehicles
+          </p>
 
-        <form
-          id="vehicleForm"
-          novalidate
-        >
+        </div>
 
-          <div class="form-grid">
+        <div class="page-heading-actions">
 
-            <div class="field-group">
+          <button
+            id="addVehicleButton"
+            class="btn btn-primary"
+          >
+            + Add Vehicle
+          </button>
 
-              <label for="vehicleNumber">
-                Vehicle Number / ID
-              </label>
+        </div>
 
-              <input
-                id="vehicleNumber"
-                type="text"
-                placeholder="Example: TS09AB1234"
-              >
+      </div>
 
-            </div>
+      <div class="filter-bar">
 
+        <div class="filter-group">
 
-            <div class="field-group">
-
-              <label for="vehicleType">
-                Vehicle Type
-              </label>
-
-              <select id="vehicleType">
-
-                <option value="">
-                  Select type
-                </option>
-
-                <option value="TM / Transit Mixer">
-                  TM / Transit Mixer
-                </option>
-
-                <option value="Truck">
-                  Truck
-                </option>
-
-                <option value="Dumper">
-                  Dumper
-                </option>
-
-                <option value="Excavator">
-                  Excavator
-                </option>
-
-                <option value="JCB">
-                  JCB
-                </option>
-
-                <option value="Loader">
-                  Loader
-                </option>
-
-                <option value="Crane">
-                  Crane
-                </option>
-
-                <option value="Tractor">
-                  Tractor
-                </option>
-
-                <option value="Water Tanker">
-                  Water Tanker
-                </option>
-
-                <option value="Other">
-                  Other
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div class="field-group">
-
-              <label for="driverName">
-                Driver Name
-              </label>
-
-              <input
-                id="driverName"
-                type="text"
-                placeholder="Driver name"
-              >
-
-            </div>
-
-
-            <div class="field-group">
-
-              <label for="contractor">
-                Contractor / Company
-              </label>
-
-              <input
-                id="contractor"
-                type="text"
-                placeholder="Contractor name"
-              >
-
-            </div>
-
-
-            <div class="field-group">
-
-              <label for="vehicleStatus">
-                Status
-              </label>
-
-              <select id="vehicleStatus">
-
-                <option value="Active">
-                  Active
-                </option>
-
-                <option value="Inactive">
-                  Inactive
-                </option>
-
-              </select>
-
-            </div>
-
-          </div>
-
-
-          <div
-            id="vehicleMessage"
-            class="message"
-          ></div>
-
-
-          <div class="form-buttons">
-
-            <button
-              type="submit"
-              class="primary-btn"
-              id="saveVehicleBtn"
-            >
-              Add Vehicle
-            </button>
-
-            <button
-              type="button"
-              class="secondary-btn"
-              id="cancelEditBtn"
-            >
-              Clear
-            </button>
-
-          </div>
-
-        </form>
-
-      </section>
-
-
-      <!-- FILTERS -->
-
-      <section class="card">
-
-        <h2 class="section-title">
-          Search & Filter
-        </h2>
-
-        <div class="filters">
+          <label class="filter-label">
+            Search
+          </label>
 
           <input
-            id="vehicleSearch"
+            id="searchInput"
             type="search"
-            placeholder="Search vehicle, driver..."
+            class="form-control"
+            placeholder="Vehicle, driver, contractor..."
           >
 
-          <select id="typeFilter">
+        </div>
+
+        <div class="filter-group">
+
+          <label class="filter-label">
+            Vehicle Type
+          </label>
+
+          <select
+            id="typeFilter"
+            class="form-control"
+          >
 
             <option value="">
               All Types
             </option>
 
-            <option value="TM / Transit Mixer">
-              TM / Transit Mixer
-            </option>
-
-            <option value="Truck">
-              Truck
-            </option>
-
-            <option value="Dumper">
-              Dumper
-            </option>
-
-            <option value="Excavator">
-              Excavator
-            </option>
-
-            <option value="JCB">
-              JCB
-            </option>
-
-            <option value="Loader">
-              Loader
-            </option>
-
-            <option value="Crane">
-              Crane
-            </option>
-
-            <option value="Tractor">
-              Tractor
-            </option>
-
-            <option value="Water Tanker">
-              Water Tanker
-            </option>
-
-            <option value="Other">
-              Other
-            </option>
+            <option>TM / Transit Mixer</option>
+            <option>Truck</option>
+            <option>Dumper</option>
+            <option>Excavator</option>
+            <option>JCB</option>
+            <option>Loader</option>
+            <option>Crane</option>
+            <option>Tractor</option>
+            <option>Water Tanker</option>
+            <option>Other</option>
 
           </select>
 
+        </div>
 
-          <select id="statusFilter">
+        <div class="filter-group">
+
+          <label class="filter-label">
+            Status
+          </label>
+
+          <select
+            id="statusFilter"
+            class="form-control"
+          >
 
             <option value="">
-              All Status
+              All
             </option>
 
             <option value="Active">
@@ -709,21 +252,83 @@
 
         </div>
 
-      </section>
+        <div
+          style="
+            display:flex;
+            align-items:end;
+          "
+        >
 
+          <button
+            id="clearFilters"
+            class="btn btn-secondary btn-block"
+          >
+            Clear
+          </button>
 
-      <!-- LIST -->
+        </div>
+
+      </div>
 
       <section class="card">
 
-        <h2 class="section-title">
-          Vehicle List
-        </h2>
+        <div class="card-header">
 
-        <div
-          id="vehicleList"
-          class="vehicle-list"
-        ></div>
+          <div>
+
+            <div class="card-title">
+              Vehicle List
+            </div>
+
+            <div
+              id="vehicleSummary"
+              class="card-subtitle"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Vehicle</th>
+                <th>Type</th>
+                <th>Driver</th>
+                <th>Contractor</th>
+                <th>Status</th>
+                <th>Actions</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="vehicleBody">
+
+              <tr>
+
+                <td colspan="6">
+
+                  <div class="loading">
+                    Loading vehicles...
+                  </div>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </section>
 
@@ -731,1202 +336,952 @@
 
   </main>
 
+</div>
 
-  <!-- HISTORY MODAL -->
+<nav class="mobile-bottom-nav">
 
-  <div
-    id="historyModal"
-    class="modal"
-  >
+  <div class="mobile-nav-inner">
 
-    <div class="modal-card">
-
-      <div class="modal-header">
-
-        <h2 id="historyTitle">
-          Vehicle History
-        </h2>
-
-        <button
-          id="closeHistory"
-          class="close-btn"
-          type="button"
-        >
-          ×
-        </button>
-
-      </div>
-
-      <div
-        id="historyList"
-      ></div>
-
-    </div>
-
-  </div>
-
-
-  <!-- BOTTOM NAV -->
-
-  <nav class="bottom-nav">
-
-    <a href="/pages/dashboard.html">
-      <span>🏠</span>
+    <a
+      href="/pages/dashboard.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🏠</span>
       Home
     </a>
 
     <a
       href="/pages/vehicles.html"
-      class="active"
+      class="mobile-nav-item active"
     >
-      <span>🚛</span>
+      <span class="mobile-nav-icon">🚛</span>
       Vehicles
     </a>
 
     <a
       href="/pages/add-entry.html"
-      class="add-main-btn"
+      class="mobile-nav-item add"
     >
-      <span>+</span>
+      <span class="mobile-nav-add">+</span>
+      Entry
     </a>
 
-    <a href="/pages/calendar.html">
-      <span>📅</span>
+    <a
+      href="/pages/calendar.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">📅</span>
       Calendar
     </a>
 
-    <a href="/pages/profile.html">
-      <span>👤</span>
+    <a
+      href="/pages/profile.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">👤</span>
       You
     </a>
 
-  </nav>
+  </div>
 
+</nav>
 
-  <script>
+<div
+  id="vehicleModal"
+  class="modal-backdrop hidden"
+>
 
-    const STORAGE = {
-      vehicles: "hyma_vehicles",
-      entries: "hyma_entries",
-      currentUser: "hyma_current_user"
-    };
+  <div class="modal">
 
+    <div class="modal-header">
 
-    let editingVehicleId = null;
+      <div
+        id="modalTitle"
+        class="modal-title"
+      >
+        Add Vehicle
+      </div>
 
+      <button
+        id="closeVehicleModal"
+        class="modal-close"
+      >
+        ×
+      </button>
 
-    function readJSON(
-      key,
-      fallback
-    ) {
+    </div>
 
-      try {
+    <form id="vehicleForm">
 
-        const value =
-          localStorage.getItem(key);
+      <div class="modal-body">
 
-        return value
-          ? JSON.parse(value)
-          : fallback;
+        <input
+          type="hidden"
+          id="vehicleId"
+        >
 
-      } catch (error) {
+        <div class="form-grid">
 
-        return fallback;
+          <div class="form-group">
 
-      }
+            <label class="form-label">
+              Vehicle Number
+            </label>
 
-    }
+            <input
+              id="vehicleNumber"
+              type="text"
+              class="form-control"
+              placeholder="e.g. TS09AB1234"
+              required
+            >
 
+          </div>
 
-    function writeJSON(
-      key,
-      value
-    ) {
+          <div class="form-group">
 
-      localStorage.setItem(
-        key,
-        JSON.stringify(value)
-      );
+            <label class="form-label">
+              Vehicle Type
+            </label>
 
-    }
+            <select
+              id="vehicleType"
+              class="form-control"
+              required
+            >
 
+              <option value="">
+                Select type
+              </option>
 
-    function getVehicles() {
+              <option>TM / Transit Mixer</option>
+              <option>Truck</option>
+              <option>Dumper</option>
+              <option>Excavator</option>
+              <option>JCB</option>
+              <option>Loader</option>
+              <option>Crane</option>
+              <option>Tractor</option>
+              <option>Water Tanker</option>
+              <option>Other</option>
 
-      return readJSON(
-        STORAGE.vehicles,
-        []
-      );
+            </select>
 
-    }
+          </div>
 
+          <div class="form-group">
 
-    function getEntries() {
+            <label class="form-label">
+              Driver Name
+            </label>
 
-      return readJSON(
-        STORAGE.entries,
-        []
-      );
+            <input
+              id="driverName"
+              type="text"
+              class="form-control"
+              placeholder="Driver name"
+            >
 
-    }
+          </div>
 
+          <div class="form-group">
 
-    function getCurrentUser() {
+            <label class="form-label">
+              Contractor / Company
+            </label>
 
-      return readJSON(
-        STORAGE.currentUser,
-        null
-      );
+            <input
+              id="contractor"
+              type="text"
+              class="form-control"
+              placeholder="Contractor"
+            >
 
-    }
+          </div>
 
+          <div class="form-group">
 
-    function generateId() {
+            <label class="form-label">
+              Status
+            </label>
 
-      return (
-        "vehicle_" +
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .substring(2, 8)
-      );
+            <select
+              id="vehicleStatus"
+              class="form-control"
+            >
 
-    }
+              <option value="Active">
+                Active
+              </option>
 
+              <option value="Inactive">
+                Inactive
+              </option>
 
-    function escapeHTML(
-      value
-    ) {
+            </select>
 
-      return String(
-        value || ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
+          </div>
 
-    }
+        </div>
 
+        <div
+          id="vehicleFormMessage"
+          style="margin-top:15px;"
+        ></div>
 
-    function showMessage(
-      message,
-      type
-    ) {
+      </div>
 
-      const element =
-        document.getElementById(
-          "vehicleMessage"
-        );
+      <div class="modal-footer">
 
-      element.textContent =
-        message;
+        <button
+          type="button"
+          id="cancelVehicle"
+          class="btn btn-secondary"
+        >
+          Cancel
+        </button>
 
-      element.className =
-        "message " +
-        (type || "");
+        <button
+          type="submit"
+          id="saveVehicle"
+          class="btn btn-primary"
+        >
+          Save Vehicle
+        </button>
 
-    }
+      </div>
 
+    </form>
 
-    function clearForm() {
+  </div>
 
-      editingVehicleId =
-        null;
+</div>
 
+<script src="../app.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+
+  let vehicles = [];
+
+  const body =
+    document.getElementById("vehicleBody");
+
+  const summary =
+    document.getElementById("vehicleSummary");
+
+  const modal =
+    document.getElementById("vehicleModal");
+
+  const form =
+    document.getElementById("vehicleForm");
+
+  const modalTitle =
+    document.getElementById("modalTitle");
+
+  const searchInput =
+    document.getElementById("searchInput");
+
+  const typeFilter =
+    document.getElementById("typeFilter");
+
+  const statusFilter =
+    document.getElementById("statusFilter");
+
+  function openModal(vehicle = null) {
+
+    modal.classList.remove("hidden");
+
+    document.body.classList.add(
+      "modal-open"
+    );
+
+    document.getElementById(
+      "vehicleFormMessage"
+    ).innerHTML = "";
+
+    if (vehicle) {
+
+      modalTitle.textContent =
+        "Edit Vehicle";
 
       document.getElementById(
-        "vehicleForm"
-      ).reset();
-
-
-      document.getElementById(
-        "vehicleStatus"
-      ).value =
-        "Active";
-
-
-      document.getElementById(
-        "formTitle"
-      ).textContent =
-        "Add Vehicle";
-
-
-      document.getElementById(
-        "saveVehicleBtn"
-      ).textContent =
-        "Add Vehicle";
-
-
-      showMessage(
-        "",
-        ""
-      );
-
-    }
-
-
-    function saveVehicle(
-      event
-    ) {
-
-      event.preventDefault();
-
-
-      const currentUser =
-        getCurrentUser();
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      const vehicleNumber =
-        document.getElementById(
-          "vehicleNumber"
-        ).value
-          .trim()
-          .toUpperCase();
-
-
-      const vehicleType =
-        document.getElementById(
-          "vehicleType"
-        ).value;
-
-
-      const driverName =
-        document.getElementById(
-          "driverName"
-        ).value
-          .trim();
-
-
-      const contractor =
-        document.getElementById(
-          "contractor"
-        ).value
-          .trim();
-
-
-      const status =
-        document.getElementById(
-          "vehicleStatus"
-        ).value;
-
-
-      if (!vehicleNumber) {
-
-        showMessage(
-          "Please enter vehicle number.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (!vehicleType) {
-
-        showMessage(
-          "Please select vehicle type.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      let vehicles =
-        getVehicles();
-
-
-      const duplicate =
-        vehicles.find(
-          function (vehicle) {
-
-            return (
-              vehicle.vehicleNumber
-                ?.toUpperCase() ===
-                vehicleNumber &&
-              vehicle.id !==
-                editingVehicleId
-            );
-
-          }
-        );
-
-
-      if (duplicate) {
-
-        showMessage(
-          "This vehicle already exists.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (editingVehicleId) {
-
-        const index =
-          vehicles.findIndex(
-            function (vehicle) {
-
-              return (
-                vehicle.id ===
-                editingVehicleId
-              );
-
-            }
-          );
-
-
-        if (index !== -1) {
-
-          vehicles[index] = {
-            ...vehicles[index],
-
-            vehicleNumber:
-              vehicleNumber,
-
-            vehicleType:
-              vehicleType,
-
-            driverName:
-              driverName,
-
-            contractor:
-              contractor,
-
-            status:
-              status,
-
-            updatedAt:
-              new Date().toISOString()
-
-          };
-
-        }
-
-
-        writeJSON(
-          STORAGE.vehicles,
-          vehicles
-        );
-
-
-        showMessage(
-          "Vehicle updated successfully.",
-          "success"
-        );
-
-      } else {
-
-        const vehicle = {
-
-          id:
-            generateId(),
-
-          vehicleNumber:
-            vehicleNumber,
-
-          vehicleType:
-            vehicleType,
-
-          driverName:
-            driverName,
-
-          contractor:
-            contractor,
-
-          status:
-            status,
-
-          createdAt:
-            new Date().toISOString()
-
-        };
-
-
-        vehicles.push(
-          vehicle
-        );
-
-
-        writeJSON(
-          STORAGE.vehicles,
-          vehicles
-        );
-
-
-        showMessage(
-          "Vehicle added successfully.",
-          "success"
-        );
-
-      }
-
-
-      renderVehicles();
-
-
-      setTimeout(
-        clearForm,
-        500
-      );
-
-    }
-
-
-    function editVehicle(
-      id
-    ) {
-
-      const vehicles =
-        getVehicles();
-
-
-      const vehicle =
-        vehicles.find(
-          function (item) {
-
-            return item.id === id;
-
-          }
-        );
-
-
-      if (!vehicle) {
-        return;
-      }
-
-
-      editingVehicleId =
-        vehicle.id;
-
+        "vehicleId"
+      ).value = vehicle.id;
 
       document.getElementById(
         "vehicleNumber"
       ).value =
-        vehicle.vehicleNumber ||
-        "";
-
+        vehicle.vehicle_number || "";
 
       document.getElementById(
         "vehicleType"
       ).value =
-        vehicle.vehicleType ||
-        "";
-
+        vehicle.vehicle_type || "";
 
       document.getElementById(
         "driverName"
       ).value =
-        vehicle.driverName ||
-        "";
-
+        vehicle.driver_name || "";
 
       document.getElementById(
         "contractor"
       ).value =
-        vehicle.contractor ||
-        "";
-
+        vehicle.contractor || "";
 
       document.getElementById(
         "vehicleStatus"
       ).value =
-        vehicle.status ||
-        "Active";
+        vehicle.status || "Active";
 
+    } else {
 
-      document.getElementById(
-        "formTitle"
-      ).textContent =
-        "Edit Vehicle";
+      modalTitle.textContent =
+        "Add Vehicle";
 
-
-      document.getElementById(
-        "saveVehicleBtn"
-      ).textContent =
-        "Update Vehicle";
-
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-    }
-
-
-    function deleteVehicle(
-      id
-    ) {
-
-      const vehicles =
-        getVehicles();
-
-
-      const vehicle =
-        vehicles.find(
-          function (item) {
-
-            return item.id === id;
-
-          }
-        );
-
-
-      if (!vehicle) {
-        return;
-      }
-
-
-      const confirmed =
-        window.confirm(
-          "Delete " +
-          vehicle.vehicleNumber +
-          "? This vehicle will be removed from the vehicle list."
-        );
-
-
-      if (!confirmed) {
-        return;
-      }
-
-
-      const updated =
-        vehicles.filter(
-          function (item) {
-
-            return item.id !== id;
-
-          }
-        );
-
-
-      writeJSON(
-        STORAGE.vehicles,
-        updated
-      );
-
-
-      renderVehicles();
-
-
-      showMessage(
-        "Vehicle deleted successfully.",
-        "success"
-      );
-
-    }
-
-
-    function showHistory(
-      id
-    ) {
-
-      const vehicles =
-        getVehicles();
-
-
-      const vehicle =
-        vehicles.find(
-          function (item) {
-
-            return item.id === id;
-
-          }
-        );
-
-
-      if (!vehicle) {
-        return;
-      }
-
-
-      const entries =
-        getEntries();
-
-
-      const history =
-        entries.filter(
-          function (entry) {
-
-            return (
-              entry.vehicleId ===
-              vehicle.id
-            );
-
-          }
-        ).sort(
-          function (a, b) {
-
-            return String(
-              b.date +
-              " " +
-              b.entryTime
-            ).localeCompare(
-              String(
-                a.date +
-                " " +
-                a.entryTime
-              )
-            );
-
-          }
-        );
-
+      form.reset();
 
       document.getElementById(
-        "historyTitle"
-      ).textContent =
-        vehicle.vehicleNumber +
-        " History";
-
-
-      const historyList =
-        document.getElementById(
-          "historyList"
-        );
-
-
-      if (
-        history.length === 0
-      ) {
-
-        historyList.innerHTML = `
-
-          <div class="empty-state">
-
-            <div class="empty-icon">
-              📭
-            </div>
-
-            <h3>
-              No history
-            </h3>
-
-            <p>
-              Is vehicle ki abhi koi entry nahi hai.
-            </p>
-
-          </div>
-
-        `;
-
-      } else {
-
-        historyList.innerHTML =
-          history
-            .map(
-              function (entry) {
-
-                return `
-
-                  <div class="history-item">
-
-                    <div class="history-row">
-
-                      <span class="history-label">
-                        Date
-                      </span>
-
-                      <span class="history-value">
-                        ${escapeHTML(
-                          entry.date ||
-                          "-"
-                        )}
-                      </span>
-
-                    </div>
-
-
-                    <div class="history-row">
-
-                      <span class="history-label">
-                        Entry → Exit
-                      </span>
-
-                      <span class="history-value">
-                        ${escapeHTML(
-                          entry.entryTime ||
-                          "-"
-                        )}
-                        →
-                        ${escapeHTML(
-                          entry.exitTime ||
-                          "-"
-                        )}
-                      </span>
-
-                    </div>
-
-
-                    <div class="history-row">
-
-                      <span class="history-label">
-                        Driver
-                      </span>
-
-                      <span class="history-value">
-                        ${escapeHTML(
-                          entry.driverName ||
-                          "-"
-                        )}
-                      </span>
-
-                    </div>
-
-
-                    <div class="history-row">
-
-                      <span class="history-label">
-                        Duration
-                      </span>
-
-                      <span class="history-value">
-                        ${formatDuration(
-                          entry.duration
-                        )}
-                      </span>
-
-                    </div>
-
-
-                    <div class="history-row">
-
-                      <span class="history-label">
-                        Purpose
-                      </span>
-
-                      <span class="history-value">
-                        ${escapeHTML(
-                          entry.purpose ||
-                          "-"
-                        )}
-                      </span>
-
-                    </div>
-
-                  </div>
-
-                `;
-
-              }
-            )
-            .join("");
-
-      }
-
+        "vehicleStatus"
+      ).value = "Active";
 
       document.getElementById(
-        "historyModal"
-      ).classList.add(
-        "show"
-      );
+        "vehicleId"
+      ).value = "";
 
     }
+  }
 
+  function closeModal() {
 
-    function closeHistory() {
+    modal.classList.add("hidden");
 
-      document.getElementById(
-        "historyModal"
-      ).classList.remove(
-        "show"
-      );
+    document.body.classList.remove(
+      "modal-open"
+    );
+  }
 
-    }
+  function filteredVehicles() {
 
+    const search =
+      searchInput.value
+        .trim()
+        .toLowerCase();
 
-    function formatDuration(
-      minutes
-    ) {
+    const type =
+      typeFilter.value;
 
-      minutes =
-        Number(minutes) || 0;
+    const status =
+      statusFilter.value;
 
-      const hours =
-        Math.floor(
-          minutes / 60
-        );
+    return vehicles.filter(
+      vehicle => {
 
-      const mins =
-        minutes % 60;
-
-
-      if (hours === 0) {
-        return `${mins} min`;
-      }
-
-
-      if (mins === 0) {
-        return `${hours} hr`;
-      }
-
-
-      return (
-        `${hours} hr ${mins} min`
-      );
-
-    }
-
-
-    function renderVehicles() {
-
-      const vehicles =
-        getVehicles();
-
-
-      const search =
-        document.getElementById(
-          "vehicleSearch"
-        ).value
-          .trim()
+        const searchable = [
+          vehicle.vehicle_number,
+          vehicle.vehicle_type,
+          vehicle.driver_name,
+          vehicle.contractor
+        ]
+          .join(" ")
           .toLowerCase();
 
+        return (
+          (!search ||
+            searchable.includes(search)) &&
+          (!type ||
+            vehicle.vehicle_type === type) &&
+          (!status ||
+            vehicle.status === status)
+        );
 
-      const type =
-        document.getElementById(
-          "typeFilter"
-        ).value;
+      }
+    );
+  }
 
+  function render() {
 
-      const status =
-        document.getElementById(
-          "statusFilter"
-        ).value;
+    const list =
+      filteredVehicles();
 
+    summary.textContent =
+      `${list.length} vehicle(s)`;
 
-      const filtered =
-        vehicles.filter(
-          function (vehicle) {
+    if (!list.length) {
 
-            const searchText =
-              (
-                vehicle.vehicleNumber +
-                " " +
-                vehicle.vehicleType +
-                " " +
-                vehicle.driverName +
-                " " +
-                vehicle.contractor
-              )
-                .toLowerCase();
+      body.innerHTML = `
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              <div class="empty-icon">🚛</div>
+              <div class="empty-title">
+                No vehicles found
+              </div>
+              <div class="empty-text">
+                Add a vehicle or change your filters.
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
 
+      return;
+    }
 
-            const matchesSearch =
-              !search ||
-              searchText.includes(
-                search
+    body.innerHTML =
+      list.map(vehicle => {
+
+        const status =
+          vehicle.status === "Inactive"
+            ? `
+              <span class="badge badge-danger">
+                Inactive
+              </span>
+            `
+            : `
+              <span class="badge badge-success">
+                Active
+              </span>
+            `;
+
+        return `
+          <tr>
+
+            <td>
+              <strong>
+                ${MyHomeGroup.escapeHtml(
+                  vehicle.vehicle_number
+                )}
+              </strong>
+            </td>
+
+            <td>
+              ${MyHomeGroup.escapeHtml(
+                vehicle.vehicle_type || "-"
+              )}
+            </td>
+
+            <td>
+              ${MyHomeGroup.escapeHtml(
+                vehicle.driver_name || "-"
+              )}
+            </td>
+
+            <td>
+              ${MyHomeGroup.escapeHtml(
+                vehicle.contractor || "-"
+              )}
+            </td>
+
+            <td>
+              ${status}
+            </td>
+
+            <td>
+
+              <div class="table-actions">
+
+                <button
+                  class="btn btn-sm btn-secondary edit-btn"
+                  data-id="${vehicle.id}"
+                >
+                  Edit
+                </button>
+
+                <button
+                  class="btn btn-sm btn-outline history-btn"
+                  data-id="${vehicle.id}"
+                >
+                  History
+                </button>
+
+                <button
+                  class="btn btn-sm btn-danger delete-btn"
+                  data-id="${vehicle.id}"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+
+    document
+      .querySelectorAll(".edit-btn")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const vehicle =
+              vehicles.find(
+                item =>
+                  String(item.id) ===
+                  String(button.dataset.id)
               );
 
-
-            const matchesType =
-              !type ||
-              vehicle.vehicleType ===
-                type;
-
-
-            const matchesStatus =
-              !status ||
-              vehicle.status ===
-                status;
-
-
-            return (
-              matchesSearch &&
-              matchesType &&
-              matchesStatus
-            );
+            if (vehicle) {
+              openModal(vehicle);
+            }
 
           }
         );
 
+      });
 
-      const list =
-        document.getElementById(
-          "vehicleList"
+    document
+      .querySelectorAll(".delete-btn")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          async () => {
+
+            if (
+              !confirm(
+                "Delete this vehicle?"
+              )
+            ) {
+              return;
+            }
+
+            try {
+
+              await MyHomeGroup
+                .deleteVehicle(
+                  button.dataset.id
+                );
+
+              MyHomeGroup.showToast(
+                "Vehicle deleted.",
+                "success"
+              );
+
+              await load();
+
+            } catch (error) {
+
+              MyHomeGroup.showToast(
+                error.message,
+                "error"
+              );
+
+            }
+
+          }
         );
 
+      });
 
-      if (
-        filtered.length === 0
-      ) {
+    document
+      .querySelectorAll(".history-btn")
+      .forEach(button => {
 
-        list.innerHTML = `
+        button.addEventListener(
+          "click",
+          async () => {
 
-          <div class="empty-state">
+            try {
 
-            <div class="empty-icon">
-              🚛
-            </div>
+              const entries =
+                await MyHomeGroup
+                  .getEntries({
+                    vehicle_id:
+                      button.dataset.id
+                  });
 
-            <h3>
-              No vehicles found
-            </h3>
+              const vehicle =
+                vehicles.find(
+                  item =>
+                    String(item.id) ===
+                    String(button.dataset.id)
+                );
 
-            <p>
-              Add a vehicle or change your filters.
-            </p>
+              showHistory(
+                vehicle,
+                entries
+              );
+
+            } catch (error) {
+
+              MyHomeGroup.showToast(
+                error.message,
+                "error"
+              );
+
+            }
+
+          }
+        );
+
+      });
+  }
+
+  function showHistory(
+    vehicle,
+    entries
+  ) {
+
+    const rows =
+      entries.length
+        ? entries.map(entry => `
+          <tr>
+
+            <td>
+              ${MyHomeGroup.formatDate(
+                entry.entry_date
+              )}
+            </td>
+
+            <td>
+              ${MyHomeGroup.formatTime(
+                entry.entry_time
+              )}
+            </td>
+
+            <td>
+              ${MyHomeGroup.formatTime(
+                entry.exit_time
+              )}
+            </td>
+
+            <td>
+              ${MyHomeGroup.minutesToDuration(
+                Number(entry.duration || 0)
+              )}
+            </td>
+
+          </tr>
+        `).join("")
+        : `
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                No history found.
+              </div>
+            </td>
+          </tr>
+        `;
+
+    const backdrop =
+      document.createElement("div");
+
+    backdrop.className =
+      "modal-backdrop";
+
+    backdrop.innerHTML = `
+      <div class="modal">
+
+        <div class="modal-header">
+
+          <div class="modal-title">
+            ${
+              MyHomeGroup.escapeHtml(
+                vehicle?.vehicle_number || "Vehicle"
+              )
+            }
+            History
+          </div>
+
+          <button
+            class="modal-close"
+            id="historyClose"
+          >
+            ×
+          </button>
+
+        </div>
+
+        <div class="modal-body">
+
+          <div class="table-wrap">
+
+            <table class="data-table">
+
+              <thead>
+
+                <tr>
+                  <th>Date</th>
+                  <th>Entry</th>
+                  <th>Exit</th>
+                  <th>Duration</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+                ${rows}
+              </tbody>
+
+            </table>
 
           </div>
 
-        `;
+        </div>
 
-        return;
+      </div>
+    `;
 
-      }
+    document.body.appendChild(
+      backdrop
+    );
 
+    document.body.classList.add(
+      "modal-open"
+    );
 
-      list.innerHTML =
-        filtered
-          .map(
-            function (vehicle) {
-
-              const vehicleStatus =
-                vehicle.status ||
-                "Active";
-
-
-              return `
-
-                <article class="vehicle-card">
-
-                  <div class="vehicle-top">
-
-                    <div>
-
-                      <div class="vehicle-number">
-                        ${escapeHTML(
-                          vehicle.vehicleNumber
-                        )}
-                      </div>
-
-                      <div class="vehicle-type">
-                        ${escapeHTML(
-                          vehicle.vehicleType
-                        )}
-                      </div>
-
-                    </div>
-
-                    <div
-                      class="status ${
-                        vehicleStatus ===
-                        "Active"
-                          ? "active"
-                          : "inactive"
-                      }"
-                    >
-                      ${escapeHTML(
-                        vehicleStatus
-                      )}
-                    </div>
-
-                  </div>
-
-
-                  <div class="vehicle-details">
-
-                    <div class="detail">
-
-                      <div class="detail-label">
-                        DRIVER
-                      </div>
-
-                      <div class="detail-value">
-                        ${escapeHTML(
-                          vehicle.driverName ||
-                          "Not specified"
-                        )}
-                      </div>
-
-                    </div>
-
-
-                    <div class="detail">
-
-                      <div class="detail-label">
-                        CONTRACTOR
-                      </div>
-
-                      <div class="detail-value">
-                        ${escapeHTML(
-                          vehicle.contractor ||
-                          "Not specified"
-                        )}
-                      </div>
-
-                    </div>
-
-                  </div>
-
-
-                  <div class="vehicle-actions">
-
-                    <button
-                      class="action-btn"
-                      type="button"
-                      onclick="editVehicle('${vehicle.id}')"
-                    >
-                      ✏️ Edit
-                    </button>
-
-                    <button
-                      class="action-btn history"
-                      type="button"
-                      onclick="showHistory('${vehicle.id}')"
-                    >
-                      📋 History
-                    </button>
-
-                    <button
-                      class="action-btn delete"
-                      type="button"
-                      onclick="deleteVehicle('${vehicle.id}')"
-                    >
-                      🗑️ Delete
-                    </button>
-
-                  </div>
-
-                </article>
-
-              `;
-
-            }
-          )
-          .join("");
-
-    }
-
-
-    function initializeVehicles() {
-
-      const currentUser =
-        getCurrentUser();
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      document.getElementById(
-        "vehicleForm"
-      ).addEventListener(
-        "submit",
-        saveVehicle
-      );
-
-
-      document.getElementById(
-        "cancelEditBtn"
-      ).addEventListener(
+    backdrop
+      .querySelector("#historyClose")
+      .addEventListener(
         "click",
-        clearForm
-      );
-
-
-      document.getElementById(
-        "vehicleSearch"
-      ).addEventListener(
-        "input",
-        renderVehicles
-      );
-
-
-      document.getElementById(
-        "typeFilter"
-      ).addEventListener(
-        "change",
-        renderVehicles
-      );
-
-
-      document.getElementById(
-        "statusFilter"
-      ).addEventListener(
-        "change",
-        renderVehicles
-      );
-
-
-      document.getElementById(
-        "closeHistory"
-      ).addEventListener(
-        "click",
-        closeHistory
-      );
-
-
-      document.getElementById(
-        "historyModal"
-      ).addEventListener(
-        "click",
-        function (event) {
-
-          if (
-            event.target.id ===
-            "historyModal"
-          ) {
-
-            closeHistory();
-
-          }
-
+        () => {
+          backdrop.remove();
+          document.body.classList.remove(
+            "modal-open"
+          );
         }
       );
 
+  }
 
-      renderVehicles();
+  async function load() {
+
+    try {
+
+      body.innerHTML = `
+        <tr>
+          <td colspan="6">
+            <div class="loading">
+              Loading vehicles...
+            </div>
+          </td>
+        </tr>
+      `;
+
+      vehicles =
+        await MyHomeGroup.getVehicles();
+
+      render();
+
+    } catch (error) {
+
+      body.innerHTML = `
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              <div class="empty-icon">⚠️</div>
+              <div class="empty-title">
+                Unable to load vehicles
+              </div>
+              <div class="empty-text">
+                ${MyHomeGroup.escapeHtml(
+                  error.message
+                )}
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
 
     }
 
+  }
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializeVehicles
+  document
+    .getElementById("addVehicleButton")
+    .addEventListener(
+      "click",
+      () => openModal()
     );
 
-  </script>
+  document
+    .getElementById("closeVehicleModal")
+    .addEventListener(
+      "click",
+      closeModal
+    );
+
+  document
+    .getElementById("cancelVehicle")
+    .addEventListener(
+      "click",
+      closeModal
+    );
+
+  modal.addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target === modal
+      ) {
+        closeModal();
+      }
+
+    }
+  );
+
+  [
+    searchInput,
+    typeFilter,
+    statusFilter
+  ].forEach(element => {
+
+    element.addEventListener(
+      "input",
+      render
+    );
+
+    element.addEventListener(
+      "change",
+      render
+    );
+
+  });
+
+  document
+    .getElementById("clearFilters")
+    .addEventListener(
+      "click",
+      () => {
+
+        searchInput.value = "";
+        typeFilter.value = "";
+        statusFilter.value = "";
+
+        render();
+
+      }
+    );
+
+  form.addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+      const id =
+        document.getElementById(
+          "vehicleId"
+        ).value;
+
+      const payload = {
+
+        vehicle_number:
+          document
+            .getElementById(
+              "vehicleNumber"
+            )
+            .value
+            .trim()
+            .toUpperCase(),
+
+        vehicle_type:
+          document
+            .getElementById(
+              "vehicleType"
+            )
+            .value,
+
+        driver_name:
+          document
+            .getElementById(
+              "driverName"
+            )
+            .value
+            .trim(),
+
+        contractor:
+          document
+            .getElementById(
+              "contractor"
+            )
+            .value
+            .trim(),
+
+        status:
+          document
+            .getElementById(
+              "vehicleStatus"
+            )
+            .value
+
+      };
+
+      const button =
+        document.getElementById(
+          "saveVehicle"
+        );
+
+      try {
+
+        MyHomeGroup.setButtonLoading(
+          button,
+          true,
+          "Saving..."
+        );
+
+        if (id) {
+
+          await MyHomeGroup.updateVehicle(
+            id,
+            payload
+          );
+
+          MyHomeGroup.showToast(
+            "Vehicle updated.",
+            "success"
+          );
+
+        } else {
+
+          await MyHomeGroup.createVehicle(
+            payload
+          );
+
+          MyHomeGroup.showToast(
+            "Vehicle added.",
+            "success"
+          );
+
+        }
+
+        closeModal();
+
+        await load();
+
+      } catch (error) {
+
+        MyHomeGroup.setFormMessage(
+          document.getElementById(
+            "vehicleFormMessage"
+          ),
+          error.message,
+          "error"
+        );
+
+      } finally {
+
+        MyHomeGroup.setButtonLoading(
+          button,
+          false
+        );
+
+      }
+
+    }
+  );
+
+  await load();
+
+});
+</script>
 
 </body>
-
 </html>
