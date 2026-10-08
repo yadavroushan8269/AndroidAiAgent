@@ -7,19 +7,10 @@ const { Pool } = require("pg");
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ============================================================
-// SECURITY
-// ============================================================
-
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
-  console.error(
-    "ERROR: JWT_SECRET environment variable is missing or too short."
-  );
-  console.error(
-    "Please add a JWT_SECRET of at least 32 characters in Render Environment Variables."
-  );
+  console.error("ERROR: JWT_SECRET is missing or too short.");
   process.exit(1);
 }
 
@@ -70,9 +61,7 @@ function createToken(user) {
       role: user.role,
     },
     JWT_SECRET,
-    {
-      expiresIn: "7d",
-    }
+    { expiresIn: "7d" }
   );
 }
 
@@ -112,10 +101,7 @@ function authenticate(req, res, next) {
       });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    req.user = decoded;
-
+    req.user = jwt.verify(token, JWT_SECRET);
     next();
   } catch (error) {
     return res.status(401).json({
@@ -185,7 +171,22 @@ async function initDatabase() {
     );
   `);
 
-  // Make sure older databases get the expected default role.
+  // ==========================================================
+  // NOTIFICATIONS TABLE
+  // ==========================================================
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS notifications (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      title VARCHAR(200) NOT NULL,
+      message TEXT NOT NULL,
+      type VARCHAR(50) DEFAULT 'info',
+      is_read BOOLEAN DEFAULT FALSE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
   await pool.query(`
     ALTER TABLE users
     ALTER COLUMN role SET DEFAULT 'Security Guard'
@@ -264,8 +265,7 @@ app.post("/api/auth/register", async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // IMPORTANT:
-    // Public registration can NEVER choose Admin.
+    // Public registration can never create Admin.
     const role = "Security Guard";
 
     const result = await pool.query(
@@ -275,7 +275,14 @@ app.post("/api/auth/register", async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id, name, email, mobile, role, company, created_at
       `,
-      [name, email, mobile || null, passwordHash, role, company || null]
+      [
+        name,
+        email,
+        mobile || null,
+        passwordHash,
+        role,
+        company || null,
+      ]
     );
 
     const user = result.rows[0];
@@ -607,22 +614,13 @@ app.post("/api/vehicles", authenticate, async (req, res) => {
       150
     );
 
-    const status = cleanString(
-      req.body.status,
-      50
-    ) || "Active";
+    const status =
+      cleanString(req.body.status, 50) || "Active";
 
-    if (!vehicleNumber) {
+    if (!vehicleNumber || !vehicleType) {
       return res.status(400).json({
         success: false,
-        message: "Vehicle number is required.",
-      });
-    }
-
-    if (!vehicleType) {
-      return res.status(400).json({
-        success: false,
-        message: "Vehicle type is required.",
+        message: "Vehicle number and type are required.",
       });
     }
 
@@ -708,10 +706,8 @@ app.put("/api/vehicles/:id", authenticate, async (req, res) => {
       150
     );
 
-    const status = cleanString(
-      req.body.status,
-      50
-    ) || "Active";
+    const status =
+      cleanString(req.body.status, 50) || "Active";
 
     if (!vehicleNumber || !vehicleType) {
       return res.status(400).json({
@@ -785,58 +781,53 @@ app.put("/api/vehicles/:id", authenticate, async (req, res) => {
 // VEHICLES - DELETE
 // ============================================================
 
-app.delete(
-  "/api/vehicles/:id",
-  authenticate,
-  async (req, res) => {
-    try {
-      const id = Number(req.params.id);
+app.delete("/api/vehicles/:id", authenticate, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
 
-      if (!Number.isInteger(id) || id <= 0) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid vehicle ID.",
-        });
-      }
-
-      // Vehicle deletion is restricted to Admin.
-      if (req.user.role !== "Admin") {
-        return res.status(403).json({
-          success: false,
-          message: "Only Admin can delete vehicles.",
-        });
-      }
-
-      const result = await pool.query(
-        `
-        DELETE FROM vehicles
-        WHERE id = $1
-        RETURNING id
-        `,
-        [id]
-      );
-
-      if (result.rows.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Vehicle not found.",
-        });
-      }
-
-      res.json({
-        success: true,
-        message: "Vehicle deleted successfully.",
-      });
-    } catch (error) {
-      console.error("Delete vehicle error:", error);
-
-      res.status(500).json({
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
         success: false,
-        message: "Unable to delete vehicle.",
+        message: "Invalid vehicle ID.",
       });
     }
+
+    if (req.user.role !== "Admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Only Admin can delete vehicles.",
+      });
+    }
+
+    const result = await pool.query(
+      `
+      DELETE FROM vehicles
+      WHERE id = $1
+      RETURNING id
+      `,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Vehicle not found.",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Vehicle deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete vehicle error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to delete vehicle.",
+    });
   }
-);
+});
 
 // ============================================================
 // ENTRIES - GET
@@ -964,15 +955,8 @@ app.post("/api/entries", authenticate, async (req, res) => {
       20
     );
 
-    const purpose = cleanString(
-      req.body.purpose,
-      255
-    );
-
-    const notes = cleanString(
-      req.body.notes,
-      2000
-    );
+    const purpose = cleanString(req.body.purpose, 255);
+    const notes = cleanString(req.body.notes, 2000);
 
     let duration = Number(req.body.duration);
 
@@ -989,21 +973,13 @@ app.post("/api/entries", authenticate, async (req, res) => {
       });
     }
 
-    if (!vehicleNumber) {
+    if (!vehicleNumber || !entryDate || !entryTime) {
       return res.status(400).json({
         success: false,
-        message: "Vehicle number is required.",
+        message: "Vehicle, entry date and entry time are required.",
       });
     }
 
-    if (!entryDate || !entryTime) {
-      return res.status(400).json({
-        success: false,
-        message: "Entry date and entry time are required.",
-      });
-    }
-
-    // Verify vehicle exists.
     const vehicleResult = await pool.query(
       `
       SELECT *
@@ -1023,14 +999,6 @@ app.post("/api/entries", authenticate, async (req, res) => {
 
     const vehicle = vehicleResult.rows[0];
 
-    // Use database vehicle data as the trusted values.
-    const trustedVehicleNumber = vehicle.vehicle_number;
-    const trustedVehicleType = vehicle.vehicle_type;
-    const trustedDriver =
-      driverName || vehicle.driver_name || null;
-    const trustedContractor =
-      contractor || vehicle.contractor || null;
-
     const result = await pool.query(
       `
       INSERT INTO entries
@@ -1049,16 +1017,16 @@ app.post("/api/entries", authenticate, async (req, res) => {
         notes
       )
       VALUES
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
       RETURNING *
       `,
       [
         vehicleId,
         req.user.id,
-        trustedVehicleNumber,
-        trustedVehicleType,
-        trustedDriver,
-        trustedContractor,
+        vehicle.vehicle_number,
+        vehicle.vehicle_type,
+        driverName || vehicle.driver_name || null,
+        contractor || vehicle.contractor || null,
         entryDate,
         entryTime,
         exitTime || null,
@@ -1098,8 +1066,6 @@ app.delete("/api/entries/:id", authenticate, async (req, res) => {
       });
     }
 
-    // Admin can delete any entry.
-    // Security Guard can delete only their own entry.
     let result;
 
     if (req.user.role === "Admin") {
@@ -1126,7 +1092,7 @@ app.delete("/api/entries/:id", authenticate, async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Entry not found or you do not have permission.",
+        message: "Entry not found or permission denied.",
       });
     }
 
@@ -1143,6 +1109,372 @@ app.delete("/api/entries/:id", authenticate, async (req, res) => {
     });
   }
 });
+
+// ============================================================
+// NOTIFICATIONS - GET
+// ============================================================
+
+app.get(
+  "/api/notifications",
+  authenticate,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `
+        SELECT
+          id,
+          title,
+          message,
+          type,
+          is_read,
+          created_at
+        FROM notifications
+        WHERE user_id = $1
+        ORDER BY created_at DESC, id DESC
+        `,
+        [req.user.id]
+      );
+
+      res.json({
+        success: true,
+        notifications: result.rows,
+      });
+    } catch (error) {
+      console.error("Get notifications error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to load notifications.",
+      });
+    }
+  }
+);
+
+// ============================================================
+// NOTIFICATIONS - UNREAD COUNT
+// ============================================================
+
+app.get(
+  "/api/notifications/unread-count",
+  authenticate,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `
+        SELECT COUNT(*)::int AS count
+        FROM notifications
+        WHERE user_id = $1
+        AND is_read = FALSE
+        `,
+        [req.user.id]
+      );
+
+      res.json({
+        success: true,
+        count: result.rows[0].count,
+      });
+    } catch (error) {
+      console.error("Unread count error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to load unread count.",
+      });
+    }
+  }
+);
+
+// ============================================================
+// NOTIFICATIONS - CREATE
+// ============================================================
+
+app.post(
+  "/api/notifications",
+  authenticate,
+  async (req, res) => {
+    try {
+      const title = cleanString(req.body.title, 200);
+      const message = cleanString(req.body.message, 2000);
+      const type =
+        cleanString(req.body.type, 50) || "info";
+
+      if (!title || !message) {
+        return res.status(400).json({
+          success: false,
+          message: "Title and message are required.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        INSERT INTO notifications
+        (user_id, title, message, type)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *
+        `,
+        [
+          req.user.id,
+          title,
+          message,
+          type,
+        ]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Notification created.",
+        notification: result.rows[0],
+      });
+    } catch (error) {
+      console.error("Create notification error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to create notification.",
+      });
+    }
+  }
+);
+
+// ============================================================
+// ADMIN - SEND NOTIFICATION TO USER
+// ============================================================
+
+app.post(
+  "/api/admin/notifications",
+  authenticate,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const userId = Number(req.body.user_id);
+      const title = cleanString(req.body.title, 200);
+      const message = cleanString(req.body.message, 2000);
+      const type =
+        cleanString(req.body.type, 50) || "info";
+
+      if (!Number.isInteger(userId) || userId <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Valid user ID is required.",
+        });
+      }
+
+      if (!title || !message) {
+        return res.status(400).json({
+          success: false,
+          message: "Title and message are required.",
+        });
+      }
+
+      const userCheck = await pool.query(
+        "SELECT id FROM users WHERE id = $1",
+        [userId]
+      );
+
+      if (userCheck.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        INSERT INTO notifications
+        (user_id, title, message, type)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *
+        `,
+        [
+          userId,
+          title,
+          message,
+          type,
+        ]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Notification sent successfully.",
+        notification: result.rows[0],
+      });
+    } catch (error) {
+      console.error("Admin notification error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to send notification.",
+      });
+    }
+  }
+);
+
+// ============================================================
+// NOTIFICATIONS - MARK ONE READ
+// ============================================================
+
+app.put(
+  "/api/notifications/:id/read",
+  authenticate,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid notification ID.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        UPDATE notifications
+        SET is_read = TRUE
+        WHERE id = $1
+        AND user_id = $2
+        RETURNING *
+        `,
+        [id, req.user.id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Notification not found.",
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Notification marked as read.",
+        notification: result.rows[0],
+      });
+    } catch (error) {
+      console.error("Mark notification read error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to update notification.",
+      });
+    }
+  }
+);
+
+// ============================================================
+// NOTIFICATIONS - MARK ALL READ
+// ============================================================
+
+app.put(
+  "/api/notifications/read-all",
+  authenticate,
+  async (req, res) => {
+    try {
+      await pool.query(
+        `
+        UPDATE notifications
+        SET is_read = TRUE
+        WHERE user_id = $1
+        `,
+        [req.user.id]
+      );
+
+      res.json({
+        success: true,
+        message: "All notifications marked as read.",
+      });
+    } catch (error) {
+      console.error("Mark all notifications error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to update notifications.",
+      });
+    }
+  }
+);
+
+// ============================================================
+// NOTIFICATIONS - DELETE ONE
+// ============================================================
+
+app.delete(
+  "/api/notifications/:id",
+  authenticate,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid notification ID.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        DELETE FROM notifications
+        WHERE id = $1
+        AND user_id = $2
+        RETURNING id
+        `,
+        [id, req.user.id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Notification not found.",
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Notification deleted.",
+      });
+    } catch (error) {
+      console.error("Delete notification error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to delete notification.",
+      });
+    }
+  }
+);
+
+// ============================================================
+// NOTIFICATIONS - CLEAR ALL
+// ============================================================
+
+app.delete(
+  "/api/notifications",
+  authenticate,
+  async (req, res) => {
+    try {
+      await pool.query(
+        `
+        DELETE FROM notifications
+        WHERE user_id = $1
+        `,
+        [req.user.id]
+      );
+
+      res.json({
+        success: true,
+        message: "All notifications cleared.",
+      });
+    } catch (error) {
+      console.error("Clear notifications error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to clear notifications.",
+      });
+    }
+  }
+);
 
 // ============================================================
 // ADMIN - USERS
@@ -1195,7 +1527,7 @@ app.get("/", (req, res) => {
 });
 
 // ============================================================
-// 404 API
+// API 404
 // ============================================================
 
 app.use("/api", (req, res) => {
@@ -1206,7 +1538,7 @@ app.use("/api", (req, res) => {
 });
 
 // ============================================================
-// FRONTEND FALLBACK
+// GENERAL 404
 // ============================================================
 
 app.use((req, res) => {
@@ -1241,7 +1573,7 @@ app.use((req, res) => {
 });
 
 // ============================================================
-// START SERVER
+// START
 // ============================================================
 
 async function startServer() {
@@ -1249,7 +1581,9 @@ async function startServer() {
     await initDatabase();
 
     app.listen(PORT, () => {
-      console.log(`My Home Group server running on port ${PORT}`);
+      console.log(
+        `My Home Group server running on port ${PORT}`
+      );
     });
   } catch (error) {
     console.error("Server startup failed:", error);
