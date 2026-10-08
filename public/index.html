@@ -1,60 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
+  <title>My Home Group - Vehicle Duration Management</title>
 
-  <meta
-    name="description"
-    content=" Vehicle Duration Management"
-  >
+  <link rel="stylesheet" href="style.css">
 
-  <title>MY Home Group @Developed_by-ROUSHAN-YADAV</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #1f2937;
+    }
+
+    .welcome-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .welcome-card {
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 35px 25px;
+      text-align: center;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+    }
+
+    .logo {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px;
+      border-radius: 22px;
+      background: #f59e0b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .company {
+      margin-top: 8px;
+      font-size: 16px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    .description {
+      margin: 18px 0 28px;
+      color: #6b7280;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .get-started {
+      width: 100%;
+      display: block;
+      text-decoration: none;
+      border: none;
+      border-radius: 14px;
+      background: #f59e0b;
+      color: #ffffff;
+      padding: 15px 20px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .get-started:hover {
+      background: #d97706;
+      transform: translateY(-1px);
+    }
+
+    .get-started:active {
+      transform: scale(0.98);
+    }
+
+    .footer {
+      margin-top: 25px;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+  </style>
 </head>
 
 <body>
 
-  <main class="welcome-screen">
+  <main class="welcome-page">
 
-    <div class="app-logo">
-      🚧
-    </div>
+    <section class="welcome-card">
 
-    <h1>
-      Hyma RMC Kokapet
-    </h1>
+      <div class="logo">
+        🚧
+      </div>
 
-    <p class="subtitle">
-      Vehicle Duration Management
-    </p>
+      <h1>My Home Group</h1>
 
-    <button
-      id="startBtn"
-      class="primary-btn"
-      type="button"
-    >
-      Get Started
-    </button>
+      <div class="company">
+        Vehicle Duration Management
+      </div>
+
+      <p class="description">
+        Manage vehicles, entry and exit times, driver details,
+        daily duration and reports easily from one place.
+      </p>
+
+      <!-- Direct navigation to login page -->
+      <a
+        class="get-started"
+        href="pages/login.html"
+      >
+        Get Started
+      </a>
+
+      <div class="footer">
+        My Home Group Vehicle Management System
+      </div>
+
+    </section>
 
   </main>
 
-  <script src="app.js"></script>
-
 </body>
-
 </html>
