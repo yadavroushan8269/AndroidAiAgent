@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Add Entry - My-Home-Group</title>
+  <title>Add Entry - My Home Group</title>
 
   <link
     rel="stylesheet"
@@ -22,273 +16,272 @@
   >
 
   <style>
-    .entry-page {
-      min-height: 100vh;
-      padding: 20px 16px 100px;
-      background: #f5f7fa;
+    .page-wrap{
+      max-width:900px;
+      margin:0 auto;
+      padding:20px;
+      padding-bottom:100px;
     }
 
-    .entry-container {
-      width: 100%;
-      max-width: 760px;
-      margin: 0 auto;
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:20px;
     }
 
-    .entry-header {
-      margin-bottom: 18px;
+    .topbar h1{
+      margin:0;
+      font-size:25px;
     }
 
-    .entry-header h1 {
-      margin: 0 0 6px;
-      font-size: 26px;
+    .topbar p{
+      margin:5px 0 0;
+      opacity:.7;
+      font-size:14px;
     }
 
-    .entry-header p {
-      margin: 0;
-      color: #6b7280;
+    .btn{
+      border:0;
+      border-radius:10px;
+      padding:11px 16px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:14px;
     }
 
-    .card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    .btn-primary{
+      background:#f5b400;
+      color:#111;
     }
 
-    .section-title {
-      margin: 0 0 15px;
-      font-size: 19px;
+    .btn-secondary{
+      background:#eef1f4;
+      color:#222;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 13px;
+    .card{
+      background:#fff;
+      border:1px solid #e3e7eb;
+      border-radius:16px;
+      padding:20px;
+      box-shadow:0 3px 14px rgba(0,0,0,.05);
     }
 
-    .field {
-      display: grid;
-      gap: 7px;
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
     }
 
-    .field.full {
-      grid-column: 1 / -1;
+    .form-group{
+      margin-bottom:14px;
     }
 
-    .field label {
-      font-size: 13px;
-      font-weight: 700;
-      color: #333;
+    .full{
+      grid-column:1 / -1;
     }
 
-    .field input,
-    .field select,
-    .field textarea {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px 12px;
-      border: 1px solid #d5dbe0;
-      border-radius: 11px;
-      background: #fff;
-      font-size: 15px;
-      outline: none;
-      font-family: inherit;
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:6px;
     }
 
-    .field textarea {
-      min-height: 90px;
-      resize: vertical;
+    input,
+    select,
+    textarea{
+      width:100%;
+      box-sizing:border-box;
+      border:1px solid #d8dde3;
+      border-radius:10px;
+      padding:12px;
+      background:#fff;
+      font-size:14px;
+      outline:none;
     }
 
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
-      border-color: #f5a400;
-      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
+    input:focus,
+    select:focus,
+    textarea:focus{
+      border-color:#f5b400;
+      box-shadow:0 0 0 3px rgba(245,180,0,.12);
     }
 
-    .readonly {
-      background: #f3f4f5 !important;
-      color: #555;
+    textarea{
+      min-height:100px;
+      resize:vertical;
     }
 
-    .duration-box {
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 14px;
-      background: #fff8e7;
-      border: 1px solid #f2d48b;
-      text-align: center;
+    .vehicle-info{
+      background:#f7f8fa;
+      border-radius:12px;
+      padding:14px;
+      margin-top:5px;
+      display:none;
     }
 
-    .duration-label {
-      font-size: 12px;
-      color: #7b6a43;
-      font-weight: 700;
+    .vehicle-info.show{
+      display:block;
     }
 
-    .duration-value {
-      margin-top: 4px;
-      font-size: 26px;
-      font-weight: 900;
-      color: #a66d00;
+    .vehicle-info-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
     }
 
-    .message {
-      min-height: 20px;
-      margin-top: 12px;
-      font-size: 13px;
-      font-weight: 700;
+    .info-item{
+      font-size:12px;
     }
 
-    .message.success {
-      color: #16803c;
+    .info-label{
+      opacity:.6;
+      margin-bottom:3px;
     }
 
-    .message.error {
-      color: #c62828;
+    .info-value{
+      font-weight:700;
+      word-break:break-word;
     }
 
-    .button-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 16px;
+    .duration-box{
+      margin-top:4px;
+      background:#fff8df;
+      border:1px solid #f5d56b;
+      border-radius:12px;
+      padding:15px;
     }
 
-    .secondary-btn {
-      border: 1px solid #d5d9df;
-      background: #fff;
-      color: #333;
-      border-radius: 11px;
-      padding: 13px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
+    .duration-label{
+      font-size:12px;
+      opacity:.7;
     }
 
-    .vehicle-info {
-      display: none;
-      margin-top: 14px;
-      padding: 13px;
-      border-radius: 12px;
-      background: #f6f7f8;
-      border: 1px solid #e1e5e9;
+    .duration-value{
+      font-size:25px;
+      font-weight:800;
+      margin-top:4px;
     }
 
-    .vehicle-info.show {
-      display: block;
+    .running-note{
+      color:#16803c;
+      font-size:12px;
+      margin-top:5px;
     }
 
-    .vehicle-info-title {
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 9px;
+    .form-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:20px;
     }
 
-    .vehicle-info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
     }
 
-    .info-item {
-      padding: 9px;
-      background: #fff;
-      border-radius: 9px;
+    .loading{
+      text-align:center;
+      padding:30px;
+      opacity:.7;
     }
 
-    .info-label {
-      font-size: 10px;
-      color: #7b8289;
-      font-weight: 800;
+    .error-box{
+      background:#ffe9eb;
+      color:#a71929;
+      border-radius:10px;
+      padding:12px;
+      margin-bottom:15px;
+      display:none;
     }
 
-    .info-value {
-      margin-top: 3px;
-      font-size: 13px;
-      font-weight: 700;
-      word-break: break-word;
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:25px;
+      transform:translateX(-50%) translateY(100px);
+      background:#16191d;
+      color:#fff;
+      padding:12px 18px;
+      border-radius:10px;
+      font-size:14px;
+      z-index:9999;
+      transition:.25s ease;
+      max-width:90%;
+      text-align:center;
     }
 
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      background: #fff;
-      border-top: 1px solid #ddd;
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
+    .toast.show{
+      transform:translateX(-50%) translateY(0);
     }
 
-    .bottom-nav a {
-      text-decoration: none;
-      color: #555;
-      text-align: center;
-      padding: 9px 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
+    .toast.error{
+      background:#c62828;
     }
 
-    .bottom-nav a span {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
+    .bottom-nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:5000;
+      display:flex;
+      justify-content:space-around;
+      background:#fff;
+      border-top:1px solid #ddd;
+      padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+      box-shadow:0 -3px 12px rgba(0,0,0,.06);
     }
 
-    .bottom-nav a.active {
-      color: #d88900;
+    .bottom-nav a{
+      text-decoration:none;
+      color:#555;
+      font-size:11px;
+      text-align:center;
+      padding:6px 8px;
     }
 
-    .add-main-btn {
-      width: 46px;
-      height: 46px;
-      margin: -16px auto 0;
-      border-radius: 50%;
-      background: #f5a400;
-      color: #fff !important;
-      border: 4px solid #fff;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    .bottom-nav a.active{
+      color:#111;
+      font-weight:800;
     }
 
-    .add-main-btn span {
-      margin: 0 !important;
-      font-size: 26px !important;
-    }
-
-    @media (max-width: 650px) {
-      .form-grid {
-        grid-template-columns: 1fr;
+    @media(max-width:650px){
+      .page-wrap{
+        padding:15px;
+        padding-bottom:95px;
       }
 
-      .field.full {
-        grid-column: auto;
+      .topbar{
+        align-items:flex-start;
       }
 
-      .button-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .entry-page {
-        padding: 16px 12px 100px;
+      .topbar h1{
+        font-size:22px;
       }
 
-      .entry-header h1 {
-        font-size: 23px;
+      .form-grid{
+        grid-template-columns:1fr;
       }
 
-      .vehicle-info-grid {
-        grid-template-columns: 1fr;
+      .full{
+        grid-column:auto;
+      }
+
+      .vehicle-info-grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .form-actions{
+        flex-direction:column;
+      }
+
+      .form-actions .btn{
+        width:100%;
       }
     }
   </style>
@@ -296,180 +289,1054 @@
 
 <body>
 
-  <main class="entry-page">
+  <main class="page-wrap">
 
-    <div class="entry-container">
+    <header class="topbar">
 
-      <header class="entry-header">
-
-        <h1>➕ Add Vehicle Entry</h1>
+      <div>
+        <h1>➕ Add Entry</h1>
 
         <p>
           Record vehicle entry and exit duration
         </p>
+      </div>
 
-      </header>
+      <button
+        class="btn btn-secondary"
+        type="button"
+        onclick="window.location.href='dashboard.html'"
+      >
+        Dashboard
+      </button>
+
+    </header>
 
 
-      <section class="card">
+    <section class="card">
 
-        <h2 class="section-title">
-          Vehicle Details
-        </h2>
+      <div
+        id="errorBox"
+        class="error-box"
+      ></div>
 
 
-        <form
-          id="entryForm"
-          novalidate
-        >
+      <form id="entryForm">
 
-          <div class="form-grid">
+        <div class="form-grid">
 
-            <div class="field full">
 
-              <label for="entryVehicle">
-                Vehicle
-              </label>
+          <!-- DATE -->
 
-              <select id="entryVehicle">
+          <div class="form-group">
 
-                <option value="">
-                  Select vehicle
-                </option>
+            <label for="entryDate">
+              Date *
+            </label>
 
-              </select>
+            <input
+              id="entryDate"
+              type="date"
+              required
+            >
+
+          </div>
+
+
+          <!-- VEHICLE -->
+
+          <div class="form-group">
+
+            <label for="vehicleSelect">
+              Vehicle *
+            </label>
+
+            <select
+              id="vehicleSelect"
+              required
+            >
+
+              <option value="">
+                Loading vehicles...
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- VEHICLE INFO -->
+
+          <div
+            id="vehicleInfo"
+            class="vehicle-info full"
+          >
+
+            <div class="vehicle-info-grid">
+
+              <div class="info-item">
+
+                <div class="info-label">
+                  Vehicle
+                </div>
+
+                <div
+                  id="infoVehicle"
+                  class="info-value"
+                >
+                  -
+                </div>
+
+              </div>
+
+
+              <div class="info-item">
+
+                <div class="info-label">
+                  Type
+                </div>
+
+                <div
+                  id="infoType"
+                  class="info-value"
+                >
+                  -
+                </div>
+
+              </div>
+
+
+              <div class="info-item">
+
+                <div class="info-label">
+                  Status
+                </div>
+
+                <div
+                  id="infoStatus"
+                  class="info-value"
+                >
+                  -
+                </div>
+
+              </div>
 
             </div>
 
+          </div>
 
-            <div class="field">
 
-              <label for="entryDate">
-                Date
-              </label>
+          <!-- DRIVER -->
 
-              <input
-                id="entryDate"
-                type="date"
+          <div class="form-group">
+
+            <label for="driverName">
+              Driver
+            </label>
+
+            <input
+              id="driverName"
+              type="text"
+              placeholder="Driver name"
+            >
+
+          </div>
+
+
+          <!-- CONTRACTOR -->
+
+          <div class="form-group">
+
+            <label for="contractor">
+              Contractor / Company
+            </label>
+
+            <input
+              id="contractor"
+              type="text"
+              placeholder="Contractor or company"
+            >
+
+          </div>
+
+
+          <!-- ENTRY TIME -->
+
+          <div class="form-group">
+
+            <label for="entryTime">
+              Entry Time *
+            </label>
+
+            <input
+              id="entryTime"
+              type="time"
+              required
+            >
+
+          </div>
+
+
+          <!-- EXIT TIME -->
+
+          <div class="form-group">
+
+            <label for="exitTime">
+              Exit Time
+            </label>
+
+            <input
+              id="exitTime"
+              type="time"
+            >
+
+          </div>
+
+
+          <!-- DURATION -->
+
+          <div class="form-group full">
+
+            <div class="duration-box">
+
+              <div class="duration-label">
+                Calculated Duration
+              </div>
+
+              <div
+                id="durationValue"
+                class="duration-value"
               >
+                0 min
+              </div>
+
+              <div
+                id="runningNote"
+                class="running-note"
+              ></div>
 
             </div>
 
-
-            <div class="field">
-
-              <label for="entryDriver">
-                Driver
-              </label>
-
-              <input
-                id="entryDriver"
-                type="text"
-                class="readonly"
-                readonly
-                placeholder="Auto-filled"
-              >
-
-            </div>
+          </div>
 
 
-            <div class="field full">
+          <!-- PURPOSE -->
 
-              <label for="entryContractor">
-                Contractor / Company
-              </label>
+          <div class="form-group full">
 
-              <input
-                id="entryContractor"
-                type="text"
-                class="readonly"
-                readonly
-                placeholder="Auto-filled"
-              >
+            <label for="purpose">
+              Purpose
+            </label>
 
-            </div>
+            <input
+              id="purpose"
+              type="text"
+              placeholder="Example: Concrete delivery"
+              maxlength="180"
+            >
 
-
-            <div class="field">
-
-              <label for="entryTime">
-                Entry Time
-              </label>
-
-              <input
-                id="entryTime"
-                type="time"
-              >
-
-            </div>
+          </div>
 
 
-            <div class="field">
+          <!-- NOTES -->
 
-              <label for="exitTime">
-                Exit Time
-              </label>
+          <div class="form-group full">
 
-              <input
-                id="exitTime"
-                type="time"
-              >
+            <label for="notes">
+              Notes
+            </label>
 
-            </div>
+            <textarea
+              id="notes"
+              placeholder="Any additional information..."
+            ></textarea>
 
-
-            <div class="field full">
-
-              <label for="entryPurpose">
-                Purpose
-              </label>
-
-              <select id="entryPurpose">
-
-                <option value="">
-                  Select purpose
-                </option>
-
-                <option value="Material Delivery">
-                  Material Delivery
-                </option>
-
-                <option value="RMC / Concrete">
-                  RMC / Concrete
-                </option>
-
-                <option value="Construction Work">
-                  Construction Work
-                </option>
-
-                <option value="Loading / Unloading">
-                  Loading / Unloading
-                </option>
-
-                <option value="Equipment Movement">
-                  Equipment Movement
-                </option>
-
-                <option value="Site Work">
-                  Site Work
-                </option>
-
-                <option value="Other">
-                  Other
-                </option>
-
-              </select>
-
-            </div>
+          </div>
 
 
-            <div class="field full">
+        </div>
 
-              <label for="entryNotes">
-                Notes
-              </label>
 
-              <textarea
-                id="entryNotes"
-                placeholder="Optional notes..."
-              ></
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="window.location.href='dashboard.html'"
+          >
+            Cancel
+          </button>
+
+          <button
+            id="saveButton"
+            type="submit"
+            class="btn btn-primary"
+          >
+            Save Entry
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  </main>
+
+
+  <!-- MOBILE NAV -->
+
+  <nav class="bottom-nav">
+
+    <a href="dashboard.html">
+      🏠<br>
+      Home
+    </a>
+
+    <a href="vehicles.html">
+      🚚<br>
+      Vehicles
+    </a>
+
+    <a
+      href="add-entry.html"
+      class="active"
+    >
+      ➕<br>
+      Entry
+    </a>
+
+    <a href="calendar.html">
+      📅<br>
+      Calendar
+    </a>
+
+    <a href="profile.html">
+      👤<br>
+      You
+    </a>
+
+  </nav>
+
+
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <script src="../app.js"></script>
+
+
+  <script>
+    "use strict";
+
+
+    /* =====================================================
+       STATE
+    ===================================================== */
+
+    let vehicles = [];
+
+    let selectedVehicle = null;
+
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const form =
+      document.getElementById(
+        "entryForm"
+      );
+
+    const dateInput =
+      document.getElementById(
+        "entryDate"
+      );
+
+    const vehicleSelect =
+      document.getElementById(
+        "vehicleSelect"
+      );
+
+    const driverInput =
+      document.getElementById(
+        "driverName"
+      );
+
+    const contractorInput =
+      document.getElementById(
+        "contractor"
+      );
+
+    const entryTimeInput =
+      document.getElementById(
+        "entryTime"
+      );
+
+    const exitTimeInput =
+      document.getElementById(
+        "exitTime"
+      );
+
+    const durationValue =
+      document.getElementById(
+        "durationValue"
+      );
+
+    const runningNote =
+      document.getElementById(
+        "runningNote"
+      );
+
+    const vehicleInfo =
+      document.getElementById(
+        "vehicleInfo"
+      );
+
+    const errorBox =
+      document.getElementById(
+        "errorBox"
+      );
+
+    const saveButton =
+      document.getElementById(
+        "saveButton"
+      );
+
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    let toastTimer;
+
+
+    function showToast(
+      message,
+      error = false
+    ){
+
+      const toast =
+        document.getElementById(
+          "toast"
+        );
+
+
+      toast.textContent =
+        message;
+
+
+      toast.classList.toggle(
+        "error",
+        error
+      );
+
+
+      toast.classList.add(
+        "show"
+      );
+
+
+      clearTimeout(
+        toastTimer
+      );
+
+
+      toastTimer =
+        setTimeout(
+          () => {
+
+            toast.classList.remove(
+              "show"
+            );
+
+          },
+          2800
+        );
+
+    }
+
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    function showError(
+      message
+    ){
+
+      errorBox.textContent =
+        message;
+
+      errorBox.style.display =
+        "block";
+
+    }
+
+
+    function clearError(){
+
+      errorBox.textContent =
+        "";
+
+      errorBox.style.display =
+        "none";
+
+    }
+
+
+    /* =====================================================
+       DEFAULT TIME
+    ===================================================== */
+
+    function setCurrentTime(){
+
+      const now =
+        new Date();
+
+
+      const hours =
+        String(
+          now.getHours()
+        ).padStart(2,"0");
+
+
+      const minutes =
+        String(
+          now.getMinutes()
+        ).padStart(2,"0");
+
+
+      entryTimeInput.value =
+        `${hours}:${minutes}`;
+
+    }
+
+
+    /* =====================================================
+       LOAD VEHICLES
+    ===================================================== */
+
+    async function loadVehicles(){
+
+      try{
+
+        vehicles =
+          await window.MyHomeGroup
+            .getVehicles();
+
+
+        const activeVehicles =
+          vehicles.filter(
+            vehicle =>
+              vehicle.status ===
+              "Active"
+          );
+
+
+        vehicleSelect.innerHTML = `
+          <option value="">
+            Select vehicle
+          </option>
+        `;
+
+
+        activeVehicles.forEach(
+          vehicle => {
+
+            const option =
+              document.createElement(
+                "option"
+              );
+
+
+            option.value =
+              vehicle.id;
+
+
+            option.textContent =
+              `${vehicle.vehicle_number} — ${vehicle.vehicle_type}`;
+
+
+            vehicleSelect.appendChild(
+              option
+            );
+
+          }
+        );
+
+
+        if(
+          activeVehicles.length === 0
+        ){
+
+          vehicleSelect.innerHTML = `
+            <option value="">
+              No active vehicles found
+            </option>
+          `;
+
+          showError(
+            "No active vehicles found. Please add an active vehicle first."
+          );
+
+        }
+
+      }catch(error){
+
+        console.error(
+          error
+        );
+
+
+        vehicleSelect.innerHTML = `
+          <option value="">
+            Unable to load vehicles
+          </option>
+        `;
+
+
+        showError(
+          error.message ||
+          "Unable to load vehicles."
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       VEHICLE SELECT
+    ===================================================== */
+
+    function handleVehicleChange(){
+
+      const id =
+        Number(
+          vehicleSelect.value
+        );
+
+
+      selectedVehicle =
+        vehicles.find(
+          vehicle =>
+            Number(
+              vehicle.id
+            ) === id
+        ) || null;
+
+
+      if(
+        !selectedVehicle
+      ){
+
+        vehicleInfo.classList.remove(
+          "show"
+        );
+
+        driverInput.value =
+          "";
+
+        contractorInput.value =
+          "";
+
+        return;
+
+      }
+
+
+      vehicleInfo.classList.add(
+        "show"
+      );
+
+
+      document.getElementById(
+        "infoVehicle"
+      ).textContent =
+        selectedVehicle.vehicle_number ||
+        "-";
+
+
+      document.getElementById(
+        "infoType"
+      ).textContent =
+        selectedVehicle.vehicle_type ||
+        "-";
+
+
+      document.getElementById(
+        "infoStatus"
+      ).textContent =
+        selectedVehicle.status ||
+        "-";
+
+
+      /*
+        Auto-fill driver and contractor.
+        User can still edit them for this entry.
+      */
+
+      driverInput.value =
+        selectedVehicle.driver_name ||
+        "";
+
+
+      contractorInput.value =
+        selectedVehicle.contractor ||
+        "";
+
+    }
+
+
+    /* =====================================================
+       DURATION
+    ===================================================== */
+
+    function updateDuration(){
+
+      const entryTime =
+        entryTimeInput.value;
+
+
+      const exitTime =
+        exitTimeInput.value;
+
+
+      if(
+        !entryTime
+      ){
+
+        durationValue.textContent =
+          "0 min";
+
+        runningNote.textContent =
+          "";
+
+        return;
+
+      }
+
+
+      if(
+        !exitTime
+      ){
+
+        durationValue.textContent =
+          "Running";
+
+
+        runningNote.textContent =
+          "Exit time is not entered yet. Duration will be updated when you save an exit time.";
+
+
+        return;
+
+      }
+
+
+      const minutes =
+        window.MyHomeGroup
+          .calculateDuration(
+            entryTime,
+            exitTime
+          );
+
+
+      durationValue.textContent =
+        window.MyHomeGroup
+          .durationText(
+            minutes
+          );
+
+
+      runningNote.textContent =
+        "";
+
+    }
+
+
+    /* =====================================================
+       VALIDATION
+    ===================================================== */
+
+    function validateForm(){
+
+      clearError();
+
+
+      if(
+        !dateInput.value
+      ){
+
+        showError(
+          "Please select a date."
+        );
+
+        dateInput.focus();
+
+        return false;
+
+      }
+
+
+      if(
+        !selectedVehicle
+      ){
+
+        showError(
+          "Please select a vehicle."
+        );
+
+        vehicleSelect.focus();
+
+        return false;
+
+      }
+
+
+      if(
+        !entryTimeInput.value
+      ){
+
+        showError(
+          "Please select entry time."
+        );
+
+        entryTimeInput.focus();
+
+        return false;
+
+      }
+
+
+      if(
+        exitTimeInput.value
+      ){
+
+        const duration =
+          window.MyHomeGroup
+            .calculateDuration(
+              entryTimeInput.value,
+              exitTimeInput.value
+            );
+
+
+        if(
+          duration <= 0
+        ){
+
+          showError(
+            "Exit time must be different from entry time."
+          );
+
+          exitTimeInput.focus();
+
+          return false;
+
+        }
+
+      }
+
+
+      return true;
+
+    }
+
+
+    /* =====================================================
+       SAVE
+    ===================================================== */
+
+    async function saveEntry(
+      event
+    ){
+
+      event.preventDefault();
+
+
+      if(
+        !validateForm()
+      ){
+
+        return;
+
+      }
+
+
+      const duration =
+        exitTimeInput.value
+          ? window.MyHomeGroup
+              .calculateDuration(
+                entryTimeInput.value,
+                exitTimeInput.value
+              )
+          : 0;
+
+
+      const payload = {
+
+        vehicleId:
+          Number(
+            selectedVehicle.id
+          ),
+
+        vehicleNumber:
+          selectedVehicle.vehicle_number,
+
+        vehicleType:
+          selectedVehicle.vehicle_type,
+
+        driverName:
+          driverInput.value.trim(),
+
+        contractor:
+          contractorInput.value.trim(),
+
+        date:
+          dateInput.value,
+
+        entryTime:
+          entryTimeInput.value,
+
+        exitTime:
+          exitTimeInput.value,
+
+        duration,
+
+        purpose:
+          document.getElementById(
+            "purpose"
+          )
+          .value
+          .trim(),
+
+        notes:
+          document.getElementById(
+            "notes"
+          )
+          .value
+          .trim()
+
+      };
+
+
+      saveButton.disabled =
+        true;
+
+
+      saveButton.textContent =
+        "Saving...";
+
+
+      try{
+
+        await window.MyHomeGroup
+          .createEntry(
+            payload
+          );
+
+
+        showToast(
+          "Entry saved successfully."
+        );
+
+
+        /*
+          Give the toast a moment,
+          then return to dashboard.
+        */
+
+        setTimeout(
+          () => {
+
+            window.location.href =
+              "dashboard.html";
+
+          },
+          700
+        );
+
+      }catch(error){
+
+        console.error(
+          error
+        );
+
+
+        showError(
+          error.message ||
+          "Unable to save entry."
+        );
+
+
+        showToast(
+          error.message ||
+          "Unable to save entry.",
+          true
+        );
+
+
+        saveButton.disabled =
+          false;
+
+
+        saveButton.textContent =
+          "Save Entry";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       EVENTS
+    ===================================================== */
+
+    vehicleSelect
+      .addEventListener(
+        "change",
+        handleVehicleChange
+      );
+
+
+    entryTimeInput
+      .addEventListener(
+        "input",
+        updateDuration
+      );
+
+
+    exitTimeInput
+      .addEventListener(
+        "input",
+        updateDuration
+      );
+
+
+    form
+      .addEventListener(
+        "submit",
+        saveEntry
+      );
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    dateInput.value =
+      window.MyHomeGroup.today();
+
+
+    setCurrentTime();
+
+    updateDuration();
+
+    loadVehicles();
+
+  </script>
+
+</body>
+</html>
