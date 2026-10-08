@@ -1,295 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <title>Reports - My Home Group</title>
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Reports - My-Home-Group</title>
-
-  <link
-    rel="stylesheet"
-    href="../style.css"
-  >
+  <link rel="stylesheet" href="../style.css">
 
   <style>
-    .reports-page {
-      min-height: 100vh;
-      padding: 20px 16px 100px;
-      background: #f5f7fa;
+    .page-wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:20px;
+      padding-bottom:105px;
     }
 
-    .reports-container {
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
+    .page-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      margin-bottom:20px;
     }
 
-    .reports-header {
-      margin-bottom: 18px;
+    .page-header h1{
+      margin:0;
+      font-size:26px;
     }
 
-    .reports-header h1 {
-      margin: 0 0 6px;
-      font-size: 26px;
+    .page-header p{
+      margin:5px 0 0;
+      font-size:13px;
+      opacity:.65;
     }
 
-    .reports-header p {
-      margin: 0;
-      color: #6b7280;
+    .back-btn{
+      border:0;
+      background:#eef1f4;
+      border-radius:10px;
+      padding:10px 13px;
+      cursor:pointer;
+      font-weight:700;
     }
 
-    .report-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    .filter-card,
+    .summary-card,
+    .report-card{
+      background:#fff;
+      border:1px solid #e3e7eb;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:18px;
+      box-shadow:0 3px 12px rgba(0,0,0,.04);
     }
 
-    .filter-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
+    .filter-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr 1fr;
+      gap:12px;
+      align-items:end;
     }
 
-    .field-group {
-      display: grid;
-      gap: 7px;
+    .field label{
+      display:block;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:6px;
     }
 
-    .field-group label {
-      font-size: 13px;
-      font-weight: 700;
+    .field input,
+    .field select{
+      width:100%;
+      box-sizing:border-box;
+      padding:11px;
+      border:1px solid #d8dde2;
+      border-radius:10px;
+      background:#fff;
     }
 
-    .field-group input,
-    .field-group select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #d6dbe0;
-      border-radius: 10px;
-      background: #fff;
-      font-size: 15px;
-      outline: none;
+    .filter-actions{
+      display:flex;
+      gap:8px;
+      margin-top:14px;
+      flex-wrap:wrap;
     }
 
-    .field-group input:focus,
-    .field-group select:focus {
-      border-color: #f5a400;
-      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
+    .filter-actions button{
+      cursor:pointer;
     }
 
-    .report-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
+    .preset-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:15px;
     }
 
-    .secondary-btn {
-      border: 1px solid #d5d9df;
-      background: #fff;
-      color: #333;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
+    .preset-btn{
+      border:1px solid #ddd;
+      background:#fff;
+      border-radius:9px;
+      padding:8px 12px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:700;
     }
 
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+    .preset-btn.active{
+      background:#fff4cc;
+      border-color:#e7bd3b;
     }
 
-    .summary-item {
-      background: #f7f8fa;
-      border-radius: 13px;
-      padding: 14px;
-      text-align: center;
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
     }
 
-    .summary-icon {
-      font-size: 22px;
+    .summary-item{
+      border:1px solid #edf0f2;
+      border-radius:12px;
+      padding:14px;
     }
 
-    .summary-number {
-      margin-top: 4px;
-      font-size: 21px;
-      font-weight: 800;
+    .summary-label{
+      font-size:11px;
+      opacity:.65;
     }
 
-    .summary-label {
-      margin-top: 3px;
-      color: #737b84;
-      font-size: 11px;
-      font-weight: 700;
+    .summary-value{
+      font-size:23px;
+      font-weight:800;
+      margin-top:4px;
     }
 
-    .section-title {
-      margin: 0 0 14px;
-      font-size: 19px;
+    .report-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
     }
 
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
+    .report-head h2{
+      margin:0;
+      font-size:18px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 600px;
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:650px;
     }
 
     th,
-    td {
-      padding: 11px 9px;
-      border-bottom: 1px solid #e6e8eb;
-      text-align: left;
-      font-size: 13px;
+    td{
+      padding:11px 10px;
+      border-bottom:1px solid #edf0f2;
+      text-align:left;
+      font-size:13px;
     }
 
-    th {
-      background: #f7f8fa;
-      font-weight: 800;
-      color: #444;
+    th{
+      font-size:11px;
+      opacity:.65;
+      text-transform:uppercase;
     }
 
-    td {
-      color: #444;
+    td strong{
+      font-weight:800;
     }
 
-    .duration-cell {
-      font-weight: 800;
-      color: #a86f00;
+    .empty{
+      text-align:center;
+      padding:35px 15px;
+      opacity:.65;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 30px 10px;
-      color: #777;
+    .loading{
+      text-align:center;
+      padding:30px;
+      opacity:.65;
     }
 
-    .empty-icon {
-      font-size: 40px;
-      margin-bottom: 8px;
+    .bottom-nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:5000;
+      display:flex;
+      justify-content:space-around;
+      background:#fff;
+      border-top:1px solid #ddd;
+      padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+      box-shadow:0 -3px 12px rgba(0,0,0,.06);
     }
 
-    .empty-state h3 {
-      margin: 0 0 5px;
-      color: #333;
+    .bottom-nav a{
+      text-decoration:none;
+      color:#555;
+      font-size:11px;
+      text-align:center;
+      padding:6px 8px;
     }
 
-    .empty-state p {
-      margin: 0;
-      font-size: 13px;
+    .bottom-nav a.active{
+      color:#111;
+      font-weight:800;
     }
 
-    .report-message {
-      min-height: 20px;
-      margin-top: 10px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .report-message.error {
-      color: #c62828;
-    }
-
-    .report-message.success {
-      color: #16803c;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      background: #fff;
-      border-top: 1px solid #ddd;
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .bottom-nav a {
-      text-decoration: none;
-      color: #555;
-      text-align: center;
-      padding: 9px 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .bottom-nav a span {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-
-    .bottom-nav a.active {
-      color: #d88900;
-    }
-
-    .add-main-btn {
-      width: 46px;
-      height: 46px;
-      margin: -16px auto 0;
-      border-radius: 50%;
-      background: #f5a400;
-      color: #fff !important;
-      border: 4px solid #fff;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-    }
-
-    .add-main-btn span {
-      margin: 0 !important;
-      font-size: 26px !important;
-    }
-
-    @media (max-width: 700px) {
-      .filter-grid {
-        grid-template-columns: 1fr;
+    @media(max-width:900px){
+      .filter-grid{
+        grid-template-columns:1fr 1fr;
       }
 
-      .summary-grid {
-        grid-template-columns: 1fr 1fr;
+      .summary-grid{
+        grid-template-columns:1fr 1fr;
       }
     }
 
-    @media (max-width: 430px) {
-      .reports-page {
-        padding: 16px 12px 100px;
+    @media(max-width:600px){
+      .page-wrap{
+        padding:15px;
+        padding-bottom:100px;
       }
 
-      .reports-header h1 {
-        font-size: 23px;
+      .page-header h1{
+        font-size:22px;
       }
 
-      .summary-grid {
-        grid-template-columns: 1fr;
+      .filter-grid{
+        grid-template-columns:1fr;
       }
 
-      .report-buttons {
-        grid-template-columns: 1fr;
+      .summary-grid{
+        grid-template-columns:1fr 1fr;
       }
     }
   </style>
@@ -297,389 +248,505 @@
 
 <body>
 
-  <main class="reports-page">
+  <main class="page-wrap">
 
-    <div class="reports-container">
+    <!-- HEADER -->
 
-      <header class="reports-header">
+    <header class="page-header">
 
+      <div>
         <h1>📊 Reports</h1>
+        <p>Analyze vehicle duration and activity</p>
+      </div>
 
-        <p>
-          Vehicle duration and activity reports
-        </p>
+      <button
+        class="back-btn"
+        type="button"
+        onclick="window.location.href='dashboard.html'"
+      >
+        ← Dashboard
+      </button>
 
-      </header>
-
-
-      <!-- FILTER -->
-
-      <section class="report-card">
-
-        <div class="filter-grid">
-
-          <div class="field-group">
-
-            <label for="reportType">
-              Report Period
-            </label>
-
-            <select id="reportType">
-
-              <option value="daily">
-                Daily
-              </option>
-
-              <option value="weekly">
-                Weekly
-              </option>
-
-              <option value="monthly">
-                Monthly
-              </option>
-
-              <option value="custom">
-                Custom
-              </option>
-
-            </select>
-
-          </div>
+    </header>
 
 
-          <div class="field-group">
+    <!-- FILTER -->
 
-            <label for="reportFrom">
-              From Date
-            </label>
+    <section class="filter-card">
 
-            <input
-              id="reportFrom"
-              type="date"
-            >
+      <div class="preset-row">
 
-          </div>
+        <button
+          class="preset-btn active"
+          data-preset="today"
+        >
+          Today
+        </button>
+
+        <button
+          class="preset-btn"
+          data-preset="week"
+        >
+          This Week
+        </button>
+
+        <button
+          class="preset-btn"
+          data-preset="month"
+        >
+          This Month
+        </button>
+
+        <button
+          class="preset-btn"
+          data-preset="custom"
+        >
+          Custom
+        </button>
+
+      </div>
 
 
-          <div class="field-group">
+      <div class="filter-grid">
 
-            <label for="reportTo">
-              To Date
-            </label>
+        <div class="field">
 
-            <input
-              id="reportTo"
-              type="date"
-            >
+          <label for="fromDate">
+            From Date
+          </label>
 
-          </div>
-
-        </div>
-
-
-        <div class="report-buttons">
-
-          <button
-            id="generateReport"
-            class="primary-btn"
-            type="button"
+          <input
+            id="fromDate"
+            type="date"
           >
-            Generate Report
-          </button>
 
-          <button
-            id="todayReport"
-            class="secondary-btn"
-            type="button"
+        </div>
+
+
+        <div class="field">
+
+          <label for="toDate">
+            To Date
+          </label>
+
+          <input
+            id="toDate"
+            type="date"
           >
-            Today's Report
-          </button>
 
         </div>
 
 
-        <div
-          id="reportMessage"
-          class="report-message"
-        ></div>
+        <div class="field">
 
-      </section>
+          <label for="vehicleFilter">
+            Vehicle
+          </label>
+
+          <select id="vehicleFilter">
+
+            <option value="">
+              All Vehicles
+            </option>
+
+          </select>
+
+        </div>
 
 
-      <!-- SUMMARY -->
+        <div class="field">
 
-      <section class="report-card">
+          <label for="typeFilter">
+            Vehicle Type
+          </label>
 
-        <div class="summary-grid">
+          <select id="typeFilter">
 
-          <div class="summary-item">
+            <option value="">
+              All Types
+            </option>
 
-            <div class="summary-icon">
-              🚛
-            </div>
+          </select>
 
-            <div
-              id="summaryVehicles"
-              class="summary-number"
-            >
-              0
-            </div>
+        </div>
 
-            <div class="summary-label">
-              VEHICLES
-            </div>
+      </div>
 
+
+      <div class="filter-grid" style="margin-top:12px;">
+
+        <div class="field">
+
+          <label for="driverFilter">
+            Driver
+          </label>
+
+          <select id="driverFilter">
+
+            <option value="">
+              All Drivers
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="contractorFilter">
+            Contractor
+          </label>
+
+          <select id="contractorFilter">
+
+            <option value="">
+              All Contractors
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="filter-actions">
+
+        <button
+          id="applyButton"
+          class="btn btn-primary"
+          type="button"
+        >
+          Apply Report
+        </button>
+
+        <button
+          id="resetButton"
+          class="btn"
+          type="button"
+        >
+          Reset
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- SUMMARY -->
+
+    <section class="summary-card">
+
+      <div class="summary-grid">
+
+        <div class="summary-item">
+
+          <div class="summary-label">
+            Entries
           </div>
 
-
-          <div class="summary-item">
-
-            <div class="summary-icon">
-              📝
-            </div>
-
-            <div
-              id="summaryEntries"
-              class="summary-number"
-            >
-              0
-            </div>
-
-            <div class="summary-label">
-              ENTRIES
-            </div>
-
-          </div>
-
-
-          <div class="summary-item">
-
-            <div class="summary-icon">
-              👨‍🔧
-            </div>
-
-            <div
-              id="summaryDrivers"
-              class="summary-number"
-            >
-              0
-            </div>
-
-            <div class="summary-label">
-              DRIVERS
-            </div>
-
-          </div>
-
-
-          <div class="summary-item">
-
-            <div class="summary-icon">
-              ⏱️
-            </div>
-
-            <div
-              id="summaryDuration"
-              class="summary-number"
-            >
-              0 min
-            </div>
-
-            <div class="summary-label">
-              TOTAL TIME
-            </div>
-
+          <div
+            id="summaryEntries"
+            class="summary-value"
+          >
+            0
           </div>
 
         </div>
 
-      </section>
+
+        <div class="summary-item">
+
+          <div class="summary-label">
+            Vehicles
+          </div>
+
+          <div
+            id="summaryVehicles"
+            class="summary-value"
+          >
+            0
+          </div>
+
+        </div>
 
 
-      <!-- VEHICLE REPORT -->
+        <div class="summary-item">
 
-      <section class="report-card">
+          <div class="summary-label">
+            Running
+          </div>
 
-        <h2 class="section-title">
-          🚛 Vehicle-wise Report
+          <div
+            id="summaryRunning"
+            class="summary-value"
+          >
+            0
+          </div>
+
+        </div>
+
+
+        <div class="summary-item">
+
+          <div class="summary-label">
+            Total Duration
+          </div>
+
+          <div
+            id="summaryDuration"
+            class="summary-value"
+          >
+            0 min
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- VEHICLE REPORT -->
+
+    <section class="report-card">
+
+      <div class="report-head">
+
+        <h2>
+          🚚 Vehicle-wise Report
         </h2>
 
-        <div
-          id="vehicleReport"
-          class="table-wrap"
-        ></div>
-
-      </section>
+      </div>
 
 
-      <!-- DRIVER REPORT -->
+      <div
+        id="vehicleReport"
+        class="loading"
+      >
+        Loading...
+      </div>
 
-      <section class="report-card">
+    </section>
 
-        <h2 class="section-title">
-          👨‍🔧 Driver-wise Report
+
+    <!-- DRIVER REPORT -->
+
+    <section class="report-card">
+
+      <div class="report-head">
+
+        <h2>
+          👤 Driver-wise Report
         </h2>
 
-        <div
-          id="driverReport"
-          class="table-wrap"
-        ></div>
-
-      </section>
+      </div>
 
 
-      <!-- CONTRACTOR REPORT -->
+      <div
+        id="driverReport"
+        class="loading"
+      >
+        Loading...
+      </div>
 
-      <section class="report-card">
+    </section>
 
-        <h2 class="section-title">
-          🏢 Contractor-wise Report
+
+    <!-- CONTRACTOR REPORT -->
+
+    <section class="report-card">
+
+      <div class="report-head">
+
+        <h2>
+          🏗️ Contractor-wise Report
         </h2>
 
-        <div
-          id="contractorReport"
-          class="table-wrap"
-        ></div>
+      </div>
 
-      </section>
 
-    </div>
+      <div
+        id="contractorReport"
+        class="loading"
+      >
+        Loading...
+      </div>
+
+    </section>
+
+
+    <!-- DAILY REPORT -->
+
+    <section class="report-card">
+
+      <div class="report-head">
+
+        <h2>
+          📅 Daily Summary
+        </h2>
+
+      </div>
+
+
+      <div
+        id="dailyReport"
+        class="loading"
+      >
+        Loading...
+      </div>
+
+    </section>
 
   </main>
 
 
-  <!-- BOTTOM NAV -->
+  <!-- MOBILE NAV -->
 
   <nav class="bottom-nav">
 
-    <a href="/pages/dashboard.html">
-      <span>🏠</span>
+    <a href="dashboard.html">
+      🏠<br>
       Home
     </a>
 
-    <a href="/pages/vehicles.html">
-      <span>🚛</span>
+    <a href="vehicles.html">
+      🚚<br>
       Vehicles
     </a>
 
-    <a
-      href="/pages/add-entry.html"
-      class="add-main-btn"
-    >
-      <span>+</span>
+    <a href="add-entry.html">
+      ➕<br>
+      Entry
     </a>
 
-    <a href="/pages/calendar.html">
-      <span>📅</span>
+    <a href="calendar.html">
+      📅<br>
       Calendar
     </a>
 
     <a
-      href="/pages/profile.html"
+      href="profile.html"
       class="active"
     >
-      <span>👤</span>
+      👤<br>
       You
     </a>
 
   </nav>
 
 
+  <script src="../app.js"></script>
+
+
   <script>
-
-    const STORAGE = {
-      entries: "hyma_entries",
-      currentUser: "hyma_current_user"
-    };
+    "use strict";
 
 
-    function readJSON(
-      key,
-      fallback
-    ) {
+    let allEntries = [];
+    let currentPreset = "today";
 
-      try {
 
-        const value =
-          localStorage.getItem(key);
+    /* =====================================================
+       HELPERS
+    ===================================================== */
 
-        return value
-          ? JSON.parse(value)
-          : fallback;
+    function escapeHTML(value){
 
-      } catch (error) {
+      const div =
+        document.createElement("div");
 
-        return fallback;
+      div.textContent =
+        value == null
+          ? ""
+          : String(value);
 
-      }
+      return div.innerHTML;
 
     }
 
 
-    function getEntries() {
-
-      return readJSON(
-        STORAGE.entries,
-        []
-      );
-
-    }
-
-
-    function getCurrentUser() {
-
-      return readJSON(
-        STORAGE.currentUser,
-        null
-      );
-
-    }
-
-
-    function getToday() {
-
-      const now =
-        new Date();
-
-      const year =
-        now.getFullYear();
-
-      const month =
-        String(
-          now.getMonth() + 1
-        ).padStart(2, "0");
-
-      const day =
-        String(
-          now.getDate()
-        ).padStart(2, "0");
+    function getDate(entry){
 
       return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
+        entry.entry_date ||
+        entry.entryDate ||
+        entry.date ||
+        ""
       );
 
     }
 
 
-    function addDays(
-      dateString,
-      amount
-    ) {
+    function getVehicle(entry){
 
-      const date =
-        new Date(
-          dateString +
-          "T00:00:00"
-        );
-
-      date.setDate(
-        date.getDate() +
-        amount
+      return (
+        entry.vehicle_number ||
+        entry.vehicleNumber ||
+        "Unknown"
       );
+
+    }
+
+
+    function getType(entry){
+
+      return (
+        entry.vehicle_type ||
+        entry.vehicleType ||
+        "Other"
+      );
+
+    }
+
+
+    function getDriver(entry){
+
+      return (
+        entry.driver_name ||
+        entry.driverName ||
+        "Unknown"
+      );
+
+    }
+
+
+    function getContractor(entry){
+
+      return (
+        entry.contractor ||
+        "Unknown"
+      );
+
+    }
+
+
+    function getDuration(entry){
+
+      return Number(
+        entry.duration
+      ) || 0;
+
+    }
+
+
+    function getExit(entry){
+
+      return (
+        entry.exit_time ||
+        entry.exitTime ||
+        ""
+      );
+
+    }
+
+
+    /* =====================================================
+       DATE HELPERS
+    ===================================================== */
+
+    function formatDateLocal(date){
 
       const year =
         date.getFullYear();
@@ -687,319 +754,431 @@
       const month =
         String(
           date.getMonth() + 1
-        ).padStart(2, "0");
+        ).padStart(
+          2,
+          "0"
+        );
 
       const day =
         String(
           date.getDate()
-        ).padStart(2, "0");
+        ).padStart(
+          2,
+          "0"
+        );
 
-      return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
+      return `${year}-${month}-${day}`;
+
+    }
+
+
+    function getMonday(date){
+
+      const d =
+        new Date(date);
+
+      const day =
+        d.getDay();
+
+
+      const diff =
+        day === 0
+          ? -6
+          : 1 - day;
+
+
+      d.setDate(
+        d.getDate() + diff
       );
 
-    }
 
-
-    function formatDuration(
-      minutes
-    ) {
-
-      minutes =
-        Number(minutes) || 0;
-
-      const hours =
-        Math.floor(
-          minutes / 60
-        );
-
-      const mins =
-        minutes % 60;
-
-      if (hours === 0) {
-        return `${mins} min`;
-      }
-
-      if (mins === 0) {
-        return `${hours} hr`;
-      }
-
-      return `${hours} hr ${mins} min`;
+      return d;
 
     }
 
 
-    function escapeHTML(
-      value
-    ) {
-
-      return String(
-        value || ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-
-    }
-
-
-    function setMessage(
-      message,
-      type
-    ) {
-
-      const element =
-        document.getElementById(
-          "reportMessage"
-        );
-
-      element.textContent =
-        message;
-
-      element.className =
-        "report-message " +
-        (type || "");
-
-    }
-
-
-    function getDateRange() {
-
-      const type =
-        document.getElementById(
-          "reportType"
-        ).value;
+    function setPreset(
+      preset
+    ){
 
       const today =
-        getToday();
+        new Date();
+
 
       let from =
-        document.getElementById(
-          "reportFrom"
-        ).value;
+        new Date(
+          today
+        );
 
       let to =
-        document.getElementById(
-          "reportTo"
-        ).value;
+        new Date(
+          today
+        );
 
 
-      if (type === "daily") {
-
-        from = today;
-        to = today;
-
-      }
-
-
-      if (type === "weekly") {
+      if(
+        preset === "week"
+      ){
 
         from =
-          addDays(
-            today,
-            -6
+          getMonday(
+            today
           );
-
-        to = today;
 
       }
 
 
-      if (type === "monthly") {
+      if(
+        preset === "month"
+      ){
 
-        const date =
+        from =
           new Date(
-            today +
-            "T00:00:00"
+            today.getFullYear(),
+            today.getMonth(),
+            1
           );
 
-        date.setDate(1);
-
-        const year =
-          date.getFullYear();
-
-        const month =
-          String(
-            date.getMonth() + 1
-          ).padStart(2, "0");
-
-        from =
-          `${year}-${month}-01`;
-
-        to = today;
-
       }
 
 
-      return {
-        from,
-        to
-      };
+      document.getElementById(
+        "fromDate"
+      ).value =
+        formatDateLocal(
+          from
+        );
+
+
+      document.getElementById(
+        "toDate"
+      ).value =
+        formatDateLocal(
+          to
+        );
+
+
+      currentPreset =
+        preset;
+
+
+      document
+        .querySelectorAll(
+          ".preset-btn"
+        )
+        .forEach(
+          button => {
+
+            button.classList.toggle(
+              "active",
+              button.dataset.preset ===
+              preset
+            );
+
+          }
+        );
 
     }
 
 
-    function generateReport() {
+    /* =====================================================
+       LOAD DATABASE
+    ===================================================== */
 
-      const range =
-        getDateRange();
+    async function loadData(){
+
+      try{
+
+        allEntries =
+          await window.MyHomeGroup
+            .getEntries();
 
 
-      if (
-        !range.from ||
-        !range.to
-      ) {
+        allEntries =
+          allEntries || [];
 
-        setMessage(
-          "Please select From and To dates.",
-          "error"
+
+        populateFilters();
+
+        setPreset(
+          "today"
         );
 
-        return;
+        generateReport();
+
+      }catch(error){
+
+        console.error(
+          "Reports:",
+          error
+        );
+
+
+        document.getElementById(
+          "vehicleReport"
+        ).innerHTML =
+          `<div class="empty">
+             Unable to load report.
+             <br>
+             ${escapeHTML(
+               error.message
+             )}
+           </div>`;
 
       }
-
-
-      if (
-        range.from >
-        range.to
-      ) {
-
-        setMessage(
-          "From date cannot be after To date.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      const entries =
-        getEntries();
-
-
-      const filtered =
-        entries.filter(
-          function (entry) {
-
-            return (
-              entry.date >=
-              range.from &&
-              entry.date <=
-              range.to
-            );
-
-          }
-        );
-
-
-      renderSummary(
-        filtered
-      );
-
-      renderVehicleReport(
-        filtered
-      );
-
-      renderDriverReport(
-        filtered
-      );
-
-      renderContractorReport(
-        filtered
-      );
-
-
-      setMessage(
-        `${filtered.length} entries found.`,
-        "success"
-      );
 
     }
 
 
-    function renderSummary(
-      entries
-    ) {
+    /* =====================================================
+       FILTER OPTIONS
+    ===================================================== */
 
-      const vehicles =
-        new Set();
+    function addOptions(
+      elementId,
+      values
+    ){
 
-      const drivers =
-        new Set();
+      const select =
+        document.getElementById(
+          elementId
+        );
 
 
-      let duration = 0;
+      const unique =
+        [...new Set(
+          values.filter(
+            value =>
+              value &&
+              value !== "-"
+          )
+        )]
+        .sort();
 
 
-      entries.forEach(
-        function (entry) {
+      unique.forEach(
+        value => {
 
-          if (
-            entry.vehicleId
-          ) {
-
-            vehicles.add(
-              entry.vehicleId
+          const option =
+            document.createElement(
+              "option"
             );
 
-          } else if (
-            entry.vehicleNumber
-          ) {
+          option.value =
+            value;
 
-            vehicles.add(
-              entry.vehicleNumber
-            );
+          option.textContent =
+            value;
 
-          }
-
-
-          if (
-            entry.driverName
-          ) {
-
-            drivers.add(
-              entry.driverName
-            );
-
-          }
-
-
-          duration +=
-            Number(
-              entry.duration
-            ) || 0;
+          select.appendChild(
+            option
+          );
 
         }
       );
 
+    }
 
-      document.getElementById(
-        "summaryVehicles"
-      ).textContent =
-        vehicles.size;
+
+    function populateFilters(){
+
+      addOptions(
+        "vehicleFilter",
+        allEntries.map(
+          getVehicle
+        )
+      );
+
+
+      addOptions(
+        "typeFilter",
+        allEntries.map(
+          getType
+        )
+      );
+
+
+      addOptions(
+        "driverFilter",
+        allEntries.map(
+          getDriver
+        )
+      );
+
+
+      addOptions(
+        "contractorFilter",
+        allEntries.map(
+          getContractor
+        )
+      );
+
+    }
+
+
+    /* =====================================================
+       GET FILTERED DATA
+    ===================================================== */
+
+    function getFilteredEntries(){
+
+      const from =
+        document.getElementById(
+          "fromDate"
+        ).value;
+
+
+      const to =
+        document.getElementById(
+          "toDate"
+        ).value;
+
+
+      const vehicle =
+        document.getElementById(
+          "vehicleFilter"
+        ).value;
+
+
+      const type =
+        document.getElementById(
+          "typeFilter"
+        ).value;
+
+
+      const driver =
+        document.getElementById(
+          "driverFilter"
+        ).value;
+
+
+      const contractor =
+        document.getElementById(
+          "contractorFilter"
+        ).value;
+
+
+      return allEntries.filter(
+        entry => {
+
+          const date =
+            getDate(
+              entry
+            );
+
+
+          if(
+            from &&
+            date < from
+          ){
+
+            return false;
+
+          }
+
+
+          if(
+            to &&
+            date > to
+          ){
+
+            return false;
+
+          }
+
+
+          if(
+            vehicle &&
+            getVehicle(entry) !==
+            vehicle
+          ){
+
+            return false;
+
+          }
+
+
+          if(
+            type &&
+            getType(entry) !==
+            type
+          ){
+
+            return false;
+
+          }
+
+
+          if(
+            driver &&
+            getDriver(entry) !==
+            driver
+          ){
+
+            return false;
+
+          }
+
+
+          if(
+            contractor &&
+            getContractor(entry) !==
+            contractor
+          ){
+
+            return false;
+
+          }
+
+
+          return true;
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       SUMMARY
+    ===================================================== */
+
+    function updateSummary(
+      entries
+    ){
+
+      const vehicles =
+        new Set(
+          entries.map(
+            getVehicle
+          )
+        );
+
+
+      const running =
+        entries.filter(
+          entry =>
+            !getExit(entry)
+        ).length;
+
+
+      const duration =
+        entries.reduce(
+          (
+            total,
+            entry
+          ) => {
+
+            return (
+              total +
+              getDuration(
+                entry
+              )
+            );
+
+          },
+          0
+        );
 
 
       document.getElementById(
@@ -1009,383 +1188,502 @@
 
 
       document.getElementById(
-        "summaryDrivers"
+        "summaryVehicles"
       ).textContent =
-        drivers.size;
+        vehicles.size;
+
+
+      document.getElementById(
+        "summaryRunning"
+      ).textContent =
+        running;
 
 
       document.getElementById(
         "summaryDuration"
       ).textContent =
-        formatDuration(
-          duration
-        );
+        window.MyHomeGroup
+          .durationText(
+            duration
+          );
 
     }
 
 
-    function groupEntries(
-      entries,
-      keyFunction
-    ) {
+    /* =====================================================
+       GROUP DATA
+    ===================================================== */
 
-      const groups = {};
+    function groupBy(
+      entries,
+      getter
+    ){
+
+      const map =
+        new Map();
 
 
       entries.forEach(
-        function (entry) {
+        entry => {
 
           const key =
-            keyFunction(entry) ||
-            "Not specified";
+            getter(entry);
 
 
-          if (!groups[key]) {
+          if(
+            !map.has(key)
+          ){
 
-            groups[key] = {
-              name: key,
-              entries: 0,
-              duration: 0
-            };
+            map.set(
+              key,
+              {
+                name:key,
+                entries:0,
+                duration:0
+              }
+            );
 
           }
 
 
-          groups[key].entries += 1;
+          const item =
+            map.get(
+              key
+            );
 
 
-          groups[key].duration +=
-            Number(
-              entry.duration
-            ) || 0;
+          item.entries++;
+
+          item.duration +=
+            getDuration(
+              entry
+            );
 
         }
       );
 
 
-      return Object.values(
-        groups
-      ).sort(
-        function (a, b) {
-
-          return (
-            b.duration -
-            a.duration
-          );
-
-        }
+      return [
+        ...map.values()
+      ].sort(
+        (
+          a,
+          b
+        ) =>
+          b.duration -
+          a.duration
       );
 
     }
 
 
-    function createTable(
+    /* =====================================================
+       TABLE RENDER
+    ===================================================== */
+
+    function renderGroupTable(
+      containerId,
       rows,
-      firstColumn
-    ) {
+      firstHeader
+    ){
 
-      if (
+      const container =
+        document.getElementById(
+          containerId
+        );
+
+
+      if(
         rows.length === 0
-      ) {
+      ){
 
-        return `
-
-          <div class="empty-state">
-
-            <div class="empty-icon">
-              📭
-            </div>
-
-            <h3>
-              No data
-            </h3>
-
-            <p>
-              Selected period mein data available nahi hai.
-            </p>
-
+        container.innerHTML = `
+          <div class="empty">
+            No data found for selected filters.
           </div>
-
         `;
-
-      }
-
-
-      return `
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>
-                ${firstColumn}
-              </th>
-
-              <th>
-                Entries
-              </th>
-
-              <th>
-                Total Duration
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            ${rows
-              .map(
-                function (row) {
-
-                  return `
-
-                    <tr>
-
-                      <td>
-                        ${escapeHTML(
-                          row.name
-                        )}
-                      </td>
-
-                      <td>
-                        ${row.entries}
-                      </td>
-
-                      <td class="duration-cell">
-                        ${formatDuration(
-                          row.duration
-                        )}
-                      </td>
-
-                    </tr>
-
-                  `;
-
-                }
-              )
-              .join("")}
-
-          </tbody>
-
-        </table>
-
-      `;
-
-    }
-
-
-    function renderVehicleReport(
-      entries
-    ) {
-
-      const rows =
-        groupEntries(
-          entries,
-          function (entry) {
-
-            return (
-              entry.vehicleNumber ||
-              "Vehicle"
-            );
-
-          }
-        );
-
-
-      document.getElementById(
-        "vehicleReport"
-      ).innerHTML =
-        createTable(
-          rows,
-          "Vehicle"
-        );
-
-    }
-
-
-    function renderDriverReport(
-      entries
-    ) {
-
-      const rows =
-        groupEntries(
-          entries,
-          function (entry) {
-
-            return entry.driverName;
-
-          }
-        );
-
-
-      document.getElementById(
-        "driverReport"
-      ).innerHTML =
-        createTable(
-          rows,
-          "Driver"
-        );
-
-    }
-
-
-    function renderContractorReport(
-      entries
-    ) {
-
-      const rows =
-        groupEntries(
-          entries,
-          function (entry) {
-
-            return (
-              entry.contractor ||
-              "Not specified"
-            );
-
-          }
-        );
-
-
-      document.getElementById(
-        "contractorReport"
-      ).innerHTML =
-        createTable(
-          rows,
-          "Contractor"
-        );
-
-    }
-
-
-    function setTodayReport() {
-
-      const today =
-        getToday();
-
-
-      document.getElementById(
-        "reportType"
-      ).value =
-        "daily";
-
-
-      document.getElementById(
-        "reportFrom"
-      ).value =
-        today;
-
-
-      document.getElementById(
-        "reportTo"
-      ).value =
-        today;
-
-
-      generateReport();
-
-    }
-
-
-    function initializeReports() {
-
-      const currentUser =
-        getCurrentUser();
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
 
         return;
 
       }
 
 
-      const today =
-        getToday();
+      let html = `
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  ${firstHeader}
+                </th>
+
+                <th>
+                  Entries
+                </th>
+
+                <th>
+                  Total Duration
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+      `;
 
 
-      document.getElementById(
-        "reportFrom"
-      ).value =
-        today;
+      rows.forEach(
+        row => {
 
+          html += `
 
-      document.getElementById(
-        "reportTo"
-      ).value =
-        today;
+            <tr>
 
+              <td>
+                <strong>
+                  ${escapeHTML(
+                    row.name
+                  )}
+                </strong>
+              </td>
 
-      document.getElementById(
-        "reportType"
-      ).addEventListener(
-        "change",
-        function () {
+              <td>
+                ${row.entries}
+              </td>
 
-          const type =
-            this.value;
+              <td>
+                ${window.MyHomeGroup
+                  .durationText(
+                    row.duration
+                  )}
+              </td>
 
+            </tr>
 
-          if (
-            type !== "custom"
-          ) {
-
-            const range =
-              getDateRange();
-
-
-            document.getElementById(
-              "reportFrom"
-            ).value =
-              range.from;
-
-
-            document.getElementById(
-              "reportTo"
-            ).value =
-              range.to;
-
-          }
+          `;
 
         }
       );
 
 
-      document.getElementById(
-        "generateReport"
-      ).addEventListener(
+      html += `
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      `;
+
+
+      container.innerHTML =
+        html;
+
+    }
+
+
+    /* =====================================================
+       DAILY REPORT
+    ===================================================== */
+
+    function renderDailyReport(
+      entries
+    ){
+
+      const groups =
+        groupBy(
+          entries,
+          entry =>
+            getDate(
+              entry
+            )
+        );
+
+
+      const container =
+        document.getElementById(
+          "dailyReport"
+        );
+
+
+      if(
+        groups.length === 0
+      ){
+
+        container.innerHTML = `
+          <div class="empty">
+            No daily data found.
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      let html = `
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>Date</th>
+                <th>Entries</th>
+                <th>Duration</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+      `;
+
+
+      groups
+        .sort(
+          (
+            a,
+            b
+          ) =>
+            b.name.localeCompare(
+              a.name
+            )
+        )
+        .forEach(
+          row => {
+
+            html += `
+
+              <tr>
+
+                <td>
+                  <strong>
+                    ${escapeHTML(
+                      row.name
+                    )}
+                  </strong>
+                </td>
+
+                <td>
+                  ${row.entries}
+                </td>
+
+                <td>
+                  ${window.MyHomeGroup
+                    .durationText(
+                      row.duration
+                    )}
+                </td>
+
+              </tr>
+
+            `;
+
+          }
+        );
+
+
+      html += `
+            </tbody>
+          </table>
+        </div>
+      `;
+
+
+      container.innerHTML =
+        html;
+
+    }
+
+
+    /* =====================================================
+       GENERATE REPORT
+    ===================================================== */
+
+    function generateReport(){
+
+      const entries =
+        getFilteredEntries();
+
+
+      updateSummary(
+        entries
+      );
+
+
+      renderGroupTable(
+        "vehicleReport",
+        groupBy(
+          entries,
+          getVehicle
+        ),
+        "Vehicle"
+      );
+
+
+      renderGroupTable(
+        "driverReport",
+        groupBy(
+          entries,
+          getDriver
+        ),
+        "Driver"
+      );
+
+
+      renderGroupTable(
+        "contractorReport",
+        groupBy(
+          entries,
+          getContractor
+        ),
+        "Contractor"
+      );
+
+
+      renderDailyReport(
+        entries
+      );
+
+    }
+
+
+    /* =====================================================
+       PRESET BUTTONS
+    ===================================================== */
+
+    document
+      .querySelectorAll(
+        ".preset-btn"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              const preset =
+                button.dataset.preset;
+
+
+              if(
+                preset === "custom"
+              ){
+
+                currentPreset =
+                  "custom";
+
+
+                document
+                  .querySelectorAll(
+                    ".preset-btn"
+                  )
+                  .forEach(
+                    item => {
+
+                      item.classList.toggle(
+                        "active",
+                        item ===
+                        button
+                      );
+
+                    }
+                  );
+
+                return;
+
+              }
+
+
+              setPreset(
+                preset
+              );
+
+
+              generateReport();
+
+            }
+          );
+
+        }
+      );
+
+
+    /* =====================================================
+       APPLY
+    ===================================================== */
+
+    document
+      .getElementById(
+        "applyButton"
+      )
+      .addEventListener(
         "click",
         generateReport
       );
 
 
-      document.getElementById(
-        "todayReport"
-      ).addEventListener(
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    document
+      .getElementById(
+        "resetButton"
+      )
+      .addEventListener(
         "click",
-        setTodayReport
+        () => {
+
+          document.getElementById(
+            "vehicleFilter"
+          ).value = "";
+
+          document.getElementById(
+            "typeFilter"
+          ).value = "";
+
+          document.getElementById(
+            "driverFilter"
+          ).value = "";
+
+          document.getElementById(
+            "contractorFilter"
+          ).value = "";
+
+
+          setPreset(
+            "today"
+          );
+
+
+          generateReport();
+
+        }
       );
 
 
-      generateReport();
+    /* =====================================================
+       INIT
+    ===================================================== */
 
-    }
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializeReports
-    );
+    loadData();
 
   </script>
 
 </body>
-
 </html>
