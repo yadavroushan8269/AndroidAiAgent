@@ -1,663 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
-
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
   <title>Register - My Home Group</title>
-
-  <link
-    rel="stylesheet"
-    href="../style.css"
-  >
-
-  <style>
-    .password-wrap {
-      position: relative;
-    }
-
-    .password-wrap input {
-      padding-right: 48px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .password-toggle {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      font-size: 20px;
-      cursor: pointer;
-      padding: 8px;
-    }
-
-    .form-message {
-      min-height: 22px;
-      margin: 10px 0;
-      font-size: 14px;
-    }
-
-    .form-message.error {
-      color: #d93025;
-    }
-
-    .form-message.success {
-      color: #188038;
-    }
-
-    .auth-footer {
-      margin-top: 18px;
-      text-align: center;
-    }
-
-    .auth-footer a {
-      color: #d98b00;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .loading {
-      opacity: 0.7;
-      pointer-events: none;
-    }
-  </style>
+  <link rel="stylesheet" href="../style.css">
 </head>
-
 
 <body>
 
-  <main class="auth-page">
+<div class="auth-page">
 
-    <section class="auth-card">
+  <div class="auth-card">
 
-      <div class="auth-logo">
-        🚧
-      </div>
+    <div class="auth-logo">MH</div>
 
-      <h1>
-        Create Account
-      </h1>
+    <h1 class="auth-title">
+      Create Account
+    </h1>
 
-      <p class="auth-subtitle">
-        Register for My Home Group
-      </p>
+    <p class="auth-subtitle">
+      Register for My Home Group
+    </p>
 
+    <div id="registerMessage"></div>
 
-      <form
-        id="registerForm"
-        class="auth-form"
-        novalidate
-      >
+    <form id="registerForm" class="auth-form">
 
-        <!-- NAME -->
-
-        <label for="registerName">
+      <div class="form-group">
+        <label class="form-label">
           Full Name
         </label>
 
         <input
-          id="registerName"
-          name="name"
+          id="name"
           type="text"
-          placeholder="Enter your name"
-          autocomplete="name"
+          class="form-control"
+          placeholder="Enter your full name"
+          required
         >
+      </div>
 
-
-        <!-- EMAIL -->
-
-        <label for="registerEmail">
+      <div class="form-group">
+        <label class="form-label">
           Email
         </label>
 
         <input
-          id="registerEmail"
-          name="email"
+          id="email"
           type="email"
-          placeholder="Enter email"
-          autocomplete="email"
+          class="form-control"
+          placeholder="Enter email address"
+          required
         >
+      </div>
 
-
-        <!-- MOBILE -->
-
-        <label for="registerMobile">
+      <div class="form-group">
+        <label class="form-label">
           Mobile
         </label>
 
         <input
-          id="registerMobile"
-          name="mobile"
+          id="mobile"
           type="tel"
+          class="form-control"
           placeholder="Enter mobile number"
-          autocomplete="tel"
         >
+      </div>
 
-
-        <!-- COMPANY -->
-
-        <label for="registerCompany">
+      <div class="form-group">
+        <label class="form-label">
           Company / Site
         </label>
 
         <input
-          id="registerCompany"
-          name="company"
+          id="company"
           type="text"
-          placeholder="My Home Group"
+          class="form-control"
+          placeholder="Enter company or site"
+          required
         >
+      </div>
 
-
-        <!-- ROLE -->
-
-        <label for="registerRole">
-          Role
-        </label>
-
-        <select
-          id="registerRole"
-          name="role"
-        >
-
-          <option value="">
-            Select role
-          </option>
-
-          <option value="Security Guard">
-            Security Guard
-          </option>
-
-          <option value="Admin">
-            Admin
-          </option>
-
-        </select>
-
-
-        <!-- PASSWORD -->
-
-        <label for="registerPassword">
+      <div class="form-group">
+        <label class="form-label">
           Password
         </label>
 
-        <div class="password-wrap">
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          placeholder="Minimum 6 characters"
+          autocomplete="new-password"
+          required
+        >
+      </div>
 
-          <input
-            id="registerPassword"
-            name="password"
-            type="password"
-            placeholder="Create password"
-            autocomplete="new-password"
-          >
-
-          <button
-            id="togglePassword"
-            class="password-toggle"
-            type="button"
-            aria-label="Show password"
-          >
-            👁️
-          </button>
-
-        </div>
-
-
-        <!-- CONFIRM PASSWORD -->
-
-        <label for="registerConfirmPassword">
+      <div class="form-group">
+        <label class="form-label">
           Confirm Password
         </label>
 
-        <div class="password-wrap">
-
-          <input
-            id="registerConfirmPassword"
-            name="confirmPassword"
-            type="password"
-            placeholder="Confirm password"
-            autocomplete="new-password"
-          >
-
-          <button
-            id="toggleConfirmPassword"
-            class="password-toggle"
-            type="button"
-            aria-label="Show confirm password"
-          >
-            👁️
-          </button>
-
-        </div>
-
-
-        <!-- MESSAGE -->
-
-        <div
-          id="registerMessage"
-          class="form-message"
-        ></div>
-
-
-        <!-- SUBMIT -->
-
-        <button
-          id="registerButton"
-          class="primary-btn full-width"
-          type="submit"
+        <input
+          id="confirmPassword"
+          type="password"
+          class="form-control"
+          placeholder="Confirm password"
+          autocomplete="new-password"
+          required
         >
-          Create Account
-        </button>
-
-      </form>
-
-
-      <div class="auth-footer">
-
-        Already have an account?
-
-        <a href="/pages/login.html">
-          Login
-        </a>
-
       </div>
 
-    </section>
+      <button
+        id="registerButton"
+        type="submit"
+        class="btn btn-primary btn-block"
+      >
+        Create Account
+      </button>
 
-  </main>
+    </form>
 
+    <div class="auth-bottom">
 
-  <script>
+      Already have an account?
 
-    const form =
-      document.getElementById(
-        "registerForm"
-      );
+      <a href="/pages/login.html">
+        Login
+      </a>
 
-    const message =
-      document.getElementById(
-        "registerMessage"
-      );
+    </div>
 
-    const button =
-      document.getElementById(
-        "registerButton"
-      );
+  </div>
 
+</div>
 
-    function showMessage(
-      text,
-      type
-    ) {
+<script src="../app.js"></script>
 
-      message.textContent = text;
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
-      message.className =
-        "form-message " + type;
+  const form =
+    document.getElementById("registerForm");
 
-    }
+  const button =
+    document.getElementById("registerButton");
 
+  const message =
+    document.getElementById("registerMessage");
 
-    function togglePassword(
-      inputId,
-      buttonId
-    ) {
+  form.addEventListener(
+    "submit",
+    async (event) => {
 
-      const input =
-        document.getElementById(
-          inputId
+      event.preventDefault();
+
+      message.innerHTML = "";
+
+      const name =
+        document.getElementById("name")
+          .value.trim();
+
+      const email =
+        document.getElementById("email")
+          .value.trim();
+
+      const mobile =
+        document.getElementById("mobile")
+          .value.trim();
+
+      const company =
+        document.getElementById("company")
+          .value.trim();
+
+      const password =
+        document.getElementById("password")
+          .value;
+
+      const confirmPassword =
+        document.getElementById("confirmPassword")
+          .value;
+
+      if (
+        password.length < 6
+      ) {
+
+        MyHomeGroup.setFormMessage(
+          message,
+          "Password must contain at least 6 characters.",
+          "error"
         );
 
-      const button =
-        document.getElementById(
-          buttonId
-        );
-
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          if (
-            input.type === "password"
-          ) {
-
-            input.type = "text";
-
-            button.textContent = "🙈";
-
-          } else {
-
-            input.type = "password";
-
-            button.textContent = "👁️";
-
-          }
-
-        }
-      );
-
-    }
-
-
-    togglePassword(
-      "registerPassword",
-      "togglePassword"
-    );
-
-    togglePassword(
-      "registerConfirmPassword",
-      "toggleConfirmPassword"
-    );
-
-
-    form.addEventListener(
-      "submit",
-      async (event) => {
-
-        event.preventDefault();
-
-
-        const name =
-          document
-            .getElementById(
-              "registerName"
-            )
-            .value
-            .trim();
-
-
-        const email =
-          document
-            .getElementById(
-              "registerEmail"
-            )
-            .value
-            .trim();
-
-
-        const mobile =
-          document
-            .getElementById(
-              "registerMobile"
-            )
-            .value
-            .trim();
-
-
-        const company =
-          document
-            .getElementById(
-              "registerCompany"
-            )
-            .value
-            .trim();
-
-
-        const role =
-          document
-            .getElementById(
-              "registerRole"
-            )
-            .value;
-
-
-        const password =
-          document
-            .getElementById(
-              "registerPassword"
-            )
-            .value;
-
-
-        const confirmPassword =
-          document
-            .getElementById(
-              "registerConfirmPassword"
-            )
-            .value;
-
-
-        showMessage(
-          "",
-          ""
-        );
-
-
-        if (!name) {
-
-          showMessage(
-            "Please enter your name.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (!email) {
-
-          showMessage(
-            "Please enter your email.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (!email.includes("@")) {
-
-          showMessage(
-            "Please enter a valid email.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (!mobile) {
-
-          showMessage(
-            "Please enter your mobile number.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (!company) {
-
-          showMessage(
-            "Please enter company/site.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (!role) {
-
-          showMessage(
-            "Please select your role.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (password.length < 6) {
-
-          showMessage(
-            "Password must be at least 6 characters.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (
-          password !==
-          confirmPassword
-        ) {
-
-          showMessage(
-            "Passwords do not match.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        button.disabled = true;
-
-        button.classList.add(
-          "loading"
-        );
-
-        button.textContent =
-          "Creating Account...";
-
-
-        try {
-
-          const response =
-            await fetch(
-              "/api/auth/register",
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "application/json"
-                },
-
-                body:
-                  JSON.stringify({
-                    name,
-                    email,
-                    mobile,
-                    company,
-                    role,
-                    password
-                  })
-              }
-            );
-
-
-          const data =
-            await response.json();
-
-
-          if (!response.ok) {
-
-            showMessage(
-              data.message ||
-              "Registration failed.",
-              "error"
-            );
-
-            return;
-
-          }
-
-
-          /*
-            Store only the authentication
-            token and safe user information.
-
-            Password is NOT stored here.
-          */
-
-          localStorage.setItem(
-            "hyma_auth_token",
-            data.token
-          );
-
-
-          localStorage.setItem(
-            "hyma_current_user",
-            JSON.stringify(
-              data.user
-            )
-          );
-
-
-          showMessage(
-            "Account created successfully. Opening dashboard...",
-            "success"
-          );
-
-
-          setTimeout(
-            () => {
-
-              window.location.href =
-                "/pages/dashboard.html";
-
-            },
-            800
-          );
-
-
-        } catch (error) {
-
-          console.error(
-            "Registration error:",
-            error
-          );
-
-
-          showMessage(
-            "Unable to connect to server. Please try again.",
-            "error"
-          );
-
-
-        } finally {
-
-          button.disabled = false;
-
-          button.classList.remove(
-            "loading"
-          );
-
-          button.textContent =
-            "Create Account";
-
-        }
-
+        return;
       }
-    );
 
-  </script>
+      if (
+        password !== confirmPassword
+      ) {
+
+        MyHomeGroup.setFormMessage(
+          message,
+          "Passwords do not match.",
+          "error"
+        );
+
+        return;
+      }
+
+      try {
+
+        MyHomeGroup.setButtonLoading(
+          button,
+          true,
+          "Creating account..."
+        );
+
+        const result =
+          await MyHomeGroup.registerUser({
+            name,
+            email,
+            mobile,
+            company,
+            password
+          });
+
+        if (result.token) {
+
+          window.location.href =
+            "/pages/dashboard.html";
+
+          return;
+        }
+
+        MyHomeGroup.setFormMessage(
+          message,
+          "Account created. Please login.",
+          "success"
+        );
+
+        setTimeout(() => {
+          window.location.href =
+            "/pages/login.html";
+        }, 1000);
+
+      } catch (error) {
+
+        MyHomeGroup.setFormMessage(
+          message,
+          error.message ||
+            "Registration failed.",
+          "error"
+        );
+
+        MyHomeGroup.setButtonLoading(
+          button,
+          false
+        );
+      }
+
+    }
+  );
+
+});
+</script>
 
 </body>
-
 </html>
