@@ -1,5 +1,5 @@
 {
-  "name": "hyma-rmc-kokapet",
+  "name": "my-home-group",
   "version": "1.0.0",
   "description": "My Home Group Vehicle Duration Management Website",
   "main": "server.js",
@@ -8,13 +8,11 @@
     "dev": "node server.js"
   },
   "keywords": [
+    "my-home-group",
     "vehicle",
     "duration",
     "construction",
-    "hyma",
-    "rmc",
-    "kokapet",
-    "my-home-group"
+    "vehicle-management"
   ],
   "author": "My Home Group",
   "license": "MIT",
