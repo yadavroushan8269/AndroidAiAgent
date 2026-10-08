@@ -1,7 +1,7 @@
 {
   "name": "hyma-rmc-kokapet",
   "version": "1.0.0",
-  "description": "Hyma RMC Kokapet Vehicle Duration Management Website",
+  "description": "My Home Group Vehicle Duration Management Website",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,14 +13,18 @@
     "construction",
     "hyma",
     "rmc",
-    "kokapet"
+    "kokapet",
+    "my-home-group"
   ],
-  "author": "Hyma RMC Kokapet",
+  "author": "My Home Group",
   "license": "MIT",
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
   }
 }
