@@ -1,71 +1,71 @@
-Hyma RMC Kokapet
+# My Home Group
 
 Vehicle Duration Management Website for construction site vehicle entry, exit and duration tracking.
 
-Project
+## Features
 
-Name: Hyma RMC Kokapet
-Type: Web Application
-Backend: Node.js + Express
-Deployment: GitHub + Render
-
-Current Features
-
-- Welcome screen
-- Login UI
-- Register UI
-- Responsive mobile-first design
-- Vehicle duration management foundation
-
-Planned Features
-
-- User authentication
-- Admin and Security Guard roles
+- User registration and login
+- Security Guard authentication
+- Admin role support
 - Vehicle management
-- Vehicle entry and exit
+- Vehicle type management
+- Driver and contractor details
+- Vehicle entry and exit tracking
 - Automatic duration calculation
-- Multiple entries per vehicle per day
-- Calendar
-- Daily / weekly / monthly reports
+- Multiple vehicle entries per day
+- Calendar view
+- Daily, weekly and monthly reports
 - Vehicle-wise reports
 - Driver-wise reports
-- PDF / Excel export
-- User profile
+- Contractor-wise reports
 - Notifications
+- User profile
+- Password change
+- Responsive mobile-friendly interface
+- PostgreSQL database
+- JWT authentication
 
-Project Structure
+## Vehicle Types
 
-Hyma-RMC-Kokapet/
+The application supports common construction-site vehicles such as:
+
+- TM / Transit Mixer
+- Truck
+- Dumper
+- Excavator
+- JCB
+- Loader
+- Crane
+- Tractor
+- Water Tanker
+- Other
+
+## Project Structure
+
+```text
+My-Home-Group/
 │
 ├── public/
 │   ├── index.html
 │   ├── style.css
-│   └── app.js
+│   ├── app.js
+│   │
+│   ├── assets/
+│   │   ├── logo.png
+│   │   └── icons/
+│   │
+│   └── pages/
+│       ├── login.html
+│       ├── register.html
+│       ├── dashboard.html
+│       ├── vehicles.html
+│       ├── add-entry.html
+│       ├── calendar.html
+│       ├── reports.html
+│       ├── profile.html
+│       └── notifications.html
 │
 ├── server.js
 ├── package.json
+├── .gitignore
 └── README.md
-
-Run Locally
-
-Install dependencies:
-
-npm install
-
-Start the website:
-
-npm start
-
-The website will run on:
-
-http://localhost:3000
-
-Render
-
-Build Command:
-
-npm install
-
-Start Command:
-
-npm start
