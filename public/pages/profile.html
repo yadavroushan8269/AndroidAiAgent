@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -9,492 +9,197 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
-  <title>Profile - My-Home-Group</title>
+  <title>Profile - My Home Group</title>
 
   <link
     rel="stylesheet"
     href="../style.css"
   >
 
-  <style>
-    .profile-page {
-      min-height: 100vh;
-      padding: 20px 16px 100px;
-      background: #f5f7fa;
-    }
-
-    .profile-container {
-      width: 100%;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .profile-header {
-      margin-bottom: 18px;
-    }
-
-    .profile-header h1 {
-      margin: 0 0 6px;
-      font-size: 26px;
-    }
-
-    .profile-header p {
-      margin: 0;
-      color: #6b7280;
-    }
-
-    .profile-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-    }
-
-    .profile-top {
-      text-align: center;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #eceff2;
-      margin-bottom: 18px;
-    }
-
-    .profile-avatar {
-      width: 78px;
-      height: 78px;
-      margin: 0 auto 10px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff3d5;
-      border: 3px solid #f5a400;
-      font-size: 35px;
-    }
-
-    .profile-name {
-      font-size: 21px;
-      font-weight: 800;
-      color: #222;
-    }
-
-    .profile-role {
-      display: inline-block;
-      margin-top: 5px;
-      padding: 5px 10px;
-      border-radius: 20px;
-      background: #f3f4f6;
-      color: #666;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .field-group {
-      display: grid;
-      gap: 7px;
-      margin-bottom: 14px;
-    }
-
-    .field-group label {
-      font-size: 13px;
-      font-weight: 700;
-      color: #333;
-    }
-
-    .field-group input,
-    .field-group select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px 12px;
-      border: 1px solid #d5dbe0;
-      border-radius: 11px;
-      background: #fff;
-      color: #222;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .field-group input:focus,
-    .field-group select:focus {
-      border-color: #f5a400;
-      box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.12);
-    }
-
-    .field-group input[readonly] {
-      background: #f3f4f6;
-      color: #777;
-    }
-
-    .section-title {
-      margin: 0 0 15px;
-      font-size: 18px;
-    }
-
-    .profile-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .secondary-btn {
-      border: 1px solid #d5d9df;
-      background: #fff;
-      color: #333;
-      border-radius: 11px;
-      padding: 13px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .danger-btn {
-      width: 100%;
-      border: 1px solid #e1a6a6;
-      background: #fff;
-      color: #c62828;
-      border-radius: 11px;
-      padding: 13px;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .form-message {
-      min-height: 20px;
-      margin-bottom: 10px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .form-message.success {
-      color: #16803c;
-    }
-
-    .form-message.error {
-      color: #c62828;
-    }
-
-    .account-info {
-      display: grid;
-      gap: 10px;
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 11px 0;
-      border-bottom: 1px solid #edf0f2;
-      font-size: 14px;
-    }
-
-    .info-row:last-child {
-      border-bottom: none;
-    }
-
-    .info-label {
-      color: #777;
-      font-weight: 600;
-    }
-
-    .info-value {
-      color: #222;
-      font-weight: 700;
-      text-align: right;
-      word-break: break-word;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      background: #fff;
-      border-top: 1px solid #ddd;
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .bottom-nav a {
-      text-decoration: none;
-      color: #555;
-      text-align: center;
-      padding: 9px 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .bottom-nav a span {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-
-    .bottom-nav a.active {
-      color: #d88900;
-    }
-
-    .add-main-btn {
-      width: 46px;
-      height: 46px;
-      margin: -16px auto 0;
-      border-radius: 50%;
-      background: #f5a400;
-      color: #fff !important;
-      border: 4px solid #fff;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-    }
-
-    .add-main-btn span {
-      margin: 0 !important;
-      font-size: 26px !important;
-    }
-
-    @media (max-width: 500px) {
-      .profile-page {
-        padding: 16px 12px 100px;
-      }
-
-      .profile-header h1 {
-        font-size: 23px;
-      }
-
-      .profile-card {
-        padding: 16px;
-      }
-
-      .profile-buttons {
-        grid-template-columns: 1fr;
-      }
-
-      .info-row {
-        flex-direction: column;
-        gap: 3px;
-      }
-
-      .info-value {
-        text-align: left;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
-  <main class="profile-page">
+<header class="app-header">
 
-    <div class="profile-container">
+  <div class="app-header-inner">
 
-      <header class="profile-header">
+    <a
+      href="/pages/dashboard.html"
+      class="app-brand"
+    >
 
-        <h1>👤 Profile</h1>
+      <div class="app-brand-mark">
+        MH
+      </div>
 
-        <p>
-          Manage your My-Home-Group account
-        </p>
+      <div class="app-brand-text">
 
-      </header>
+        <div class="app-brand-name">
+          My Home Group
+        </div>
 
+        <div class="app-brand-subtitle">
+          Vehicle Duration Management
+        </div>
 
-      <!-- PROFILE -->
+      </div>
 
-      <section class="profile-card">
+    </a>
 
-        <div class="profile-top">
+    <div class="header-actions">
 
-          <div class="profile-avatar">
-            👤
-          </div>
+      <a
+        href="/pages/notifications.html"
+        class="header-icon-btn"
+      >
+        🔔
+        <span
+          class="notification-badge hidden"
+          data-notification-count
+        ></span>
+      </a>
 
-          <div
-            id="profileName"
-            class="profile-name"
-          >
-            User
-          </div>
+      <a
+        href="/pages/profile.html"
+        class="header-icon-btn"
+      >
+        👤
+      </a>
 
-          <div
-            id="profileRole"
-            class="profile-role"
-          >
-            User
-          </div>
+    </div>
+
+  </div>
+
+</header>
+
+<div class="app-layout">
+
+  <aside class="sidebar">
+
+    <nav class="sidebar-nav">
+
+      <a
+        href="/pages/dashboard.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🏠</span>
+        Dashboard
+      </a>
+
+      <a
+        href="/pages/vehicles.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🚛</span>
+        Vehicles
+      </a>
+
+      <a
+        href="/pages/add-entry.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">➕</span>
+        Add Entry
+      </a>
+
+      <a
+        href="/pages/calendar.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📅</span>
+        Calendar
+      </a>
+
+      <a
+        href="/pages/reports.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">📊</span>
+        Reports
+      </a>
+
+      <a
+        href="/pages/notifications.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">🔔</span>
+        Notifications
+      </a>
+
+      <a
+        href="/pages/profile.html"
+        class="nav-link active"
+      >
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
+
+      <a
+        href="#"
+        class="nav-link logout-btn"
+      >
+        <span class="nav-icon">🚪</span>
+        Logout
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <main class="main-content">
+
+    <div class="content-inner">
+
+      <div class="page-heading">
+
+        <div class="page-heading-text">
+
+          <h1>
+            My Profile
+          </h1>
+
+          <p>
+            Manage your account information
+          </p>
 
         </div>
 
+      </div>
 
-        <h2 class="section-title">
-          Personal Information
-        </h2>
+      <section class="card">
 
-
-        <form
-          id="profileForm"
-          novalidate
-        >
-
-          <div class="field-group">
-
-            <label for="profileNameInput">
-              Full Name
-            </label>
-
-            <input
-              id="profileNameInput"
-              type="text"
-              placeholder="Your name"
-            >
-
-          </div>
-
-
-          <div class="field-group">
-
-            <label for="profileEmail">
-              Email
-            </label>
-
-            <input
-              id="profileEmail"
-              type="email"
-              placeholder="Your email"
-              readonly
-            >
-
-          </div>
-
-
-          <div class="field-group">
-
-            <label for="profileMobile">
-              Mobile
-            </label>
-
-            <input
-              id="profileMobile"
-              type="tel"
-              placeholder="Your mobile"
-            >
-
-          </div>
-
-
-          <div class="field-group">
-
-            <label for="profileCompany">
-              Company / Site
-            </label>
-
-            <input
-              id="profileCompany"
-              type="text"
-              placeholder="Company or site"
-            >
-
-          </div>
-
-
-          <div class="field-group">
-
-            <label for="profileRoleInput">
-              Role
-            </label>
-
-            <select
-              id="profileRoleInput"
-            >
-
-              <option value="Security Guard">
-                Security Guard
-              </option>
-
-              <option value="Admin">
-                Admin
-              </option>
-
-            </select>
-
-          </div>
-
+        <div class="profile-header">
 
           <div
-            id="profileMessage"
-            class="form-message"
-          ></div>
-
-
-          <div class="profile-buttons">
-
-            <button
-              type="submit"
-              class="primary-btn"
-            >
-              Save Profile
-            </button>
-
-            <button
-              type="button"
-              class="secondary-btn"
-              id="resetProfile"
-            >
-              Reset
-            </button>
-
+            class="profile-avatar"
+            data-user-initials
+          >
+            U
           </div>
 
-        </form>
+          <div>
 
-      </section>
+            <div
+              class="profile-name"
+              data-user-name
+            >
+              User
+            </div>
 
-
-      <!-- ACCOUNT INFO -->
-
-      <section class="profile-card">
-
-        <h2 class="section-title">
-          Account Information
-        </h2>
-
-        <div class="account-info">
-
-          <div class="info-row">
-
-            <span class="info-label">
-              Account ID
-            </span>
-
-            <span
-              id="accountId"
-              class="info-value"
+            <div
+              class="profile-meta"
+              data-user-email
             >
               -
-            </span>
+            </div>
 
-          </div>
-
-
-          <div class="info-row">
-
-            <span class="info-label">
-              Account Created
-            </span>
-
-            <span
-              id="accountCreated"
-              class="info-value"
+            <div
+              class="profile-meta"
+              data-user-role
             >
-              -
-            </span>
+              Security Guard
+            </div>
 
           </div>
 
@@ -502,97 +207,237 @@
 
       </section>
 
+      <section
+        class="card"
+        style="margin-top:18px;"
+      >
 
-      <!-- CHANGE PASSWORD -->
+        <div class="card-header">
 
-      <section class="profile-card">
+          <div>
 
-        <h2 class="section-title">
-          🔐 Change Password
-        </h2>
+            <div class="card-title">
+              Profile Information
+            </div>
 
-        <form
-          id="passwordForm"
-          novalidate
-        >
-
-          <div class="field-group">
-
-            <label for="currentPassword">
-              Current Password
-            </label>
-
-            <input
-              id="currentPassword"
-              type="password"
-              placeholder="Current password"
-              autocomplete="current-password"
-            >
+            <div class="card-subtitle">
+              Update your basic information
+            </div>
 
           </div>
 
+        </div>
 
-          <div class="field-group">
+        <div class="card-body">
 
-            <label for="newPassword">
-              New Password
-            </label>
+          <div id="profileMessage"></div>
 
-            <input
-              id="newPassword"
-              type="password"
-              placeholder="New password"
-              autocomplete="new-password"
-            >
+          <form id="profileForm">
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Name
+                </label>
+
+                <input
+                  id="profileName"
+                  type="text"
+                  class="form-control"
+                  required
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Email
+                </label>
+
+                <input
+                  id="profileEmail"
+                  type="email"
+                  class="form-control"
+                  readonly
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Mobile
+                </label>
+
+                <input
+                  id="profileMobile"
+                  type="tel"
+                  class="form-control"
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Company / Site
+                </label>
+
+                <input
+                  id="profileCompany"
+                  type="text"
+                  class="form-control"
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Role
+                </label>
+
+                <input
+                  id="profileRole"
+                  type="text"
+                  class="form-control"
+                  readonly
+                >
+
+              </div>
+
+            </div>
+
+            <div class="form-actions">
+
+              <button
+                id="saveProfile"
+                type="submit"
+                class="btn btn-primary"
+              >
+                Save Changes
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </section>
+
+      <section
+        class="card"
+        style="margin-top:18px;"
+      >
+
+        <div class="card-header">
+
+          <div>
+
+            <div class="card-title">
+              Change Password
+            </div>
+
+            <div class="card-subtitle">
+              Keep your account secure
+            </div>
 
           </div>
 
+        </div>
 
-          <div class="field-group">
+        <div class="card-body">
 
-            <label for="confirmNewPassword">
-              Confirm New Password
-            </label>
+          <div id="passwordMessage"></div>
 
-            <input
-              id="confirmNewPassword"
-              type="password"
-              placeholder="Confirm new password"
-              autocomplete="new-password"
-            >
+          <form id="passwordForm">
 
-          </div>
+            <div class="form-grid">
 
+              <div class="form-group full">
 
-          <div
-            id="passwordMessage"
-            class="form-message"
-          ></div>
+                <label class="form-label">
+                  Current Password
+                </label>
 
+                <input
+                  id="currentPassword"
+                  type="password"
+                  class="form-control"
+                  required
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  New Password
+                </label>
+
+                <input
+                  id="newPassword"
+                  type="password"
+                  class="form-control"
+                  required
+                >
+
+              </div>
+
+              <div class="form-group">
+
+                <label class="form-label">
+                  Confirm New Password
+                </label>
+
+                <input
+                  id="confirmNewPassword"
+                  type="password"
+                  class="form-control"
+                  required
+                >
+
+              </div>
+
+            </div>
+
+            <div class="form-actions">
+
+              <button
+                id="changePasswordButton"
+                type="submit"
+                class="btn btn-primary"
+              >
+                Change Password
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </section>
+
+      <section
+        class="card"
+        style="margin-top:18px;"
+      >
+
+        <div class="card-body">
 
           <button
-            type="submit"
-            class="primary-btn"
+            id="logoutButton"
+            class="btn btn-danger btn-block"
           >
-            Change Password
+            Logout
           </button>
 
-        </form>
-
-      </section>
-
-
-      <!-- LOGOUT -->
-
-      <section class="profile-card">
-
-        <button
-          id="logoutBtn"
-          type="button"
-          class="danger-btn"
-        >
-          🚪 Logout
-        </button>
+        </div>
 
       </section>
 
@@ -600,623 +445,316 @@
 
   </main>
 
+</div>
 
-  <!-- BOTTOM NAV -->
+<nav class="mobile-bottom-nav">
 
-  <nav class="bottom-nav">
+  <div class="mobile-nav-inner">
 
-    <a href="/pages/dashboard.html">
-      <span>🏠</span>
+    <a
+      href="/pages/dashboard.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🏠</span>
       Home
     </a>
 
-    <a href="/pages/vehicles.html">
-      <span>🚛</span>
+    <a
+      href="/pages/vehicles.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">🚛</span>
       Vehicles
     </a>
 
     <a
       href="/pages/add-entry.html"
-      class="add-main-btn"
+      class="mobile-nav-item add"
     >
-      <span>+</span>
+      <span class="mobile-nav-add">+</span>
+      Entry
     </a>
 
-    <a href="/pages/calendar.html">
-      <span>📅</span>
+    <a
+      href="/pages/calendar.html"
+      class="mobile-nav-item"
+    >
+      <span class="mobile-nav-icon">📅</span>
       Calendar
     </a>
 
     <a
       href="/pages/profile.html"
-      class="active"
+      class="mobile-nav-item active"
     >
-      <span>👤</span>
+      <span class="mobile-nav-icon">👤</span>
       You
     </a>
 
-  </nav>
+  </div>
 
+</nav>
 
-  <script>
+<script src="../app.js"></script>
 
-    const STORAGE = {
-      users: "hyma_users",
-      currentUser: "hyma_current_user"
-    };
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
 
+  const profileMessage =
+    document.getElementById(
+      "profileMessage"
+    );
 
-    function readJSON(
-      key,
-      fallback
-    ) {
+  const passwordMessage =
+    document.getElementById(
+      "passwordMessage"
+    );
 
-      try {
+  async function loadProfile() {
 
-        const value =
-          localStorage.getItem(key);
+    try {
 
-        return value
-          ? JSON.parse(value)
-          : fallback;
-
-      } catch (error) {
-
-        return fallback;
-
-      }
-
-    }
-
-
-    function writeJSON(
-      key,
-      value
-    ) {
-
-      localStorage.setItem(
-        key,
-        JSON.stringify(value)
-      );
-
-    }
-
-
-    function getUsers() {
-
-      return readJSON(
-        STORAGE.users,
-        []
-      );
-
-    }
-
-
-    function getCurrentUser() {
-
-      return readJSON(
-        STORAGE.currentUser,
-        null
-      );
-
-    }
-
-
-    function escapeHTML(
-      value
-    ) {
-
-      return String(
-        value || ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-
-    }
-
-
-    function showMessage(
-      elementId,
-      message,
-      type
-    ) {
-
-      const element =
-        document.getElementById(
-          elementId
-        );
-
-      element.textContent =
-        message;
-
-      element.className =
-        "form-message " +
-        (type || "");
-
-    }
-
-
-    function fillProfile(
-      user
-    ) {
+      const user =
+        await MyHomeGroup.getMe();
 
       document.getElementById(
         "profileName"
-      ).textContent =
-        user.name ||
-        "User";
-
-
-      document.getElementById(
-        "profileRole"
-      ).textContent =
-        user.role ||
-        "User";
-
-
-      document.getElementById(
-        "profileNameInput"
       ).value =
-        user.name ||
-        "";
-
+        user.name || "";
 
       document.getElementById(
         "profileEmail"
       ).value =
-        user.email ||
-        "";
-
+        user.email || "";
 
       document.getElementById(
         "profileMobile"
       ).value =
-        user.mobile ||
-        "";
-
+        user.mobile || "";
 
       document.getElementById(
         "profileCompany"
       ).value =
-        user.company ||
-        "";
-
+        user.company || "";
 
       document.getElementById(
-        "profileRoleInput"
+        "profileRole"
       ).value =
-        user.role ||
-        "Security Guard";
+        user.role || "Security Guard";
 
+      MyHomeGroup.updateUserDisplay();
 
-      document.getElementById(
-        "accountId"
-      ).textContent =
-        user.id ||
-        "-";
+    } catch (error) {
 
-
-      document.getElementById(
-        "accountCreated"
-      ).textContent =
-        user.createdAt
-          ? new Date(
-              user.createdAt
-            ).toLocaleDateString()
-          : "-";
-
-    }
-
-
-    function saveProfile(
-      event
-    ) {
-
-      event.preventDefault();
-
-
-      const currentUser =
-        getCurrentUser();
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      const name =
-        document.getElementById(
-          "profileNameInput"
-        ).value.trim();
-
-
-      const mobile =
-        document.getElementById(
-          "profileMobile"
-        ).value.trim();
-
-
-      const company =
-        document.getElementById(
-          "profileCompany"
-        ).value.trim();
-
-
-      const role =
-        document.getElementById(
-          "profileRoleInput"
-        ).value;
-
-
-      if (!name) {
-
-        showMessage(
-          "profileMessage",
-          "Please enter your name.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      const users =
-        getUsers();
-
-
-      const index =
-        users.findIndex(
-          function (user) {
-
-            return (
-              user.id ===
-              currentUser.id
-            );
-
-          }
-        );
-
-
-      if (index === -1) {
-
-        showMessage(
-          "profileMessage",
-          "User account not found.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      users[index] = {
-        ...users[index],
-        name: name,
-        mobile: mobile,
-        company: company,
-        role: role
-      };
-
-
-      writeJSON(
-        STORAGE.users,
-        users
-      );
-
-
-      writeJSON(
-        STORAGE.currentUser,
-        users[index]
-      );
-
-
-      fillProfile(
-        users[index]
-      );
-
-
-      showMessage(
-        "profileMessage",
-        "Profile updated successfully.",
-        "success"
+      MyHomeGroup.showToast(
+        error.message,
+        "error"
       );
 
     }
 
+  }
 
-    function resetProfile() {
+  document
+    .getElementById("profileForm")
+    .addEventListener(
+      "submit",
+      async event => {
 
-      const user =
-        getCurrentUser();
+        event.preventDefault();
 
-      if (user) {
+        const button =
+          document.getElementById(
+            "saveProfile"
+          );
 
-        fillProfile(
-          user
-        );
+        try {
 
-      }
+          MyHomeGroup.setButtonLoading(
+            button,
+            true,
+            "Saving..."
+          );
 
-      showMessage(
-        "profileMessage",
-        "",
-        ""
-      );
+          await MyHomeGroup.updateProfile({
 
-    }
+            name:
+              document
+                .getElementById(
+                  "profileName"
+                )
+                .value
+                .trim(),
 
+            mobile:
+              document
+                .getElementById(
+                  "profileMobile"
+                )
+                .value
+                .trim(),
 
-    function changePassword(
-      event
-    ) {
+            company:
+              document
+                .getElementById(
+                  "profileCompany"
+                )
+                .value
+                .trim()
 
-      event.preventDefault();
+          });
 
+          MyHomeGroup.setFormMessage(
+            profileMessage,
+            "Profile updated successfully.",
+            "success"
+          );
 
-      const currentUser =
-        getCurrentUser();
+          MyHomeGroup.updateUserDisplay();
 
+          MyHomeGroup.showToast(
+            "Profile updated.",
+            "success"
+          );
 
-      if (!currentUser) {
+        } catch (error) {
 
-        window.location.href =
-          "/pages/login.html";
+          MyHomeGroup.setFormMessage(
+            profileMessage,
+            error.message,
+            "error"
+          );
 
-        return;
+        } finally {
 
-      }
+          MyHomeGroup.setButtonLoading(
+            button,
+            false
+          );
 
-
-      const currentPassword =
-        document.getElementById(
-          "currentPassword"
-        ).value;
-
-
-      const newPassword =
-        document.getElementById(
-          "newPassword"
-        ).value;
-
-
-      const confirmPassword =
-        document.getElementById(
-          "confirmNewPassword"
-        ).value;
-
-
-      if (!currentPassword) {
-
-        showMessage(
-          "passwordMessage",
-          "Enter your current password.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (!newPassword) {
-
-        showMessage(
-          "passwordMessage",
-          "Enter a new password.",
-          "error"
-        );
-
-        return;
+        }
 
       }
-
-
-      if (
-        newPassword.length < 6
-      ) {
-
-        showMessage(
-          "passwordMessage",
-          "New password must be at least 6 characters.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (
-        newPassword !==
-        confirmPassword
-      ) {
-
-        showMessage(
-          "passwordMessage",
-          "New passwords do not match.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      const users =
-        getUsers();
-
-
-      const index =
-        users.findIndex(
-          function (user) {
-
-            return (
-              user.id ===
-              currentUser.id
-            );
-
-          }
-        );
-
-
-      if (index === -1) {
-
-        showMessage(
-          "passwordMessage",
-          "User account not found.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      if (
-        users[index].password !==
-        currentPassword
-      ) {
-
-        showMessage(
-          "passwordMessage",
-          "Current password is incorrect.",
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      users[index].password =
-        newPassword;
-
-
-      writeJSON(
-        STORAGE.users,
-        users
-      );
-
-
-      writeJSON(
-        STORAGE.currentUser,
-        users[index]
-      );
-
-
-      document.getElementById(
-        "passwordForm"
-      ).reset();
-
-
-      showMessage(
-        "passwordMessage",
-        "Password changed successfully.",
-        "success"
-      );
-
-    }
-
-
-    function logout() {
-
-      localStorage.removeItem(
-        STORAGE.currentUser
-      );
-
-      window.location.href =
-        "/pages/login.html";
-
-    }
-
-
-    function initializeProfile() {
-
-      const user =
-        getCurrentUser();
-
-
-      if (!user) {
-
-        window.location.href =
-          "/pages/login.html";
-
-        return;
-
-      }
-
-
-      fillProfile(
-        user
-      );
-
-
-      document.getElementById(
-        "profileForm"
-      ).addEventListener(
-        "submit",
-        saveProfile
-      );
-
-
-      document.getElementById(
-        "resetProfile"
-      ).addEventListener(
-        "click",
-        resetProfile
-      );
-
-
-      document.getElementById(
-        "passwordForm"
-      ).addEventListener(
-        "submit",
-        changePassword
-      );
-
-
-      document.getElementById(
-        "logoutBtn"
-      ).addEventListener(
-        "click",
-        logout
-      );
-
-    }
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializeProfile
     );
 
-  </script>
+  document
+    .getElementById("passwordForm")
+    .addEventListener(
+      "submit",
+      async event => {
+
+        event.preventDefault();
+
+        const currentPassword =
+          document.getElementById(
+            "currentPassword"
+          ).value;
+
+        const newPassword =
+          document.getElementById(
+            "newPassword"
+          ).value;
+
+        const confirmPassword =
+          document.getElementById(
+            "confirmNewPassword"
+          ).value;
+
+        if (
+          newPassword.length < 6
+        ) {
+
+          MyHomeGroup.setFormMessage(
+            passwordMessage,
+            "New password must contain at least 6 characters.",
+            "error"
+          );
+
+          return;
+        }
+
+        if (
+          newPassword !==
+          confirmPassword
+        ) {
+
+          MyHomeGroup.setFormMessage(
+            passwordMessage,
+            "New passwords do not match.",
+            "error"
+          );
+
+          return;
+        }
+
+        const button =
+          document.getElementById(
+            "changePasswordButton"
+          );
+
+        try {
+
+          MyHomeGroup.setButtonLoading(
+            button,
+            true,
+            "Changing..."
+          );
+
+          await MyHomeGroup.changePassword(
+            currentPassword,
+            newPassword
+          );
+
+          MyHomeGroup.setFormMessage(
+            passwordMessage,
+            "Password changed successfully.",
+            "success"
+          );
+
+          document
+            .getElementById(
+              "passwordForm"
+            )
+            .reset();
+
+          MyHomeGroup.showToast(
+            "Password changed.",
+            "success"
+          );
+
+        } catch (error) {
+
+          MyHomeGroup.setFormMessage(
+            passwordMessage,
+            error.message,
+            "error"
+          );
+
+        } finally {
+
+          MyHomeGroup.setButtonLoading(
+            button,
+            false
+          );
+
+        }
+
+      }
+    );
+
+  document
+    .getElementById("logoutButton")
+    .addEventListener(
+      "click",
+      () => {
+        MyHomeGroup.logout(true);
+      }
+    );
+
+  await loadProfile();
+
+});
+</script>
 
 </body>
-
 </html>
