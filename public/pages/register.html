@@ -14,13 +14,68 @@
     content="#f5a400"
   >
 
-  <title>Register - Hyma RMC Kokapet</title>
+  <title>Register - My Home Group</title>
 
   <link
     rel="stylesheet"
     href="../style.css"
   >
+
+  <style>
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 48px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .form-message {
+      min-height: 22px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .form-message.error {
+      color: #d93025;
+    }
+
+    .form-message.success {
+      color: #188038;
+    }
+
+    .auth-footer {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .auth-footer a {
+      color: #d98b00;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+  </style>
 </head>
+
 
 <body>
 
@@ -37,7 +92,7 @@
       </h1>
 
       <p class="auth-subtitle">
-        Register for vehicle management
+        Register for My Home Group
       </p>
 
 
@@ -46,7 +101,6 @@
         class="auth-form"
         novalidate
       >
-
 
         <!-- NAME -->
 
@@ -103,7 +157,7 @@
           id="registerCompany"
           name="company"
           type="text"
-          placeholder="Hyma RMC Kokapet"
+          placeholder="My Home Group"
         >
 
 
@@ -117,6 +171,7 @@
           id="registerRole"
           name="role"
         >
+
           <option value="">
             Select role
           </option>
@@ -128,6 +183,7 @@
           <option value="Admin">
             Admin
           </option>
+
         </select>
 
 
@@ -137,13 +193,26 @@
           Password
         </label>
 
-        <input
-          id="registerPassword"
-          name="password"
-          type="password"
-          placeholder="Create password"
-          autocomplete="new-password"
-        >
+        <div class="password-wrap">
+
+          <input
+            id="registerPassword"
+            name="password"
+            type="password"
+            placeholder="Create password"
+            autocomplete="new-password"
+          >
+
+          <button
+            id="togglePassword"
+            class="password-toggle"
+            type="button"
+            aria-label="Show password"
+          >
+            👁️
+          </button>
+
+        </div>
 
 
         <!-- CONFIRM PASSWORD -->
@@ -152,13 +221,26 @@
           Confirm Password
         </label>
 
-        <input
-          id="registerConfirmPassword"
-          name="confirmPassword"
-          type="password"
-          placeholder="Confirm password"
-          autocomplete="new-password"
-        >
+        <div class="password-wrap">
+
+          <input
+            id="registerConfirmPassword"
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm password"
+            autocomplete="new-password"
+          >
+
+          <button
+            id="toggleConfirmPassword"
+            class="password-toggle"
+            type="button"
+            aria-label="Show confirm password"
+          >
+            👁️
+          </button>
+
+        </div>
 
 
         <!-- MESSAGE -->
@@ -172,6 +254,7 @@
         <!-- SUBMIT -->
 
         <button
+          id="registerButton"
           class="primary-btn full-width"
           type="submit"
         >
@@ -180,8 +263,6 @@
 
       </form>
 
-
-      <!-- LOGIN -->
 
       <div class="auth-footer">
 
@@ -198,7 +279,384 @@
   </main>
 
 
-  <script src="../app.js"></script>
+  <script>
+
+    const form =
+      document.getElementById(
+        "registerForm"
+      );
+
+    const message =
+      document.getElementById(
+        "registerMessage"
+      );
+
+    const button =
+      document.getElementById(
+        "registerButton"
+      );
+
+
+    function showMessage(
+      text,
+      type
+    ) {
+
+      message.textContent = text;
+
+      message.className =
+        "form-message " + type;
+
+    }
+
+
+    function togglePassword(
+      inputId,
+      buttonId
+    ) {
+
+      const input =
+        document.getElementById(
+          inputId
+        );
+
+      const button =
+        document.getElementById(
+          buttonId
+        );
+
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          if (
+            input.type === "password"
+          ) {
+
+            input.type = "text";
+
+            button.textContent = "🙈";
+
+          } else {
+
+            input.type = "password";
+
+            button.textContent = "👁️";
+
+          }
+
+        }
+      );
+
+    }
+
+
+    togglePassword(
+      "registerPassword",
+      "togglePassword"
+    );
+
+    togglePassword(
+      "registerConfirmPassword",
+      "toggleConfirmPassword"
+    );
+
+
+    form.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const name =
+          document
+            .getElementById(
+              "registerName"
+            )
+            .value
+            .trim();
+
+
+        const email =
+          document
+            .getElementById(
+              "registerEmail"
+            )
+            .value
+            .trim();
+
+
+        const mobile =
+          document
+            .getElementById(
+              "registerMobile"
+            )
+            .value
+            .trim();
+
+
+        const company =
+          document
+            .getElementById(
+              "registerCompany"
+            )
+            .value
+            .trim();
+
+
+        const role =
+          document
+            .getElementById(
+              "registerRole"
+            )
+            .value;
+
+
+        const password =
+          document
+            .getElementById(
+              "registerPassword"
+            )
+            .value;
+
+
+        const confirmPassword =
+          document
+            .getElementById(
+              "registerConfirmPassword"
+            )
+            .value;
+
+
+        showMessage(
+          "",
+          ""
+        );
+
+
+        if (!name) {
+
+          showMessage(
+            "Please enter your name.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (!email) {
+
+          showMessage(
+            "Please enter your email.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (!email.includes("@")) {
+
+          showMessage(
+            "Please enter a valid email.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (!mobile) {
+
+          showMessage(
+            "Please enter your mobile number.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (!company) {
+
+          showMessage(
+            "Please enter company/site.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (!role) {
+
+          showMessage(
+            "Please select your role.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (password.length < 6) {
+
+          showMessage(
+            "Password must be at least 6 characters.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (
+          password !==
+          confirmPassword
+        ) {
+
+          showMessage(
+            "Passwords do not match.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        button.disabled = true;
+
+        button.classList.add(
+          "loading"
+        );
+
+        button.textContent =
+          "Creating Account...";
+
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/auth/register",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify({
+                    name,
+                    email,
+                    mobile,
+                    company,
+                    role,
+                    password
+                  })
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          if (!response.ok) {
+
+            showMessage(
+              data.message ||
+              "Registration failed.",
+              "error"
+            );
+
+            return;
+
+          }
+
+
+          /*
+            Store only the authentication
+            token and safe user information.
+
+            Password is NOT stored here.
+          */
+
+          localStorage.setItem(
+            "hyma_auth_token",
+            data.token
+          );
+
+
+          localStorage.setItem(
+            "hyma_current_user",
+            JSON.stringify(
+              data.user
+            )
+          );
+
+
+          showMessage(
+            "Account created successfully. Opening dashboard...",
+            "success"
+          );
+
+
+          setTimeout(
+            () => {
+
+              window.location.href =
+                "/pages/dashboard.html";
+
+            },
+            800
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "Registration error:",
+            error
+          );
+
+
+          showMessage(
+            "Unable to connect to server. Please try again.",
+            "error"
+          );
+
+
+        } finally {
+
+          button.disabled = false;
+
+          button.classList.remove(
+            "loading"
+          );
+
+          button.textContent =
+            "Create Account";
+
+        }
+
+      }
+    );
+
+  </script>
 
 </body>
 
