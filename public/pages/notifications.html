@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#f5a400"
+  >
+
+  <title>Notifications - My-Home-Group</title>
+
+  <link
+    rel="stylesheet"
+    href="../style.css"
+  >
+
+  <style>
+    body {
+      background: #f5f7fa;
+    }
+
+    .notifications-page {
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    .notifications-header {
+      background: #fff;
+      padding: 20px 16px 18px;
+      border-bottom: 1px solid #e8eaed;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #222;
+    }
+
+    .header-title p {
+      margin: 5px 0 0;
+      font-size: 13px;
+      color: #777;
+    }
+
+    .mark-read-btn {
+      border: 1px solid #e0e3e6;
+      background: #fff;
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .notification-count {
+      display: inline-flex;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: #f5a400;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      margin-left: 6px;
+    }
+
+    .notifications-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .notification-card {
+      display: flex;
+      gap: 12px;
+      padding: 15px;
+      margin-bottom: 11px;
+      background: #fff;
+      border-radius: 15px;
+      border: 1px solid #eceff1;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
+      position: relative;
+    }
+
+    .notification-card.unread {
+      border-left: 4px solid #f5a400;
+      background: #fffdf7;
+    }
+
+    .notification-icon {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff3cf;
+      font-size: 21px;
+    }
+
+    .notification-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notification-content h3 {
+      margin: 0 0 5px;
+      font-size: 15px;
+      color: #222;
+    }
+
+    .notification-content p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #666;
+    }
+
+    .notification-time {
+      display: block;
+      margin-top: 7px;
+      font-size: 11px;
+      color: #999;
+    }
+
+    .unread-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f5a400;
+      position: absolute;
+      top: 17px;
+      right: 16px;
+    }
+
+    .empty-state {
+      background: #fff;
+      border-radius: 18px;
+      padding: 45px 20px;
+      text-align: center;
+      border: 1px solid #eceff1;
+      margin-top: 10px;
+    }
+
+    .empty-icon {
+      font-size: 45px;
+      margin-bottom: 10px;
+    }
+
+    .empty-state h2 {
+      margin: 0 0 6px;
+      font-size: 19px;
+    }
+
+    .empty-state p {
+      margin: 0;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .clear-btn {
+      display: block;
+      margin: 18px auto 0;
+      border: none;
+      background: transparent;
+      color: #d18a00;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+      height: 68px;
+      background: #fff;
+      border-top: 1px solid #e5e7e9;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .bottom-nav a {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-decoration: none;
+      color: #777;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .bottom-nav a span {
+      font-size: 21px;
+      line-height: 1;
+    }
+
+    .bottom-nav a.active {
+      color: #d18a00;
+    }
+
+    @media (min-width: 700px) {
+
+      .notifications-header {
+        padding-left: calc((100% - 768px) / 2);
+        padding-right: calc((100% - 768px) / 2);
+      }
+
+      .bottom-nav {
+        left: 50%;
+        right: auto;
+        width: 100%;
+        max-width: 700px;
+        transform: translateX(-50%);
+        border-radius: 16px 16px 0 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="notifications-page">
+
+    <header class="notifications-header">
+
+      <div class="header-row">
+
+        <div class="header-title">
+
+          <h1>
+            Notifications
+            <span
+              id="unreadCount"
+              class="notification-count"
+              style="display:none;"
+            >
+              0
+            </span>
+          </h1>
+
+          <p>
+            Important updates and activity
+          </p>
+
+        </div>
+
+        <button
+          id="markReadBtn"
+          class="mark-read-btn"
+          type="button"
+        >
+          Mark all read
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <section
+      id="notificationsList"
+      class="notifications-content"
+    ></section>
+
+
+    <button
+      id="clearBtn"
+      class="clear-btn"
+      type="button"
+      style="display:none;"
+    >
+      Clear all notifications
+    </button>
+
+  </main>
+
+
+  <nav class="bottom-nav">
+
+    <a href="/pages/dashboard.html">
+      <span>⌂</span>
+      Home
+    </a>
+
+    <a href="/pages/vehicles.html">
+      <span>🚚</span>
+      Vehicles
+    </a>
+
+    <a href="/pages/add-entry.html">
+      <span>＋</span>
+      Entry
+    </a>
+
+    <a href="/pages/calendar.html">
+      <span>▣</span>
+      Calendar
+    </a>
+
+    <a
+      href="/pages/profile.html"
+      class="active"
+    >
+      <span>👤</span>
+      You
+    </a>
+
+  </nav>
+
+
+  <script>
+
+    const STORAGE = {
+      currentUser: "hyma_current_user",
+      users: "hyma_users",
+      vehicles: "hyma_vehicles",
+      entries: "hyma_entries",
+      notifications: "hyma_notifications"
+    };
+
+
+    function readJSON(
+      key,
+      fallback
+    ) {
+
+      try {
+
+        const value =
+          localStorage.getItem(key);
+
+        return value
+          ? JSON.parse(value)
+          : fallback;
+
+      } catch (error) {
+
+        return fallback;
+
+      }
+
+    }
+
+
+    function writeJSON(
+      key,
+      value
+    ) {
+
+      localStorage.setItem(
+        key,
+        JSON.stringify(value)
+      );
+
+    }
+
+
+    function getCurrentUser() {
+
+      return readJSON(
+        STORAGE.currentUser,
+        null
+      );
+
+    }
+
+
+    function getNotifications() {
+
+      return readJSON(
+        STORAGE.notifications,
+        []
+      );
+
+    }
+
+
+    function saveNotifications(
+      notifications
+    ) {
+
+      writeJSON(
+        STORAGE.notifications,
+        notifications
+      );
+
+    }
+
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(
+        value ?? ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    function formatTime(
+      timestamp
+    ) {
+
+      const date =
+        new Date(timestamp);
+
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return "";
+
+      }
+
+
+      return date.toLocaleString(
+        "en-IN",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      );
+
+    }
+
+
+    function createAutomaticNotifications() {
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      let notifications =
+        getNotifications();
+
+
+      const entries =
+        readJSON(
+          STORAGE.entries,
+          []
+        );
+
+
+      const vehicles =
+        readJSON(
+          STORAGE.vehicles,
+          []
+        );
+
+
+      const today =
+        new Date()
+          .toISOString()
+          .slice(
+            0,
+            10
+          );
+
+
+      /*
+       * Create a welcome notification
+       * only once for the user.
+       */
+
+      const welcomeId =
+        "welcome-" +
+        String(
+          currentUser.id ||
+          currentUser.email ||
+          currentUser.mobile
+        );
+
+
+      const welcomeExists =
+        notifications.some(
+          function (item) {
+
+            return (
+              item.id ===
+              welcomeId
+            );
+
+          }
+        );
+
+
+      if (!welcomeExists) {
+
+        notifications.push({
+
+          id: welcomeId,
+
+          userId:
+            currentUser.id ||
+            currentUser.email ||
+            currentUser.mobile,
+
+          title:
+            "Welcome to My-Home-Group",
+
+          message:
+            "Your vehicle duration management dashboard is ready.",
+
+          icon:
+            "👋",
+
+          read:
+            false,
+
+          createdAt:
+            new Date().toISOString()
+
+        });
+
+      }
+
+
+      /*
+       * Today's running vehicle alerts.
+       */
+
+      const userEntries =
+        entries.filter(
+          function (entry) {
+
+            return (
+              entry.userId ===
+                currentUser.id &&
+              entry.date ===
+                today &&
+              entry.entryTime &&
+              !entry.exitTime
+            );
+
+          }
+        );
+
+
+      userEntries.forEach(
+        function (entry) {
+
+          const id =
+            "running-" +
+            entry.id;
+
+
+          const exists =
+            notifications.some(
+              function (item) {
+
+                return item.id === id;
+
+              }
+            );
+
+
+          if (!exists) {
+
+            notifications.push({
+
+              id,
+
+              userId:
+                currentUser.id,
+
+              title:
+                "Vehicle still running",
+
+              message:
+                (
+                  entry.vehicleNumber ||
+                  "Vehicle"
+                ) +
+                " has an open entry for today.",
+
+              icon:
+                "🚚",
+
+              read:
+                false,
+
+              createdAt:
+                new Date().toISOString()
+
+            });
+
+          }
+
+        }
+      );
+
+
+      /*
+       * If there are no vehicles yet,
+       * give a useful setup notification.
+       */
+
+      if (
+        vehicles.length === 0
+      ) {
+
+        const setupId =
+          "setup-vehicles-" +
+          String(
+            currentUser.id ||
+            currentUser.email ||
+            currentUser.mobile
+          );
+
+
+        const exists =
+          notifications.some(
+            function (item) {
+
+              return item.id === setupId;
+
+            }
+          );
+
+
+        if (!exists) {
+
+          notifications.push({
+
+            id: setupId,
+
+            userId:
+              currentUser.id ||
+              currentUser.email ||
+              currentUser.mobile,
+
+            title:
+              "Add your first vehicle",
+
+            message:
+              "Open Vehicles and add a vehicle to start recording duration.",
+
+            icon:
+              "🚧",
+
+            read:
+              false,
+
+            createdAt:
+              new Date().toISOString()
+
+          });
+
+        }
+
+      }
+
+
+      /*
+       * Keep only this user's notifications.
+       */
+
+      notifications =
+        notifications.filter(
+          function (item) {
+
+            return (
+              item.userId ===
+              (
+                currentUser.id ||
+                currentUser.email ||
+                currentUser.mobile
+              )
+            );
+
+          }
+        );
+
+
+      saveNotifications(
+        notifications
+      );
+
+    }
+
+
+    function renderNotifications() {
+
+      const list =
+        document.getElementById(
+          "notificationsList"
+        );
+
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        window.location.href =
+          "/pages/login.html";
+
+        return;
+
+      }
+
+
+      const userId =
+        currentUser.id ||
+        currentUser.email ||
+        currentUser.mobile;
+
+
+      const notifications =
+        getNotifications()
+          .filter(
+            function (item) {
+
+              return (
+                item.userId ===
+                userId
+              );
+
+            }
+          )
+          .sort(
+            function (a, b) {
+
+              return (
+                new Date(
+                  b.createdAt
+                ) -
+                new Date(
+                  a.createdAt
+                )
+              );
+
+            }
+          );
+
+
+      const unread =
+        notifications.filter(
+          function (item) {
+
+            return !item.read;
+
+          }
+        ).length;
+
+
+      const count =
+        document.getElementById(
+          "unreadCount"
+        );
+
+
+      if (unread > 0) {
+
+        count.textContent =
+          unread;
+
+        count.style.display =
+          "inline-flex";
+
+      } else {
+
+        count.style.display =
+          "none";
+
+      }
+
+
+      const clearBtn =
+        document.getElementById(
+          "clearBtn"
+        );
+
+
+      clearBtn.style.display =
+        notifications.length
+          ? "block"
+          : "none";
+
+
+      if (
+        notifications.length ===
+        0
+      ) {
+
+        list.innerHTML = `
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+              🔔
+            </div>
+
+            <h2>
+              No notifications
+            </h2>
+
+            <p>
+              You're all caught up.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      list.innerHTML =
+        notifications
+          .map(
+            function (item) {
+
+              return `
+
+                <article
+                  class="notification-card ${
+                    item.read
+                      ? ""
+                      : "unread"
+                  }"
+                  data-id="${escapeHTML(
+                    item.id
+                  )}"
+                >
+
+                  <div class="notification-icon">
+                    ${escapeHTML(
+                      item.icon ||
+                      "🔔"
+                    )}
+                  </div>
+
+                  <div class="notification-content">
+
+                    <h3>
+                      ${escapeHTML(
+                        item.title ||
+                        "Notification"
+                      )}
+                    </h3>
+
+                    <p>
+                      ${escapeHTML(
+                        item.message ||
+                        ""
+                      )}
+                    </p>
+
+                    <span class="notification-time">
+                      ${escapeHTML(
+                        formatTime(
+                          item.createdAt
+                        )
+                      )}
+                    </span>
+
+                  </div>
+
+                  ${
+                    item.read
+                      ? ""
+                      : `<span class="unread-dot"></span>`
+                  }
+
+                </article>
+
+              `;
+
+            }
+          )
+          .join("");
+
+    }
+
+
+    function markAllRead() {
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        return;
+
+      }
+
+
+      const userId =
+        currentUser.id ||
+        currentUser.email ||
+        currentUser.mobile;
+
+
+      const notifications =
+        getNotifications();
+
+
+      notifications.forEach(
+        function (item) {
+
+          if (
+            item.userId ===
+            userId
+          ) {
+
+            item.read = true;
+
+          }
+
+        }
+      );
+
+
+      saveNotifications(
+        notifications
+      );
+
+
+      renderNotifications();
+
+    }
+
+
+    function clearAll() {
+
+      const currentUser =
+        getCurrentUser();
+
+
+      if (!currentUser) {
+
+        return;
+
+      }
+
+
+      const userId =
+        currentUser.id ||
+        currentUser.email ||
+        currentUser.mobile;
+
+
+      const notifications =
+        getNotifications()
+          .filter(
+            function (item) {
+
+              return (
+                item.userId !==
+                userId
+              );
+
+            }
+          );
+
+
+      saveNotifications(
+        notifications
+      );
+
+
+      renderNotifications();
+
+    }
+
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+
+        createAutomaticNotifications();
+
+        renderNotifications();
+
+
+        document.getElementById(
+          "markReadBtn"
+        ).addEventListener(
+          "click",
+          markAllRead
+        );
+
+
+        document.getElementById(
+          "clearBtn"
+        ).addEventListener(
+          "click",
+          clearAll
+        );
+
+      }
+    );
+
+  </script>
+
+</body>
+
+</html>
