@@ -1,1350 +1,2167 @@
+"use strict";
+
 /* =========================================================
-   MY HOME GROUP
-   Central Frontend Application
+   MY HOME GROUP - FRONTEND APP
 ========================================================= */
 
-(() => {
-  "use strict";
+const API = "/api";
 
-  const API_BASE = "/api";
+/* =========================================================
+   AUTH
+========================================================= */
 
-  const STORAGE_TOKEN = "my_home_group_auth_token";
-  const STORAGE_USER = "my_home_group_current_user";
+function getToken() {
+  return localStorage.getItem("mhg_token");
+}
 
-  /* =======================================================
-     BASIC HELPERS
-  ======================================================= */
+function setToken(token) {
+  localStorage.setItem("mhg_token", token);
+}
 
-  function qs(selector, parent = document) {
-    return parent.querySelector(selector);
+function clearAuth() {
+  localStorage.removeItem("mhg_token");
+  localStorage.removeItem("mhg_user");
+}
+
+function getStoredUser() {
+  try {
+    return JSON.parse(localStorage.getItem("mhg_user") || "null");
+  } catch {
+    return null;
+  }
+}
+
+function setStoredUser(user) {
+  localStorage.setItem("mhg_user", JSON.stringify(user));
+}
+
+function requireAuth() {
+  if (!getToken()) {
+    window.location.href = "/login";
+    return false;
   }
 
-  function qsa(selector, parent = document) {
-    return Array.from(parent.querySelectorAll(selector));
+  return true;
+}
+
+function logout() {
+  clearAuth();
+  window.location.href = "/login";
+}
+
+/* =========================================================
+   API
+========================================================= */
+
+async function apiFetch(url, options = {}) {
+  const headers = {
+    ...(options.headers || {})
+  };
+
+  if (options.body && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
   }
 
-  function escapeHtml(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+  const token = getToken();
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
 
-  function getToken() {
-    return localStorage.getItem(STORAGE_TOKEN) || "";
+  const response = await fetch(`${API}${url}`, {
+    ...options,
+    headers
+  });
+
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
   }
 
-  function getStoredUser() {
-    try {
-      const raw = localStorage.getItem(STORAGE_USER);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  }
-
-  function saveAuth(token, user) {
-    if (token) {
-      localStorage.setItem(STORAGE_TOKEN, token);
-    }
-
-    if (user) {
-      localStorage.setItem(
-        STORAGE_USER,
-        JSON.stringify(user)
-      );
-    }
-  }
-
-  function clearAuth() {
-    localStorage.removeItem(STORAGE_TOKEN);
-    localStorage.removeItem(STORAGE_USER);
-  }
-
-  function isLoggedIn() {
-    return Boolean(getToken());
-  }
-
-  function getCurrentUser() {
-    return getStoredUser();
-  }
-
-  /* =======================================================
-     API
-  ======================================================= */
-
-  async function apiRequest(
-    endpoint,
-    options = {}
-  ) {
-    const config = {
-      method: options.method || "GET",
-      headers: {
-        ...(options.headers || {})
-      }
-    };
-
-    if (options.body !== undefined) {
-      config.headers["Content-Type"] =
-        "application/json";
-
-      config.body =
-        typeof options.body === "string"
-          ? options.body
-          : JSON.stringify(options.body);
-    }
-
-    const token = getToken();
-
-    if (token) {
-      config.headers.Authorization =
-        `Bearer ${token}`;
-    }
-
-    let response;
-
-    try {
-      response = await fetch(
-        `${API_BASE}${endpoint}`,
-        config
-      );
-    } catch (error) {
-      throw new Error(
-        "Unable to connect to server. Please check your internet connection."
-      );
-    }
-
-    let data = {};
-
-    try {
-      data = await response.json();
-    } catch {
-      data = {};
-    }
-
-    if (response.status === 401) {
-      clearAuth();
-
-      const path =
-        window.location.pathname || "";
-
-      const protectedPage =
-        path.includes("/pages/") &&
-        !path.endsWith("/login.html") &&
-        !path.endsWith("/register.html");
-
-      if (protectedPage) {
-        window.location.href =
-          "/pages/login.html";
-      }
-    }
-
-    if (!response.ok) {
-      throw new Error(
-        data.message ||
-        `Request failed (${response.status})`
-      );
-    }
-
-    return data;
-  }
-
-  /* =======================================================
-     AUTH
-  ======================================================= */
-
-  async function registerUser(payload) {
-    const data = await apiRequest(
-      "/auth/register",
-      {
-        method: "POST",
-        body: payload
-      }
-    );
-
-    if (data.token) {
-      saveAuth(
-        data.token,
-        data.user
-      );
-    }
-
-    return data;
-  }
-
-  async function loginUser(login, password) {
-    const data = await apiRequest(
-      "/auth/login",
-      {
-        method: "POST",
-        body: {
-          login,
-          password
-        }
-      }
-    );
-
-    if (data.token) {
-      saveAuth(
-        data.token,
-        data.user
-      );
-    }
-
-    return data;
-  }
-
-  async function getMe() {
-    const data = await apiRequest(
-      "/me"
-    );
-
-    if (data.user) {
-      localStorage.setItem(
-        STORAGE_USER,
-        JSON.stringify(data.user)
-      );
-    }
-
-    return data.user;
-  }
-
-  async function updateProfile(payload) {
-    const data = await apiRequest(
-      "/me",
-      {
-        method: "PUT",
-        body: payload
-      }
-    );
-
-    if (data.user) {
-      localStorage.setItem(
-        STORAGE_USER,
-        JSON.stringify(data.user)
-      );
-    }
-
-    return data;
-  }
-
-  async function changePassword(
-    currentPassword,
-    newPassword
-  ) {
-    return apiRequest(
-      "/auth/change-password",
-      {
-        method: "POST",
-        body: {
-          currentPassword,
-          newPassword
-        }
-      }
-    );
-  }
-
-  function logout(
-    redirect = true
-  ) {
+  if (response.status === 401) {
     clearAuth();
 
-    if (redirect) {
-      window.location.href =
-        "/pages/login.html";
+    if (!window.location.pathname.endsWith("login.html")) {
+      window.location.href = "/login";
     }
+
+    throw new Error(data.message || "Authentication required.");
   }
 
-  /* =======================================================
-     VEHICLES
-  ======================================================= */
-
-  async function getVehicles() {
-    const data = await apiRequest(
-      "/vehicles"
-    );
-
-    return data.vehicles || [];
-  }
-
-  async function createVehicle(payload) {
-    return apiRequest(
-      "/vehicles",
-      {
-        method: "POST",
-        body: payload
-      }
+  if (!response.ok) {
+    throw new Error(
+      data.message || "Something went wrong."
     );
   }
 
-  async function updateVehicle(
-    id,
-    payload
-  ) {
-    return apiRequest(
-      `/vehicles/${encodeURIComponent(id)}`,
-      {
-        method: "PUT",
-        body: payload
-      }
-    );
+  return data;
+}
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+function escapeHtml(value) {
+  if (value === null || value === undefined) {
+    return "";
   }
 
-  async function deleteVehicle(id) {
-    return apiRequest(
-      `/vehicles/${encodeURIComponent(id)}`,
-      {
-        method: "DELETE"
-      }
-    );
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function formatMinutes(minutes) {
+  if (minutes === null || minutes === undefined) {
+    return "—";
   }
 
-  /* =======================================================
-     ENTRIES
-  ======================================================= */
+  const value = Number(minutes);
 
-  async function getEntries(params = {}) {
-    const query = new URLSearchParams();
+  if (Number.isNaN(value)) {
+    return "—";
+  }
 
-    Object.entries(params).forEach(
-      ([key, value]) => {
-        if (
-          value !== undefined &&
-          value !== null &&
-          value !== ""
-        ) {
-          query.set(
-            key,
-            value
-          );
+  const hours = Math.floor(value / 60);
+  const mins = value % 60;
+
+  return `${hours}h ${mins}m`;
+}
+
+function formatDate(dateString) {
+  if (!dateString) {
+    return "—";
+  }
+
+  const date = new Date(`${dateString}T00:00:00`);
+
+  return date.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+function todayISO() {
+  const date = new Date();
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function formatTodayLong() {
+  return new Date().toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+function formatTime(time) {
+  if (!time) {
+    return "—";
+  }
+
+  const parts = String(time).split(":");
+
+  if (parts.length < 2) {
+    return time;
+  }
+
+  const date = new Date();
+
+  date.setHours(
+    Number(parts[0]),
+    Number(parts[1]),
+    0,
+    0
+  );
+
+  return date.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function formatDateTime(value) {
+  if (!value) {
+    return "";
+  }
+
+  return new Date(value).toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(message, type = "success") {
+  let container =
+    document.querySelector(".toast-container");
+
+  if (!container) {
+    container = document.createElement("div");
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3500);
+}
+
+/* =========================================================
+   COMMON HEADER
+========================================================= */
+
+function setupCommonHeader() {
+  const logoutButtons =
+    document.querySelectorAll("[data-logout]");
+
+  logoutButtons.forEach((button) => {
+    button.addEventListener("click", logout);
+  });
+
+  const user = getStoredUser();
+
+  document
+    .querySelectorAll("[data-user-name]")
+    .forEach((element) => {
+      element.textContent =
+        user?.name || "User";
+    });
+
+  document
+    .querySelectorAll("[data-user-email]")
+    .forEach((element) => {
+      element.textContent =
+        user?.email || "—";
+    });
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function setupLoginPage() {
+  const form =
+    document.getElementById("loginForm");
+
+  if (!form) {
+    return;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const loginValue =
+      document.getElementById("loginValue").value.trim();
+
+    const password =
+      document.getElementById("loginPassword").value;
+
+    const button =
+      document.getElementById("loginButton");
+
+    if (!loginValue || !password) {
+      showToast(
+        "Mobile/email and password are required.",
+        "error"
+      );
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Logging in...";
+
+    try {
+      const payload =
+        loginValue.includes("@")
+          ? {
+              email: loginValue,
+              password
+            }
+          : {
+              mobile: loginValue,
+              password
+            };
+
+      const data = await apiFetch(
+        "/auth/login",
+        {
+          method: "POST",
+          body: JSON.stringify(payload)
         }
-      }
-    );
+      );
 
-    const queryString =
-      query.toString();
+      setToken(data.token);
+      setStoredUser(data.user);
 
-    const endpoint =
-      queryString
-        ? `/entries?${queryString}`
-        : "/entries";
+      window.location.href = "/dashboard";
+    } catch (error) {
+      showToast(error.message, "error");
 
+      button.disabled = false;
+      button.textContent = "Login";
+    }
+  });
+}
+
+/* =========================================================
+   REGISTER
+========================================================= */
+
+function setupRegisterPage() {
+  const form =
+    document.getElementById("registerForm");
+
+  if (!form) {
+    return;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const name =
+      document.getElementById("registerName").value.trim();
+
+    const mobile =
+      document.getElementById("registerMobile").value.trim();
+
+    const email =
+      document.getElementById("registerEmail").value.trim();
+
+    const password =
+      document.getElementById("registerPassword").value;
+
+    const company =
+      document.getElementById("registerCompany").value.trim();
+
+    const button =
+      document.getElementById("registerButton");
+
+    if (!name || !email || !password) {
+      showToast(
+        "Please fill all required fields.",
+        "error"
+      );
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Creating account...";
+
+    try {
+      const data = await apiFetch(
+        "/auth/register",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            name,
+            mobile,
+            email,
+            password,
+            company
+          })
+        }
+      );
+
+      setToken(data.token);
+      setStoredUser(data.user);
+
+      window.location.href = "/dashboard";
+    } catch (error) {
+      showToast(error.message, "error");
+
+      button.disabled = false;
+      button.textContent = "Create Account";
+    }
+  });
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+async function loadDashboard() {
+  if (!requireAuth()) {
+    return;
+  }
+
+  const dateElement =
+    document.getElementById("dashboardDate");
+
+  if (dateElement) {
+    dateElement.textContent =
+      formatTodayLong();
+  }
+
+  try {
     const data =
-      await apiRequest(endpoint);
+      await apiFetch("/dashboard");
 
-    return data.entries || [];
-  }
+    const statistics =
+      data.statistics || {};
 
-  async function createEntry(payload) {
-    return apiRequest(
-      "/entries",
-      {
-        method: "POST",
-        body: payload
-      }
+    document.getElementById(
+      "totalVehicles"
+    ).textContent =
+      statistics.vehicles ?? 0;
+
+    document.getElementById(
+      "runningVehicles"
+    ).textContent =
+      statistics.running ?? 0;
+
+    document.getElementById(
+      "totalVehicleDuration"
+    ).textContent =
+      statistics.total_duration || "0h 0m";
+
+    renderTodayActivity(
+      data.today_activity || []
     );
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+function renderTodayActivity(entries) {
+  const container =
+    document.getElementById("todayActivity");
+
+  if (!container) {
+    return;
   }
 
-  async function deleteEntry(id) {
-    return apiRequest(
-      `/entries/${encodeURIComponent(id)}`,
-      {
-        method: "DELETE"
-      }
-    );
-  }
-
-  /* =======================================================
-     NOTIFICATIONS
-  ======================================================= */
-
-  async function getNotifications() {
-    const data =
-      await apiRequest(
-        "/notifications"
-      );
-
-    return data.notifications || [];
-  }
-
-  async function getUnreadNotificationCount() {
-    const data =
-      await apiRequest(
-        "/notifications/unread-count"
-      );
-
-    return Number(data.count || 0);
-  }
-
-  async function createNotification(payload) {
-    return apiRequest(
-      "/notifications",
-      {
-        method: "POST",
-        body: payload
-      }
-    );
-  }
-
-  async function sendAdminNotification(
-    payload
-  ) {
-    return apiRequest(
-      "/admin/notifications",
-      {
-        method: "POST",
-        body: payload
-      }
-    );
-  }
-
-  async function markNotificationRead(id) {
-    return apiRequest(
-      `/notifications/${encodeURIComponent(id)}/read`,
-      {
-        method: "PUT"
-      }
-    );
-  }
-
-  async function markAllNotificationsRead() {
-    return apiRequest(
-      "/notifications/read-all",
-      {
-        method: "PUT"
-      }
-    );
-  }
-
-  async function deleteNotification(id) {
-    return apiRequest(
-      `/notifications/${encodeURIComponent(id)}`,
-      {
-        method: "DELETE"
-      }
-    );
-  }
-
-  async function clearNotifications() {
-    return apiRequest(
-      "/notifications",
-      {
-        method: "DELETE"
-      }
-    );
-  }
-
-  /* =======================================================
-     ADMIN
-  ======================================================= */
-
-  async function getAdminUsers() {
-    const data =
-      await apiRequest(
-        "/admin/users"
-      );
-
-    return data.users || [];
-  }
-
-  /* =======================================================
-     DATE HELPERS
-  ======================================================= */
-
-  function pad(number) {
-    return String(number)
-      .padStart(2, "0");
-  }
-
-  function todayString() {
-    const now = new Date();
-
-    return [
-      now.getFullYear(),
-      pad(now.getMonth() + 1),
-      pad(now.getDate())
-    ].join("-");
-  }
-
-  function formatDate(
-    dateValue
-  ) {
-    if (!dateValue) {
-      return "-";
-    }
-
-    const date =
-      new Date(`${dateValue}T00:00:00`);
-
-    if (Number.isNaN(date.getTime())) {
-      return dateValue;
-    }
-
-    return date.toLocaleDateString(
-      undefined,
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      }
-    );
-  }
-
-  function formatTime(timeValue) {
-    if (!timeValue) {
-      return "-";
-    }
-
-    const value =
-      String(timeValue)
-        .slice(0, 5);
-
-    const parts =
-      value.split(":");
-
-    if (parts.length < 2) {
-      return value;
-    }
-
-    let hour =
-      Number(parts[0]);
-
-    const minute =
-      parts[1];
-
-    const suffix =
-      hour >= 12 ? "PM" : "AM";
-
-    hour =
-      hour % 12 || 12;
-
-    return `${hour}:${minute} ${suffix}`;
-  }
-
-  function minutesToDuration(minutes) {
-    const total =
-      Math.max(
-        0,
-        Number(minutes) || 0
-      );
-
-    const hours =
-      Math.floor(total / 60);
-
-    const mins =
-      total % 60;
-
-    if (hours === 0) {
-      return `${mins}m`;
-    }
-
-    if (mins === 0) {
-      return `${hours}h`;
-    }
-
-    return `${hours}h ${mins}m`;
-  }
-
-  function calculateDuration(
-    entryTime,
-    exitTime
-  ) {
-    if (
-      !entryTime ||
-      !exitTime
-    ) {
-      return 0;
-    }
-
-    const start =
-      parseTimeToMinutes(
-        entryTime
-      );
-
-    const end =
-      parseTimeToMinutes(
-        exitTime
-      );
-
-    if (
-      start === null ||
-      end === null
-    ) {
-      return 0;
-    }
-
-    let difference =
-      end - start;
-
-    if (difference < 0) {
-      difference += 24 * 60;
-    }
-
-    return difference;
-  }
-
-  function parseTimeToMinutes(
-    value
-  ) {
-    const match =
-      String(value)
-        .match(
-          /^(\d{1,2}):(\d{2})/
-        );
-
-    if (!match) {
-      return null;
-    }
-
-    const hours =
-      Number(match[1]);
-
-    const minutes =
-      Number(match[2]);
-
-    if (
-      hours < 0 ||
-      hours > 23 ||
-      minutes < 0 ||
-      minutes > 59
-    ) {
-      return null;
-    }
-
-    return (
-      hours * 60 +
-      minutes
-    );
-  }
-
-  function getDateDaysAgo(days) {
-    const date =
-      new Date();
-
-    date.setDate(
-      date.getDate() - days
-    );
-
-    return [
-      date.getFullYear(),
-      pad(date.getMonth() + 1),
-      pad(date.getDate())
-    ].join("-");
-  }
-
-  function getMonthStart() {
-    const date =
-      new Date();
-
-    return [
-      date.getFullYear(),
-      pad(date.getMonth() + 1),
-      "01"
-    ].join("-");
-  }
-
-  function getWeekStart() {
-    const date =
-      new Date();
-
-    const day =
-      date.getDay();
-
-    const diff =
-      day === 0
-        ? -6
-        : 1 - day;
-
-    date.setDate(
-      date.getDate() + diff
-    );
-
-    return [
-      date.getFullYear(),
-      pad(date.getMonth() + 1),
-      pad(date.getDate())
-    ].join("-");
-  }
-
-  /* =======================================================
-     USER HELPERS
-  ======================================================= */
-
-  function getInitials(name) {
-    const text =
-      String(name || "")
-        .trim();
-
-    if (!text) {
-      return "U";
-    }
-
-    const parts =
-      text.split(/\s+/);
-
-    if (parts.length === 1) {
-      return parts[0]
-        .slice(0, 2)
-        .toUpperCase();
-    }
-
-    return (
-      parts[0][0] +
-      parts[parts.length - 1][0]
-    ).toUpperCase();
-  }
-
-  function userDisplayName() {
-    const user =
-      getCurrentUser();
-
-    return (
-      user?.name ||
-      "User"
-    );
-  }
-
-  function userRole() {
-    const user =
-      getCurrentUser();
-
-    return (
-      user?.role ||
-      "Security Guard"
-    );
-  }
-
-  /* =======================================================
-     TOAST
-  ======================================================= */
-
-  function ensureToastContainer() {
-    let container =
-      qs(".toast-container");
-
-    if (container) {
-      return container;
-    }
-
-    container =
-      document.createElement("div");
-
-    container.className =
-      "toast-container";
-
-    document.body.appendChild(
-      container
-    );
-
-    return container;
-  }
-
-  function showToast(
-    message,
-    type = "success"
-  ) {
-    const container =
-      ensureToastContainer();
-
-    const toast =
-      document.createElement("div");
-
-    toast.className =
-      `toast ${type}`;
-
-    const icon =
-      type === "error"
-        ? "⚠️"
-        : type === "warning"
-          ? "⚠️"
-          : "✓";
-
-    toast.innerHTML = `
-      <div class="toast-icon">${icon}</div>
-      <div class="toast-message">
-        ${escapeHtml(message)}
+  if (!entries.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🚚</div>
+        <h3>No activity today</h3>
+        <p>No vehicle entries have been recorded today.</p>
       </div>
     `;
 
-    container.appendChild(
-      toast
-    );
-
-    window.setTimeout(() => {
-      toast.remove();
-    }, 3500);
+    return;
   }
 
-  /* =======================================================
-     FORM HELPERS
-  ======================================================= */
+  container.innerHTML = entries
+    .map((entry) => {
+      const timeText =
+        `${formatTime(entry.entry_time)} → ${
+          entry.exit_time
+            ? formatTime(entry.exit_time)
+            : "Running"
+        }`;
 
-  function setButtonLoading(
-    button,
-    loading,
-    loadingText = "Please wait..."
-  ) {
-    if (!button) {
+      return `
+        <div class="activity-item">
+          <div class="activity-main">
+            <strong>
+              ${escapeHtml(entry.vehicle_number)}
+            </strong>
+
+            <span>
+              ${escapeHtml(entry.vehicle_type)}
+              • ${timeText}
+            </span>
+          </div>
+
+          <div class="activity-duration">
+            ${
+              entry.duration_formatted ||
+              "Running"
+            }
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+/* =========================================================
+   PERSONAL DURATION
+========================================================= */
+
+function setupPersonalDuration() {
+  const calculateButton =
+    document.getElementById("calculatePersonal");
+
+  const resetButton =
+    document.getElementById("resetPersonal");
+
+  if (!calculateButton) {
+    return;
+  }
+
+  calculateButton.addEventListener(
+    "click",
+    () => {
+      const inTime =
+        document.getElementById("personalIn").value;
+
+      const outTime =
+        document.getElementById("personalOut").value;
+
+      if (!inTime || !outTime) {
+        showToast(
+          "Please enter both In Time and Out Time.",
+          "error"
+        );
+        return;
+      }
+
+      const [inH, inM] =
+        inTime.split(":").map(Number);
+
+      const [outH, outM] =
+        outTime.split(":").map(Number);
+
+      let start =
+        inH * 60 + inM;
+
+      let end =
+        outH * 60 + outM;
+
+      if (end < start) {
+        end += 24 * 60;
+      }
+
+      const duration = end - start;
+
+      document.getElementById(
+        "personalResult"
+      ).textContent =
+        formatMinutes(duration);
+    }
+  );
+
+  resetButton?.addEventListener(
+    "click",
+    () => {
+      document.getElementById(
+        "personalIn"
+      ).value = "";
+
+      document.getElementById(
+        "personalOut"
+      ).value = "";
+
+      document.getElementById(
+        "personalResult"
+      ).textContent = "0h 0m";
+    }
+  );
+}
+
+/* =========================================================
+   VEHICLES
+========================================================= */
+
+async function loadVehicleTypes(selectId) {
+  const select =
+    document.getElementById(selectId);
+
+  if (!select) {
+    return;
+  }
+
+  try {
+    const data =
+      await apiFetch("/vehicles/types");
+
+    select.innerHTML = `
+      <option value="">
+        Select Vehicle Type
+      </option>
+    `;
+
+    data.vehicleTypes.forEach((type) => {
+      const option =
+        document.createElement("option");
+
+      option.value = type;
+      option.textContent = type;
+
+      select.appendChild(option);
+    });
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+async function loadVehicles() {
+  if (!requireAuth()) {
+    return;
+  }
+
+  const container =
+    document.getElementById("vehicleList");
+
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML =
+    `<div class="loading">Loading vehicles...</div>`;
+
+  try {
+    const data =
+      await apiFetch("/vehicles");
+
+    renderVehicles(data.vehicles || []);
+  } catch (error) {
+    container.innerHTML = "";
+    showToast(error.message, "error");
+  }
+}
+
+function renderVehicles(vehicles) {
+  const container =
+    document.getElementById("vehicleList");
+
+  if (!vehicles.length) {
+    container.innerHTML = `
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-state-icon">🚚</div>
+          <h3>No vehicles yet</h3>
+          <p>Add your first vehicle to get started.</p>
+
+          <a
+            href="/pages/vehicles.html#add"
+            class="btn btn-primary"
+          >
+            + Add Vehicle
+          </a>
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = vehicles
+    .map((vehicle) => {
+      const running =
+        vehicle.status === "Running";
+
+      return `
+        <article class="vehicle-card">
+
+          <div class="vehicle-top">
+            <div>
+              <div class="vehicle-number">
+                ${escapeHtml(
+                  vehicle.vehicle_number
+                )}
+              </div>
+
+              <div class="vehicle-type">
+                ${escapeHtml(
+                  vehicle.vehicle_type
+                )}
+              </div>
+            </div>
+
+            <span
+              class="status ${
+                running
+                  ? "running"
+                  : "available"
+              }"
+            >
+              ${
+                running
+                  ? "RUNNING"
+                  : "AVAILABLE"
+              }
+            </span>
+          </div>
+
+          <div class="vehicle-info">
+
+            <div class="vehicle-info-row">
+              <span>Driver</span>
+              <strong>
+                ${
+                  escapeHtml(
+                    vehicle.driver_name ||
+                    "—"
+                  )
+                }
+              </strong>
+            </div>
+
+            <div class="vehicle-info-row">
+              <span>Contractor</span>
+              <strong>
+                ${
+                  escapeHtml(
+                    vehicle.contractor ||
+                    "—"
+                  )
+                }
+              </strong>
+            </div>
+
+          </div>
+
+          <div class="vehicle-actions">
+
+            <button
+              class="btn btn-secondary"
+              onclick="editVehicle(${vehicle.id})"
+            >
+              Edit
+            </button>
+
+            <button
+              class="btn btn-danger"
+              onclick="deleteVehicle(${vehicle.id})"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </article>
+      `;
+    })
+    .join("");
+}
+
+async function addVehicle() {
+  const number =
+    document.getElementById("vehicleNumber")
+      .value
+      .trim();
+
+  const type =
+    document.getElementById("vehicleType")
+      .value;
+
+  const driver =
+    document.getElementById("vehicleDriver")
+      .value
+      .trim();
+
+  const contractor =
+    document.getElementById("vehicleContractor")
+      .value
+      .trim();
+
+  if (!number || !type) {
+    showToast(
+      "Vehicle number and type are required.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    await apiFetch("/vehicles", {
+      method: "POST",
+      body: JSON.stringify({
+        vehicle_number: number,
+        vehicle_type: type,
+        driver_name: driver,
+        contractor
+      })
+    });
+
+    showToast(
+      "Vehicle added successfully."
+    );
+
+    document.getElementById(
+      "vehicleForm"
+    ).reset();
+
+    loadVehicles();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+async function deleteVehicle(id) {
+  const confirmed =
+    confirm(
+      "Are you sure you want to delete this vehicle?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    await apiFetch(
+      `/vehicles/${id}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    showToast(
+      "Vehicle deleted successfully."
+    );
+
+    loadVehicles();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+async function editVehicle(id) {
+  try {
+    const data =
+      await apiFetch(`/vehicles/${id}`);
+
+    const vehicle = data.vehicle;
+
+    const number =
+      prompt(
+        "Vehicle Number:",
+        vehicle.vehicle_number
+      );
+
+    if (number === null) {
       return;
     }
 
-    if (loading) {
-      if (
-        !button.dataset.originalText
-      ) {
-        button.dataset.originalText =
-          button.innerHTML;
+    const driver =
+      prompt(
+        "Driver Name:",
+        vehicle.driver_name || ""
+      );
+
+    if (driver === null) {
+      return;
+    }
+
+    const contractor =
+      prompt(
+        "Contractor:",
+        vehicle.contractor || ""
+      );
+
+    if (contractor === null) {
+      return;
+    }
+
+    await apiFetch(
+      `/vehicles/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          vehicle_number: number,
+          vehicle_type: vehicle.vehicle_type,
+          driver_name: driver,
+          contractor,
+          status: vehicle.status
+        })
+      }
+    );
+
+    showToast(
+      "Vehicle updated successfully."
+    );
+
+    loadVehicles();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+/* =========================================================
+   ADD ENTRY
+========================================================= */
+
+async function loadVehicleDropdown(
+  selectId = "entryVehicle"
+) {
+  const select =
+    document.getElementById(selectId);
+
+  if (!select) {
+    return;
+  }
+
+  try {
+    const data =
+      await apiFetch("/vehicles");
+
+    select.innerHTML = `
+      <option value="">
+        Select Vehicle
+      </option>
+    `;
+
+    data.vehicles.forEach((vehicle) => {
+      const option =
+        document.createElement("option");
+
+      option.value = vehicle.id;
+
+      option.textContent =
+        `${vehicle.vehicle_number} — ${vehicle.vehicle_type}`;
+
+      option.dataset.driver =
+        vehicle.driver_name || "";
+
+      option.dataset.contractor =
+        vehicle.contractor || "";
+
+      select.appendChild(option);
+    });
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+function calculateEntryDuration() {
+  const entryTime =
+    document.getElementById("entryTime")?.value;
+
+  const exitTime =
+    document.getElementById("exitTime")?.value;
+
+  const result =
+    document.getElementById("entryDuration");
+
+  if (!result) {
+    return;
+  }
+
+  if (!entryTime || !exitTime) {
+    result.textContent =
+      exitTime
+        ? "—"
+        : "Running";
+
+    return;
+  }
+
+  const [inH, inM] =
+    entryTime.split(":").map(Number);
+
+  const [outH, outM] =
+    exitTime.split(":").map(Number);
+
+  let start =
+    inH * 60 + inM;
+
+  let end =
+    outH * 60 + outM;
+
+  if (end < start) {
+    end += 24 * 60;
+  }
+
+  result.textContent =
+    formatMinutes(end - start);
+}
+
+function setupEntryPage() {
+  const form =
+    document.getElementById("entryForm");
+
+  if (!form) {
+    return;
+  }
+
+  const dateInput =
+    document.getElementById("entryDate");
+
+  const entryTime =
+    document.getElementById("entryTime");
+
+  const exitTime =
+    document.getElementById("exitTime");
+
+  dateInput.value = todayISO();
+
+  entryTime.addEventListener(
+    "input",
+    calculateEntryDuration
+  );
+
+  exitTime.addEventListener(
+    "input",
+    calculateEntryDuration
+  );
+
+  document
+    .getElementById("entryVehicle")
+    .addEventListener("change", (event) => {
+      const option =
+        event.target.selectedOptions[0];
+
+      if (!option) {
+        return;
+      }
+
+      document.getElementById(
+        "entryDriver"
+      ).value =
+        option.dataset.driver || "";
+
+      document.getElementById(
+        "entryContractor"
+      ).value =
+        option.dataset.contractor || "";
+    });
+
+  form.addEventListener(
+    "submit",
+    async (event) => {
+      event.preventDefault();
+
+      const vehicleId =
+        document.getElementById(
+          "entryVehicle"
+        ).value;
+
+      const driver =
+        document.getElementById(
+          "entryDriver"
+        ).value.trim();
+
+      const contractor =
+        document.getElementById(
+          "entryContractor"
+        ).value.trim();
+
+      const date =
+        document.getElementById(
+          "entryDate"
+        ).value;
+
+      const entry =
+        document.getElementById(
+          "entryTime"
+        ).value;
+
+      const exit =
+        document.getElementById(
+          "exitTime"
+        ).value;
+
+      const purpose =
+        document.getElementById(
+          "entryPurpose"
+        ).value.trim();
+
+      const notes =
+        document.getElementById(
+          "entryNotes"
+        ).value.trim();
+
+      const button =
+        document.getElementById(
+          "saveEntryButton"
+        );
+
+      if (!vehicleId || !date || !entry) {
+        showToast(
+          "Vehicle, date and entry time are required.",
+          "error"
+        );
+        return;
       }
 
       button.disabled = true;
+      button.textContent = "Saving...";
 
-      button.innerHTML = `
-        <span class="spinner"
-              style="
-                width:16px;
-                height:16px;
-                border-width:2px;
-              ">
-        </span>
-        ${escapeHtml(loadingText)}
-      `;
-    } else {
-      button.disabled = false;
-
-      if (
-        button.dataset.originalText
-      ) {
-        button.innerHTML =
-          button.dataset.originalText;
-
-        delete button.dataset
-          .originalText;
-      }
-    }
-  }
-
-  function setFormMessage(
-    element,
-    message,
-    type = "error"
-  ) {
-    if (!element) {
-      return;
-    }
-
-    if (!message) {
-      element.innerHTML = "";
-      element.className = "";
-      return;
-    }
-
-    element.className =
-      `alert alert-${type}`;
-
-    element.textContent =
-      message;
-  }
-
-  /* =======================================================
-     AUTH PROTECTION
-  ======================================================= */
-
-  function isPublicPage() {
-    const path =
-      window.location.pathname;
-
-    return (
-      path === "/" ||
-      path.endsWith("/index.html") ||
-      path.endsWith("/login.html") ||
-      path.endsWith("/register.html")
-    );
-  }
-
-  function protectPage() {
-    if (
-      !isPublicPage() &&
-      !isLoggedIn()
-    ) {
-      window.location.href =
-        "/pages/login.html";
-    }
-  }
-
-  function redirectLoggedInUser() {
-    if (
-      !isLoggedIn()
-    ) {
-      return;
-    }
-
-    const path =
-      window.location.pathname;
-
-    if (
-      path.endsWith("/login.html") ||
-      path.endsWith("/register.html")
-    ) {
-      window.location.href =
-        "/pages/dashboard.html";
-    }
-  }
-
-  /* =======================================================
-     DISPLAY USER
-  ======================================================= */
-
-  function updateUserDisplay() {
-    const user =
-      getCurrentUser();
-
-    if (!user) {
-      return;
-    }
-
-    qsa(
-      "[data-user-name]"
-    ).forEach(
-      element => {
-        element.textContent =
-          user.name || "User";
-      }
-    );
-
-    qsa(
-      "[data-user-email]"
-    ).forEach(
-      element => {
-        element.textContent =
-          user.email ||
-          user.mobile ||
-          "";
-      }
-    );
-
-    qsa(
-      "[data-user-mobile]"
-    ).forEach(
-      element => {
-        element.textContent =
-          user.mobile || "-";
-      }
-    );
-
-    qsa(
-      "[data-user-role]"
-    ).forEach(
-      element => {
-        element.textContent =
-          user.role ||
-          "Security Guard";
-      }
-    );
-
-    qsa(
-      "[data-user-company]"
-    ).forEach(
-      element => {
-        element.textContent =
-          user.company || "-";
-      }
-    );
-
-    qsa(
-      "[data-user-initials]"
-    ).forEach(
-      element => {
-        element.textContent =
-          getInitials(
-            user.name
-          );
-      }
-    );
-  }
-
-  /* =======================================================
-     NOTIFICATION BADGE
-  ======================================================= */
-
-  async function updateNotificationBadge() {
-    if (!isLoggedIn()) {
-      return;
-    }
-
-    try {
-      const count =
-        await getUnreadNotificationCount();
-
-      qsa(
-        "[data-notification-count]"
-      ).forEach(
-        element => {
-          if (count > 0) {
-            element.textContent =
-              count > 99
-                ? "99+"
-                : String(count);
-
-            element.classList.remove(
-              "hidden"
-            );
-          } else {
-            element.textContent = "";
-            element.classList.add(
-              "hidden"
-            );
-          }
-        }
-      );
-    } catch {
-      /* Do not break page if notification
-         request fails. */
-    }
-  }
-
-  /* =======================================================
-     LOGOUT BUTTONS
-  ======================================================= */
-
-  function bindLogoutButtons() {
-    qsa(
-      "[data-logout], .logout-btn"
-    ).forEach(
-      button => {
-        if (
-          button.dataset.logoutBound
-        ) {
-          return;
-        }
-
-        button.dataset.logoutBound =
-          "true";
-
-        button.addEventListener(
-          "click",
-          event => {
-            event.preventDefault();
-
-            logout(true);
+      try {
+        await apiFetch(
+          "/entries",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              vehicle_id: Number(vehicleId),
+              driver_name: driver,
+              contractor,
+              entry_date: date,
+              entry_time: entry,
+              exit_time: exit || null,
+              purpose,
+              notes
+            })
           }
         );
-      }
-    );
-  }
 
-  /* =======================================================
-     MOBILE NAV
-  ======================================================= */
-
-  function setupMobileNav() {
-    const currentPath =
-      window.location.pathname;
-
-    qsa(
-      ".mobile-nav-item[data-page]"
-    ).forEach(
-      item => {
-        const page =
-          item.dataset.page;
-
-        if (
-          page &&
-          currentPath.includes(page)
-        ) {
-          item.classList.add(
-            "active"
-          );
-        }
-      }
-    );
-  }
-
-  /* =======================================================
-     DATE / TIME DEFAULTS
-  ======================================================= */
-
-  function setTodayDefaults() {
-    qsa(
-      'input[type="date"][data-today]'
-    ).forEach(
-      input => {
-        if (!input.value) {
-          input.value =
-            todayString();
-        }
-      }
-    );
-
-    const now =
-      new Date();
-
-    const currentTime =
-      `${pad(now.getHours())}:${pad(
-        now.getMinutes()
-      )}`;
-
-    qsa(
-      'input[type="time"][data-current-time]'
-    ).forEach(
-      input => {
-        if (!input.value) {
-          input.value =
-            currentTime;
-        }
-      }
-    );
-  }
-
-  /* =======================================================
-     DURATION CALCULATOR
-  ======================================================= */
-
-  function setupDurationCalculators() {
-    qsa(
-      "[data-duration-calculator]"
-    ).forEach(
-      calculator => {
-        const entryInput =
-          qs(
-            '[data-duration-entry]',
-            calculator
-          );
-
-        const exitInput =
-          qs(
-            '[data-duration-exit]',
-            calculator
-          );
-
-        const result =
-          qs(
-            '[data-duration-result]',
-            calculator
-          );
-
-        if (
-          !entryInput ||
-          !exitInput ||
-          !result
-        ) {
-          return;
-        }
-
-        const calculate = () => {
-          if (
-            !entryInput.value ||
-            !exitInput.value
-          ) {
-            result.textContent =
-              "0m";
-            return;
-          }
-
-          const minutes =
-            calculateDuration(
-              entryInput.value,
-              exitInput.value
-            );
-
-          result.textContent =
-            minutesToDuration(
-              minutes
-            );
-        };
-
-        entryInput.addEventListener(
-          "input",
-          calculate
+        showToast(
+          "Vehicle entry saved successfully."
         );
 
-        exitInput.addEventListener(
-          "input",
-          calculate
-        );
-      }
-    );
-  }
+        form.reset();
 
-  /* =======================================================
-     GLOBAL ERROR HANDLING
-  ======================================================= */
+        dateInput.value = todayISO();
 
-  window.addEventListener(
-    "unhandledrejection",
-    event => {
-      if (
-        event.reason instanceof Error
-      ) {
-        console.error(
-          "Unhandled promise rejection:",
-          event.reason
-        );
+        document.getElementById(
+          "entryDuration"
+        ).textContent = "—";
+
+        await loadVehicleDropdown();
+      } catch (error) {
+        showToast(error.message, "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = "SAVE ENTRY";
       }
     }
   );
 
-  /* =======================================================
-     INITIALIZATION
-  ======================================================= */
+  loadVehicleDropdown();
+}
 
-  async function initialize() {
-    protectPage();
+/* =========================================================
+   CALENDAR
+========================================================= */
 
-    redirectLoggedInUser();
+let calendarDate =
+  new Date();
 
-    updateUserDisplay();
+let selectedCalendarDate =
+  todayISO();
 
-    bindLogoutButtons();
-
-    setupMobileNav();
-
-    setTodayDefaults();
-
-    setupDurationCalculators();
-
-    if (isLoggedIn()) {
-      updateNotificationBadge();
-    }
+async function loadCalendar() {
+  if (!requireAuth()) {
+    return;
   }
 
-  /* =======================================================
-     PUBLIC API
-  ======================================================= */
+  renderCalendar();
 
-  window.MyHomeGroup = {
-    API_BASE,
+  await loadCalendarEntries(
+    selectedCalendarDate
+  );
+}
 
-    apiRequest,
+function renderCalendar() {
+  const year =
+    calendarDate.getFullYear();
 
-    getToken,
-    getCurrentUser,
-    isLoggedIn,
+  const month =
+    calendarDate.getMonth();
 
-    saveAuth,
-    clearAuth,
-
-    registerUser,
-    loginUser,
-    getMe,
-    updateProfile,
-    changePassword,
-    logout,
-
-    getVehicles,
-    createVehicle,
-    updateVehicle,
-    deleteVehicle,
-
-    getEntries,
-    createEntry,
-    deleteEntry,
-
-    getNotifications,
-    getUnreadNotificationCount,
-    createNotification,
-    sendAdminNotification,
-    markNotificationRead,
-    markAllNotificationsRead,
-    deleteNotification,
-    clearNotifications,
-
-    getAdminUsers,
-
-    todayString,
-    formatDate,
-    formatTime,
-
-    calculateDuration,
-    minutesToDuration,
-    parseTimeToMinutes,
-
-    getDateDaysAgo,
-    getMonthStart,
-    getWeekStart,
-
-    getInitials,
-    userDisplayName,
-    userRole,
-
-    escapeHtml,
-
-    showToast,
-    setButtonLoading,
-    setFormMessage,
-
-    updateUserDisplay,
-    updateNotificationBadge,
-
-    protectPage
-  };
-
-  /* =======================================================
-     BACKWARD-COMPATIBILITY GLOBALS
-  ======================================================= */
-
-  window.apiRequest =
-    apiRequest;
-
-  window.getVehicles =
-    getVehicles;
-
-  window.getEntries =
-    getEntries;
-
-  window.createVehicle =
-    createVehicle;
-
-  window.updateVehicle =
-    updateVehicle;
-
-  window.deleteVehicle =
-    deleteVehicle;
-
-  window.createEntry =
-    createEntry;
-
-  window.deleteEntry =
-    deleteEntry;
-
-  window.getNotifications =
-    getNotifications;
-
-  window.getUnreadNotificationCount =
-    getUnreadNotificationCount;
-
-  window.markNotificationRead =
-    markNotificationRead;
-
-  window.markAllNotificationsRead =
-    markAllNotificationsRead;
-
-  window.deleteNotification =
-    deleteNotification;
-
-  window.clearNotifications =
-    clearNotifications;
-
-  window.showToast =
-    showToast;
-
-  window.logout =
-    logout;
-
-  /* =======================================================
-     START
-  ======================================================= */
-
-  if (
-    document.readyState === "loading"
-  ) {
-    document.addEventListener(
-      "DOMContentLoaded",
-      initialize
+  const title =
+    document.getElementById(
+      "calendarMonth"
     );
-  } else {
-    initialize();
+
+  if (title) {
+    title.textContent =
+      calendarDate.toLocaleDateString(
+        "en-IN",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      );
   }
 
-})();
+  const daysContainer =
+    document.getElementById(
+      "calendarDays"
+    );
+
+  if (!daysContainer) {
+    return;
+  }
+
+  const firstDay =
+    new Date(
+      year,
+      month,
+      1
+    ).getDay();
+
+  const mondayOffset =
+    firstDay === 0
+      ? 6
+      : firstDay - 1;
+
+  const daysInMonth =
+    new Date(
+      year,
+      month + 1,
+      0
+    ).getDate();
+
+  const daysInPreviousMonth =
+    new Date(
+      year,
+      month,
+      0
+    ).getDate();
+
+  let html = "";
+
+  for (
+    let i = mondayOffset - 1;
+    i >= 0;
+    i--
+  ) {
+    const day =
+      daysInPreviousMonth - i;
+
+    html += `
+      <div class="calendar-day other-month">
+        ${day}
+      </div>
+    `;
+  }
+
+  for (
+    let day = 1;
+    day <= daysInMonth;
+    day++
+  ) {
+    const date =
+      `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+    const selected =
+      date === selectedCalendarDate;
+
+    html += `
+      <button
+        type="button"
+        class="calendar-day ${
+          selected ? "selected" : ""
+        }"
+        onclick="selectCalendarDate('${date}')"
+      >
+        ${day}
+      </button>
+    `;
+  }
+
+  const totalCells =
+    mondayOffset + daysInMonth;
+
+  const remaining =
+    totalCells % 7 === 0
+      ? 0
+      : 7 - (totalCells % 7);
+
+  for (
+    let day = 1;
+    day <= remaining;
+    day++
+  ) {
+    html += `
+      <div class="calendar-day other-month">
+        ${day}
+      </div>
+    `;
+  }
+
+  daysContainer.innerHTML = html;
+}
+
+async function selectCalendarDate(date) {
+  selectedCalendarDate = date;
+
+  renderCalendar();
+
+  await loadCalendarEntries(date);
+}
+
+async function loadCalendarEntries(date) {
+  const container =
+    document.getElementById(
+      "calendarEntries"
+    );
+
+  if (!container) {
+    return;
+  }
+
+  document.getElementById(
+    "selectedCalendarDate"
+  ).textContent =
+    formatDate(date);
+
+  container.innerHTML =
+    `<div class="loading">Loading...</div>`;
+
+  try {
+    const data =
+      await apiFetch(
+        `/calendar/${date}`
+      );
+
+    renderCalendarEntries(
+      data.entries || [],
+      data.total_duration || "0h 0m"
+    );
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+function renderCalendarEntries(
+  entries,
+  total
+) {
+  const container =
+    document.getElementById(
+      "calendarEntries"
+    );
+
+  if (!entries.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📅</div>
+        <h3>No vehicles</h3>
+        <p>No vehicle activity was recorded on this date.</p>
+      </div>
+    `;
+
+    document.getElementById(
+      "calendarTotal"
+    ).textContent = "0h 0m";
+
+    return;
+  }
+
+  container.innerHTML =
+    entries
+      .map(
+        (entry) => `
+          <div class="activity-item">
+
+            <div class="activity-main">
+              <strong>
+                ${escapeHtml(
+                  entry.vehicle_type
+                )}
+                —
+                ${escapeHtml(
+                  entry.vehicle_number
+                )}
+              </strong>
+
+              <span>
+                ${formatTime(
+                  entry.entry_time
+                )}
+                →
+                ${
+                  entry.exit_time
+                    ? formatTime(
+                        entry.exit_time
+                      )
+                    : "Running"
+                }
+              </span>
+            </div>
+
+            <div class="activity-duration">
+              ${
+                entry.duration_formatted ||
+                "Running"
+              }
+            </div>
+
+          </div>
+        `
+      )
+      .join("");
+
+  document.getElementById(
+    "calendarTotal"
+  ).textContent = total;
+}
+
+function previousMonth() {
+  calendarDate.setMonth(
+    calendarDate.getMonth() - 1
+  );
+
+  renderCalendar();
+}
+
+function nextMonth() {
+  calendarDate.setMonth(
+    calendarDate.getMonth() + 1
+  );
+
+  renderCalendar();
+}
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+async function loadReportFilters() {
+  const vehicleSelect =
+    document.getElementById(
+      "reportVehicle"
+    );
+
+  if (!vehicleSelect) {
+    return;
+  }
+
+  try {
+    const data =
+      await apiFetch("/vehicles");
+
+    vehicleSelect.innerHTML = `
+      <option value="">All</option>
+    `;
+
+    data.vehicles.forEach((vehicle) => {
+      const option =
+        document.createElement("option");
+
+      option.value = vehicle.id;
+
+      option.textContent =
+        `${vehicle.vehicle_number} — ${vehicle.vehicle_type}`;
+
+      vehicleSelect.appendChild(option);
+    });
+
+    const drivers =
+      [
+        ...new Set(
+          data.vehicles
+            .map(
+              (vehicle) =>
+                vehicle.driver_name
+            )
+            .filter(Boolean)
+        )
+      ];
+
+    const contractors =
+      [
+        ...new Set(
+          data.vehicles
+            .map(
+              (vehicle) =>
+                vehicle.contractor
+            )
+            .filter(Boolean)
+        )
+      ];
+
+    const driverSelect =
+      document.getElementById(
+        "reportDriver"
+      );
+
+    const contractorSelect =
+      document.getElementById(
+        "reportContractor"
+      );
+
+    driverSelect.innerHTML =
+      `<option value="">All</option>`;
+
+    contractorSelect.innerHTML =
+      `<option value="">All</option>`;
+
+    drivers.forEach((driver) => {
+      driverSelect.innerHTML += `
+        <option value="${escapeHtml(driver)}">
+          ${escapeHtml(driver)}
+        </option>
+      `;
+    });
+
+    contractors.forEach((contractor) => {
+      contractorSelect.innerHTML += `
+        <option value="${escapeHtml(contractor)}">
+          ${escapeHtml(contractor)}
+        </option>
+      `;
+    });
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+async function generateReport() {
+  const params =
+    new URLSearchParams();
+
+  const from =
+    document.getElementById(
+      "reportFrom"
+    ).value;
+
+  const to =
+    document.getElementById(
+      "reportTo"
+    ).value;
+
+  const vehicle =
+    document.getElementById(
+      "reportVehicle"
+    ).value;
+
+  const driver =
+    document.getElementById(
+      "reportDriver"
+    ).value;
+
+  const contractor =
+    document.getElementById(
+      "reportContractor"
+    ).value;
+
+  if (from) {
+    params.set("from", from);
+  }
+
+  if (to) {
+    params.set("to", to);
+  }
+
+  if (vehicle) {
+    params.set(
+      "vehicle_id",
+      vehicle
+    );
+  }
+
+  if (driver) {
+    params.set(
+      "driver",
+      driver
+    );
+  }
+
+  if (contractor) {
+    params.set(
+      "contractor",
+      contractor
+    );
+  }
+
+  try {
+    const data =
+      await apiFetch(
+        `/reports?${params.toString()}`
+      );
+
+    renderReport(
+      data.summary,
+      data.entries
+    );
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+function renderReport(
+  summary,
+  entries
+) {
+  document.getElementById(
+    "reportVehicles"
+  ).textContent =
+    summary.total_vehicles;
+
+  document.getElementById(
+    "reportEntries"
+  ).textContent =
+    summary.total_entries;
+
+  document.getElementById(
+    "reportDuration"
+  ).textContent =
+    summary.total_duration ||
+    "0h 0m";
+
+  const tableBody =
+    document.getElementById(
+      "reportTableBody"
+    );
+
+  if (!entries.length) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="8">
+          <div class="empty-state">
+            No report data found.
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tableBody.innerHTML =
+    entries
+      .map(
+        (entry) => `
+          <tr>
+            <td>
+              ${formatDate(
+                entry.entry_date
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                entry.vehicle_number
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                entry.vehicle_type
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                entry.driver_name ||
+                "—"
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                entry.contractor ||
+                "—"
+              )}
+            </td>
+
+            <td>
+              ${formatTime(
+                entry.entry_time
+              )}
+            </td>
+
+            <td>
+              ${
+                entry.exit_time
+                  ? formatTime(
+                      entry.exit_time
+                    )
+                  : "Running"
+              }
+            </td>
+
+            <td>
+              ${
+                entry.duration_formatted ||
+                "Running"
+              }
+            </td>
+          </tr>
+        `
+      )
+      .join("");
+}
+
+/* =========================================================
+   REPORT EXPORT
+========================================================= */
+
+function exportReportCSV() {
+  const rows =
+    [
+      [
+        "Date",
+        "Vehicle",
+        "Type",
+        "Driver",
+        "Contractor",
+        "Entry",
+        "Exit",
+        "Duration"
+      ]
+    ];
+
+  document
+    .querySelectorAll(
+      "#reportTableBody tr"
+    )
+    .forEach((row) => {
+      const cells =
+        [...row.children]
+          .map(
+            (cell) =>
+              cell.textContent
+                .trim()
+                .replaceAll(",", " ")
+          );
+
+      if (cells.length === 8) {
+        rows.push(cells);
+      }
+    });
+
+  if (rows.length === 1) {
+    showToast(
+      "No report data to export.",
+      "error"
+    );
+
+    return;
+  }
+
+  const csv =
+    rows
+      .map(
+        (row) =>
+          row
+            .map(
+              (value) =>
+                `"${value.replaceAll(
+                  '"',
+                  '""'
+                )}"`
+            )
+            .join(",")
+      )
+      .join("\n");
+
+  const blob =
+    new Blob(
+      [csv],
+      {
+        type: "text/csv;charset=utf-8;"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+  link.download =
+    `my-home-group-report-${todayISO()}.csv`;
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+async function loadProfile() {
+  if (!requireAuth()) {
+    return;
+  }
+
+  try {
+    const data =
+      await apiFetch(
+        "/auth/profile"
+      );
+
+    const user =
+      data.user;
+
+    setStoredUser(user);
+
+    const fields = {
+      profileName:
+        user.name,
+      profileEmail:
+        user.email,
+      profileMobile:
+        user.mobile || "XXXXXXXXXX",
+      profileRole:
+        user.role || "—",
+      profileCompany:
+        user.company || "—"
+    };
+
+    Object.entries(fields)
+      .forEach(
+        ([id, value]) => {
+          const element =
+            document.getElementById(id);
+
+          if (element) {
+            element.textContent =
+              value;
+          }
+        }
+      );
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+async function loadNotifications() {
+  if (!requireAuth()) {
+    return;
+  }
+
+  const container =
+    document.getElementById(
+      "notificationList"
+    );
+
+  if (!container) {
+    return;
+  }
+
+  try {
+    const data =
+      await apiFetch(
+        "/notifications"
+      );
+
+    renderNotifications(
+      data.notifications || []
+    );
+
+    updateNotificationBadge(
+      data.notifications || []
+    );
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+function renderNotifications(
+  notifications
+) {
+  const container =
+    document.getElementById(
+      "notificationList"
+    );
+
+  if (!notifications.length) {
+    container.innerHTML = `
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-state-icon">🔔</div>
+          <h3>No notifications</h3>
+          <p>You are all caught up.</p>
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    notifications
+      .map(
+        (notification) => `
+          <article
+            class="notification-item ${
+              notification.is_read
+                ? ""
+                : "unread"
+            }"
+          >
+
+            <div class="notification-content">
+
+              <div class="notification-icon">
+                🔔
+              </div>
+
+              <div>
+                <h3>
+                  ${escapeHtml(
+                    notification.title
+                  )}
+                </h3>
+
+                <p>
+                  ${escapeHtml(
+                    notification.message
+                  )}
+                </p>
+
+                <div class="notification-time">
+                  ${formatDateTime(
+                    notification.created_at
+                  )}
+                </div>
+              </div>
+
+            </div>
+
+            <div class="notification-actions">
+
+              ${
+                !notification.is_read
+                  ? `
+                    <button
+                      class="btn btn-secondary"
+                      onclick="markNotificationRead(${notification.id})"
+                    >
+                      Mark Read
+                    </button>
+                  `
+                  : ""
+              }
+
+              <button
+                class="btn btn-danger"
+                onclick="deleteNotification(${notification.id})"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          </article>
+        `
+      )
+      .join("");
+}
+
+function updateNotificationBadge(
+  notifications
+) {
+  const unread =
+    notifications.filter(
+      (item) =>
+        !item.is_read
+    ).length;
+
+  document
+    .querySelectorAll(
+      ".notification-badge"
+    )
+    .forEach((badge) => {
+      badge.textContent =
+        unread > 99
+          ? "99+"
+          : unread;
+
+      badge.classList.toggle(
+        "hidden",
+        unread === 0
+      );
+    });
+}
+
+async function markNotificationRead(
+  id
+) {
+  try {
+    await apiFetch(
+      `/notifications/${id}/read`,
+      {
+        method: "PATCH"
+      }
+    );
+
+    loadNotifications();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+async function markAllNotificationsRead() {
+  try {
+    await apiFetch(
+      "/notifications/read-all",
+      {
+        method: "PATCH"
+      }
+    );
+
+    showToast(
+      "All notifications marked as read."
+    );
+
+    loadNotifications();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+async function deleteNotification(
+  id
+) {
+  try {
+    await apiFetch(
+      `/notifications/${id}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    loadNotifications();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+async function clearAllNotifications() {
+  const confirmed =
+    confirm(
+      "Clear all notifications?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    await apiFetch(
+      "/notifications",
+      {
+        method: "DELETE"
+      }
+    );
+
+    showToast(
+      "All notifications cleared."
+    );
+
+    loadNotifications();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+/* =========================================================
+   NOTIFICATION BADGE - HEADER
+========================================================= */
+
+async function loadNotificationBadge() {
+  if (!getToken()) {
+    return;
+  }
+
+  try {
+    const data =
+      await apiFetch(
+        "/notifications"
+      );
+
+    updateNotificationBadge(
+      data.notifications || []
+    );
+  } catch {
+    // Do not show errors on every page.
+  }
+}
+
+/* =========================================================
+   PAGE INITIALIZATION
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    setupCommonHeader();
+
+    setupLoginPage();
+
+    setupRegisterPage();
+
+    setupPersonalDuration();
+
+    setupEntryPage();
+
+    if (
+      document.getElementById(
+        "dashboardPage"
+      )
+    ) {
+      loadDashboard();
+    }
+
+    if (
+      document.getElementById(
+        "vehicleList"
+      )
+    ) {
+      loadVehicleTypes(
+        "vehicleType"
+      );
+
+      loadVehicles();
+    }
+
+    if (
+      document.getElementById(
+        "calendarDays"
+      )
+    ) {
+      loadCalendar();
+    }
+
+    if (
+      document.getElementById(
+        "reportTableBody"
+      )
+    ) {
+      loadReportFilters();
+
+      const today =
+        todayISO();
+
+      document.getElementById(
+        "reportFrom"
+      ).value = today;
+
+      document.getElementById(
+        "reportTo"
+      ).value = today;
+
+      generateReport();
+    }
+
+    if (
+      document.getElementById(
+        "profileName"
+      )
+    ) {
+      loadProfile();
+    }
+
+    if (
+      document.getElementById(
+        "notificationList"
+      )
+    ) {
+      loadNotifications();
+    }
+
+    loadNotificationBadge();
+  }
+);
