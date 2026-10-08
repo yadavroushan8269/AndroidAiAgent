@@ -1,49 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="theme-color"
-    content="#f5a400"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - My Home Group</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
 
-  <link
-    rel="stylesheet"
-    href="../style.css"
-  >
+<body>
 
-  <style>
-    .password-wrap {
-      position: relative;
+<div class="auth-page">
+
+  <div class="auth-card">
+
+    <div class="auth-logo">MH</div>
+
+    <h1 class="auth-title">Welcome Back</h1>
+
+    <p class="auth-subtitle">
+      Sign in to My Home Group Vehicle Management
+    </p>
+
+    <div id="loginMessage"></div>
+
+    <form id="loginForm" class="auth-form">
+
+      <div class="form-group">
+        <label class="form-label">
+          Email or Mobile
+        </label>
+
+        <input
+          id="login"
+          name="login"
+          type="text"
+          class="form-control"
+          placeholder="Enter email or mobile"
+          autocomplete="username"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Password
+        </label>
+
+        <input
+          id="password"
+          name="password"
+          type="password"
+          class="form-control"
+          placeholder="Enter password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button
+        id="loginButton"
+        type="submit"
+        class="btn btn-primary btn-block"
+      >
+        Login
+      </button>
+
+    </form>
+
+    <div class="auth-bottom">
+      <div>
+        Don't have an account?
+        <a href="/pages/register.html">
+          Register
+        </a>
+      </div>
+
+      <div style="margin-top:8px;">
+        <a href="#" id="forgotPassword">
+          Forgot password?
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="../app.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const form = document.getElementById("loginForm");
+  const button = document.getElementById("loginButton");
+  const message = document.getElementById("loginMessage");
+
+  form.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    message.innerHTML = "";
+
+    const login =
+      document.getElementById("login").value.trim();
+
+    const password =
+      document.getElementById("password").value;
+
+    if (!login || !password) {
+      MyHomeGroup.setFormMessage(
+        message,
+        "Please enter your email/mobile and password.",
+        "error"
+      );
+      return;
     }
 
-    .password-wrap input {
-      width: 100%;
-      box-sizing: border-box;
-      padding-right: 50px;
+    try {
+
+      MyHomeGroup.setButtonLoading(
+        button,
+        true,
+        "Signing in..."
+      );
+
+      await MyHomeGroup.loginUser(
+        login,
+        password
+      );
+
+      MyHomeGroup.showToast(
+        "Login successful.",
+        "success"
+      );
+
+      window.location.href =
+        "/pages/dashboard.html";
+
+    } catch (error) {
+
+      MyHomeGroup.setFormMessage(
+        message,
+        error.message ||
+          "Login failed.",
+        "error"
+      );
+
+      MyHomeGroup.setButtonLoading(
+        button,
+        false
+      );
     }
 
-    .password-toggle {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      padding: 8px;
-      font-size: 20px;
-      cursor: pointer;
-    }
+  });
 
-    .form-message {
-      min-height: 22px;
-      margin: 10
+  document
+    .getElementById("forgotPassword")
+    .addEventListener("click", (event) => {
+
+      event.preventDefault();
+
+      MyHomeGroup.showToast(
+        "Please contact your site administrator to reset your password.",
+        "warning"
+      );
+
+    });
+
+});
+</script>
+
+</body>
+</html>
