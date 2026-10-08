@@ -1,519 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="My Home Group Vehicle Duration Management System"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
   >
 
   <meta
     name="theme-color"
-    content="#f59e0b"
+    content="#f5a400"
   >
 
-  <title>My Home Group | Vehicle Duration Management</title>
-
-  <link rel="stylesheet" href="style.css">
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-    }
-
-    body {
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-      background:
-        linear-gradient(
-          135deg,
-          #fffaf0 0%,
-          #f8fafc 50%,
-          #ffffff 100%
-        );
-
-      color: #1f2937;
-    }
-
-    .welcome-page {
-      min-height: 100vh;
-      min-height: 100dvh;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 20px;
-    }
-
-    .welcome-container {
-      width: 100%;
-      max-width: 520px;
-    }
-
-    .welcome-card {
-      width: 100%;
-
-      background: #ffffff;
-
-      border: 1px solid #f1f5f9;
-
-      border-radius: 28px;
-
-      padding: 38px 28px 30px;
-
-      text-align: center;
-
-      box-shadow:
-        0 20px 60px rgba(15, 23, 42, 0.10),
-        0 4px 15px rgba(15, 23, 42, 0.05);
-    }
-
-    .logo-wrapper {
-      width: 100px;
-      height: 100px;
-
-      margin: 0 auto 22px;
-
-      border-radius: 28px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background:
-        linear-gradient(
-          135deg,
-          #f59e0b,
-          #f97316
-        );
-
-      box-shadow:
-        0 12px 25px rgba(245, 158, 11, 0.25);
-    }
-
-    .logo-icon {
-      font-size: 52px;
-      line-height: 1;
-    }
-
-    .welcome-title {
-      margin: 0;
-
-      font-size: 30px;
-
-      line-height: 1.2;
-
-      font-weight: 800;
-
-      color: #111827;
-    }
-
-    .welcome-subtitle {
-      margin: 9px 0 0;
-
-      font-size: 17px;
-
-      line-height: 1.4;
-
-      font-weight: 700;
-
-      color: #f59e0b;
-    }
-
-    .site-name {
-      margin: 8px 0 0;
-
-      font-size: 14px;
-
-      color: #6b7280;
-
-      font-weight: 600;
-    }
-
-    .welcome-description {
-      margin: 22px auto 28px;
-
-      max-width: 430px;
-
-      font-size: 14px;
-
-      line-height: 1.7;
-
-      color: #6b7280;
-    }
-
-    .features {
-      display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
-      gap: 10px;
-
-      margin-bottom: 28px;
-    }
-
-    .feature {
-      padding: 13px 8px;
-
-      border-radius: 14px;
-
-      background: #f8fafc;
-
-      border: 1px solid #eef2f7;
-    }
-
-    .feature-icon {
-      display: block;
-
-      font-size: 23px;
-
-      margin-bottom: 6px;
-    }
-
-    .feature-text {
-      display: block;
-
-      font-size: 11px;
-
-      line-height: 1.3;
-
-      color: #6b7280;
-
-      font-weight: 600;
-    }
-
-    .get-started {
-      width: 100%;
-
-      min-height: 54px;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      text-decoration: none;
-
-      border: 0;
-
-      border-radius: 15px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #f59e0b,
-          #f97316
-        );
-
-      color: #ffffff;
-
-      font-size: 17px;
-
-      font-weight: 800;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 10px 22px rgba(245, 158, 11, 0.25);
-
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
-    }
-
-    .get-started:hover {
-      transform: translateY(-2px);
-
-      box-shadow:
-        0 14px 28px rgba(245, 158, 11, 0.30);
-    }
-
-    .get-started:active {
-      transform: scale(0.98);
-    }
-
-    .get-started-arrow {
-      margin-left: 9px;
-
-      font-size: 20px;
-    }
-
-    .login-hint {
-      margin: 13px 0 0;
-
-      font-size: 12px;
-
-      color: #9ca3af;
-    }
-
-    .footer {
-      margin-top: 25px;
-
-      padding-top: 18px;
-
-      border-top: 1px solid #f1f5f9;
-
-      font-size: 11px;
-
-      line-height: 1.5;
-
-      color: #9ca3af;
-    }
-
-    .status {
-      display: inline-flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      gap: 6px;
-
-      margin-top: 12px;
-
-      font-size: 11px;
-
-      color: #6b7280;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-
-      border-radius: 50%;
-
-      background: #22c55e;
-
-      box-shadow:
-        0 0 0 3px rgba(34, 197, 94, 0.12);
-    }
-
-    @media (max-width: 480px) {
-      .welcome-page {
-        padding: 14px;
-      }
-
-      .welcome-card {
-        padding:
-          30px 18px 24px;
-
-        border-radius: 23px;
-      }
-
-      .logo-wrapper {
-        width: 86px;
-        height: 86px;
-
-        border-radius: 23px;
-      }
-
-      .logo-icon {
-        font-size: 45px;
-      }
-
-      .welcome-title {
-        font-size: 27px;
-      }
-
-      .welcome-subtitle {
-        font-size: 16px;
-      }
-
-      .welcome-description {
-        margin-top: 18px;
-        margin-bottom: 23px;
-      }
-
-      .features {
-        gap: 7px;
-      }
-
-      .feature {
-        padding:
-          11px 5px;
-      }
-
-      .feature-icon {
-        font-size: 20px;
-      }
-
-      .feature-text {
-        font-size: 10px;
-      }
-
-      .get-started {
-        min-height: 52px;
-        font-size: 16px;
-      }
-    }
-
-    @media (max-width: 350px) {
-      .welcome-title {
-        font-size: 24px;
-      }
-
-      .features {
-        grid-template-columns: 1fr;
-      }
-
-      .feature {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-      }
-
-      .feature-icon {
-        margin-bottom: 0;
-      }
-    }
-  </style>
+  <title>Dashboard - Hyma RMC Kokapet</title>
+
+  <link
+    rel="stylesheet"
+    href="../style.css"
+  >
 </head>
 
 <body>
 
-  <main class="welcome-page">
+  <div class="app-page">
 
-    <div class="welcome-container">
+    <header class="top-header">
 
-      <section class="welcome-card">
+      <div>
 
-        <!-- Logo -->
-        <div
-          class="logo-wrapper"
-          aria-label="My Home Group"
-        >
-          <span class="logo-icon">🚧</span>
-        </div>
-
-        <!-- Main heading -->
-        <h1 class="welcome-title">
-          My Home Group
+        <h1 id="dashboardTitle">
+          Dashboard
         </h1>
 
-        <div class="welcome-subtitle">
-          Vehicle Duration Management
-        </div>
-
-        <div class="site-name">
-          Construction Site Management System
-        </div>
-
-        <!-- Description -->
-        <p class="welcome-description">
-          Manage vehicles, drivers, contractors,
-          entry and exit times, vehicle duration,
-          daily activity and reports from one simple
-          management system.
+        <p id="dashboardDate">
+          Today
         </p>
 
-        <!-- Features -->
-        <div class="features">
+      </div>
 
-          <div class="feature">
-            <span class="feature-icon">🚚</span>
-            <span class="feature-text">
-              Vehicles
-            </span>
-          </div>
+      <button
+        id="notificationBtn"
+        class="header-action notification-badge"
+        type="button"
+      >
+        🔔
+      </button>
 
-          <div class="feature">
-            <span class="feature-icon">⏱️</span>
-            <span class="feature-text">
-              Duration
-            </span>
-          </div>
+    </header>
 
-          <div class="feature">
-            <span class="feature-icon">📊</span>
-            <span class="feature-text">
-              Reports
-            </span>
-          </div>
 
-        </div>
+    <main class="page-content">
 
-        <!-- Get Started -->
-        <a
-          id="getStartedButton"
-          class="get-started"
-          href="./pages/login.html"
-          aria-label="Get Started"
-        >
-          <span>
-            Get Started
-          </span>
 
-          <span class="get-started-arrow">
-            →
-          </span>
-        </a>
+      <section class="dashboard-welcome">
 
-        <p class="login-hint">
-          Login or create your account to continue
+        <h2 id="welcomeName">
+          Welcome
+        </h2>
+
+        <p>
+          Vehicle duration management
         </p>
 
-        <!-- System status -->
-        <div class="status">
-          <span class="status-dot"></span>
+      </section>
+
+
+      <section class="stats-grid">
+
+        <div class="stat-card">
+
+          <strong id="dashboardVehicleCount">
+            0
+          </strong>
+
           <span>
-            System available
+            Vehicles
           </span>
+
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-          My Home Group<br>
-          Vehicle Duration Management System
+
+        <div class="stat-card green">
+
+          <strong id="dashboardRunningCount">
+            0
+          </strong>
+
+          <span>
+            Running
+          </span>
+
+        </div>
+
+
+        <div class="stat-card orange">
+
+          <strong id="dashboardEntryCount">
+            0
+          </strong>
+
+          <span>
+            Today's Entries
+          </span>
+
+        </div>
+
+
+        <div class="stat-card blue">
+
+          <strong id="dashboardDuration">
+            0h 0m
+          </strong>
+
+          <span>
+            Total Duration
+          </span>
+
         </div>
 
       </section>
 
-    </div>
 
-  </main>
+      <section>
 
-  <script>
-    /*
-      Get Started navigation backup.
+        <div class="section-heading">
 
-      The normal anchor link above should open:
-      /pages/login.html
+          <div>
 
-      This click handler provides a second navigation
-      method in case the browser has any issue.
-    */
+            <h2>
+              Quick Actions
+            </h2>
 
-    document
-      .getElementById("getStartedButton")
-      .addEventListener("click", function (event) {
+            <p>
+              Frequently used options
+            </p>
 
-        event.preventDefault();
+          </div>
 
-        window.location.href = "./pages/login.html";
+        </div>
 
-      });
-  </script>
+
+        <div class="quick-actions">
+
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/add-entry.html'"
+          >
+
+            <span>
+              ➕
+            </span>
+
+            <strong>
+              Add Entry
+            </strong>
+
+            <span>
+              Record vehicle entry
+            </span>
+
+          </button>
+
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/vehicles.html'"
+          >
+
+            <span>
+              🚚
+            </span>
+
+            <strong>
+              Vehicles
+            </strong>
+
+            <span>
+              Manage vehicles
+            </span>
+
+          </button>
+
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/calendar.html'"
+          >
+
+            <span>
+              📅
+            </span>
+
+            <strong>
+              Calendar
+            </strong>
+
+            <span>
+              View daily activity
+            </span>
+
+          </button>
+
+
+          <button
+            class="quick-action"
+            type="button"
+            onclick="window.location.href='/pages/reports.html'"
+          >
+
+            <span>
+              📊
+            </span>
+
+            <strong>
+              Reports
+            </strong>
+
+            <span>
+              View duration reports
+            </span>
+
+          </button>
+
+
+        </div>
+
+      </section>
+
+
+      <section>
+
+        <div class="section-heading">
+
+          <div>
+
+            <h2>
+              Today's Activity
+            </h2>
+
+            <p>
+              Latest vehicle entries
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="dashboardActivityList"
+          class="activity-list"
+        ></div>
+
+      </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+    ====================================================== -->
+
+    <nav class="bottom-nav">
+
+
+      <button
+        class="nav-item active"
+        type="button"
+        onclick="window.location.href='/pages/dashboard.html'"
+      >
+
+        <span>
+          ⌂
+        </span>
+
+        <small>
+          Home
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        onclick="window.location.href='/pages/vehicles.html'"
+      >
+
+        <span>
+          🚚
+        </span>
+
+        <small>
+          Vehicles
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item add-nav"
+        type="button"
+        onclick="window.location.href='/pages/add-entry.html'"
+        aria-label="Add Entry"
+      >
+
+        <span>
+          +
+        </span>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        onclick="window.location.href='/pages/calendar.html'"
+      >
+
+        <span>
+          ▣
+        </span>
+
+        <small>
+          Calendar
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        onclick="window.location.href='/pages/profile.html'"
+      >
+
+        <span>
+          👤
+        </span>
+
+        <small>
+          You
+        </small>
+
+      </button>
+
+
+    </nav>
+
+  </div>
+
+
+  <script src="../app.js"></script>
 
 </body>
+
 </html>
