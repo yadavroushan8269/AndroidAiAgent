@@ -10,13 +10,13 @@ const PORT = process.env.PORT || 10000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
-  console.error("JWT_SECRET is missing or too short.");
+  console.error("ERROR: JWT_SECRET must be set and at least 32 characters long.");
   process.exit(1);
 }
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production"
+  ssl: process.env.DATABASE_URL
     ? { rejectUnauthorized: false }
     : false
 });
@@ -33,28 +33,24 @@ async function initDatabase() {
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       name VARCHAR(120) NOT NULL,
-      email VARCHAR(180) UNIQUE NOT NULL,
+      email VARCHAR(180) UNIQUE,
       mobile VARCHAR(30),
       password_hash TEXT NOT NULL,
       role VARCHAR(30) NOT NULL DEFAULT 'Security Guard',
       company VARCHAR(180),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-  `);
 
-  await pool.query(`
     CREATE TABLE IF NOT EXISTS vehicles (
       id SERIAL PRIMARY KEY,
       vehicle_number VARCHAR(50) UNIQUE NOT NULL,
       vehicle_type VARCHAR(80) NOT NULL,
       driver_name VARCHAR(120),
       contractor VARCHAR(180),
-      status VARCHAR(30) DEFAULT 'Active',
+      status VARCHAR(30) NOT NULL DEFAULT 'Active',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-  `);
 
-  await pool.query(`
     CREATE TABLE IF NOT EXISTS entries (
       id SERIAL PRIMARY KEY,
       vehicle_id INTEGER REFERENCES vehicles(id) ON DELETE SET NULL,
@@ -67,41 +63,72 @@ async function initDatabase() {
       entry_time TIME NOT NULL,
       exit_time TIME,
       duration INTEGER DEFAULT 0,
-      purpose TEXT,
+      purpose VARCHAR(180),
       notes TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-  `);
 
-  await pool.query(`
     CREATE TABLE IF NOT EXISTS notifications (
       id SERIAL PRIMARY KEY,
       user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
       title VARCHAR(200) NOT NULL,
       message TEXT NOT NULL,
-      type VARCHAR(50) DEFAULT 'general',
+      type VARCHAR(50) DEFAULT 'info',
       is_read BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE INDEX IF NOT EXISTS idx_entries_date
+      ON entries(entry_date);
+
+    CREATE INDEX IF NOT EXISTS idx_entries_vehicle
+      ON entries(vehicle_id);
+
+    CREATE INDEX IF NOT EXISTS idx_entries_user
+      ON entries(user_id);
+
+    CREATE INDEX IF NOT EXISTS idx_notifications_user
+      ON notifications(user_id);
   `);
 
-  console.log("Database tables ready.");
+  console.log("Database initialized");
 }
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-function createToken(user) {
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+function cleanString(value) {
+  if (value === undefined || value === null) return "";
+  return String(value).trim();
+}
+
+function signToken(user) {
   return jwt.sign(
     {
       id: user.id,
-      email: user.email,
-      role: user.role
+      role: user.role,
+      email: user.email || ""
     },
     JWT_SECRET,
     { expiresIn: "7d" }
   );
+}
+
+function publicUser(user) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    mobile: user.mobile,
+    role: user.role,
+    company: user.company,
+    created_at: user.created_at
+  };
 }
 
 function getTokenFromRequest(req) {
@@ -111,8 +138,12 @@ function getTokenFromRequest(req) {
     return null;
   }
 
-  return header.substring(7);
+  return header.slice(7).trim();
 }
+
+/* =========================================================
+   AUTH MIDDLEWARE
+========================================================= */
 
 function authRequired(req, res, next) {
   try {
@@ -120,18 +151,19 @@ function authRequired(req, res, next) {
 
     if (!token) {
       return res.status(401).json({
-        message: "Authentication required."
+        success: false,
+        message: "Authentication required"
       });
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
 
     req.user = decoded;
-
     next();
   } catch (error) {
     return res.status(401).json({
-      message: "Invalid or expired token."
+      success: false,
+      message: "Invalid or expired token"
     });
   }
 }
@@ -139,38 +171,12 @@ function authRequired(req, res, next) {
 function adminRequired(req, res, next) {
   if (!req.user || req.user.role !== "Admin") {
     return res.status(403).json({
-      message: "Admin access required."
+      success: false,
+      message: "Admin access required"
     });
   }
 
   next();
-}
-
-function calculateDuration(entryTime, exitTime) {
-  if (!entryTime || !exitTime) {
-    return 0;
-  }
-
-  const [eh, em] = String(entryTime).split(":").map(Number);
-  const [xh, xm] = String(exitTime).split(":").map(Number);
-
-  if (
-    Number.isNaN(eh) ||
-    Number.isNaN(em) ||
-    Number.isNaN(xh) ||
-    Number.isNaN(xm)
-  ) {
-    return 0;
-  }
-
-  let start = eh * 60 + em;
-  let end = xh * 60 + xm;
-
-  if (end < start) {
-    end += 24 * 60;
-  }
-
-  return end - start;
 }
 
 /* =========================================================
@@ -183,75 +189,83 @@ app.get("/health", async (req, res) => {
 
     res.json({
       status: "ok",
-      app: "My Home Group",
-      service: "Vehicle Duration Management",
-      database: "connected"
+      database: "connected",
+      service: "My Home Group Vehicle Duration Management"
     });
   } catch (error) {
     console.error("Health error:", error);
 
     res.status(500).json({
       status: "error",
-      app: "My Home Group",
       database: "disconnected"
     });
   }
 });
 
 /* =========================================================
-   AUTH
+   AUTH - REGISTER
 ========================================================= */
 
 app.post("/api/auth/register", async (req, res) => {
   try {
-    const {
-      name,
-      email,
-      mobile,
-      password,
-      company
-    } = req.body;
+    const name = cleanString(req.body.name);
+    const email = normalizeEmail(req.body.email);
+    const mobile = cleanString(req.body.mobile);
+    const password = String(req.body.password || "");
+    const company = cleanString(req.body.company);
 
-    if (!name || !email || !password) {
+    if (!name) {
       return res.status(400).json({
-        message: "Name, email and password are required."
+        success: false,
+        message: "Name is required"
       });
     }
 
-    if (String(password).length < 6) {
+    if (!email && !mobile) {
       return res.status(400).json({
-        message: "Password must be at least 6 characters."
+        success: false,
+        message: "Email or mobile is required"
       });
     }
 
-    const normalizedEmail = String(email).trim().toLowerCase();
-
-    const existing = await pool.query(
-      "SELECT id FROM users WHERE email = $1",
-      [normalizedEmail]
-    );
-
-    if (existing.rows.length) {
-      return res.status(409).json({
-        message: "An account with this email already exists."
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters"
       });
     }
 
-    const passwordHash = await bcrypt.hash(
-      String(password),
-      12
-    );
+    if (email) {
+      const existing = await pool.query(
+        "SELECT id FROM users WHERE email = $1",
+        [email]
+      );
 
+      if (existing.rows.length) {
+        return res.status(409).json({
+          success: false,
+          message: "Email already registered"
+        });
+      }
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    /*
+      Public registration always creates Security Guard.
+      Admin cannot be created by sending role from frontend.
+    */
     const result = await pool.query(
       `
       INSERT INTO users
-      (name, email, mobile, password_hash, role, company)
-      VALUES ($1, $2, $3, $4, $5, $6)
+        (name, email, mobile, password_hash, role, company)
+      VALUES
+        ($1, $2, $3, $4, $5, $6)
       RETURNING id, name, email, mobile, role, company, created_at
       `,
       [
-        String(name).trim(),
-        normalizedEmail,
+        name,
+        email || null,
         mobile || null,
         passwordHash,
         "Security Guard",
@@ -260,106 +274,101 @@ app.post("/api/auth/register", async (req, res) => {
     );
 
     const user = result.rows[0];
-
-    const token = createToken(user);
+    const token = signToken(user);
 
     res.status(201).json({
-      message: "Registration successful.",
+      success: true,
+      message: "Registration successful",
       token,
-      user
+      user: publicUser(user)
     });
-
   } catch (error) {
     console.error("Register error:", error);
 
     res.status(500).json({
-      message: "Registration failed."
+      success: false,
+      message: "Registration failed"
     });
   }
 });
 
+/* =========================================================
+   AUTH - LOGIN
+========================================================= */
+
 app.post("/api/auth/login", async (req, res) => {
   try {
-    const {
-      email,
-      password
-    } = req.body;
+    const login = cleanString(req.body.login || req.body.email);
+    const password = String(req.body.password || "");
 
-    if (!email || !password) {
+    if (!login || !password) {
       return res.status(400).json({
-        message: "Email and password are required."
+        success: false,
+        message: "Login and password are required"
       });
     }
 
-    const normalizedEmail = String(email).trim().toLowerCase();
+    const email = normalizeEmail(login);
 
     const result = await pool.query(
       `
-      SELECT
-        id,
-        name,
-        email,
-        mobile,
-        password_hash,
-        role,
-        company,
-        created_at
+      SELECT *
       FROM users
-      WHERE email = $1
+      WHERE LOWER(email) = $1
+         OR mobile = $2
+      LIMIT 1
       `,
-      [normalizedEmail]
+      [email, login]
     );
 
     if (!result.rows.length) {
       return res.status(401).json({
-        message: "Invalid email or password."
+        success: false,
+        message: "Invalid login or password"
       });
     }
 
     const user = result.rows[0];
 
-    const validPassword = await bcrypt.compare(
-      String(password),
+    const passwordOk = await bcrypt.compare(
+      password,
       user.password_hash
     );
 
-    if (!validPassword) {
+    if (!passwordOk) {
       return res.status(401).json({
-        message: "Invalid email or password."
+        success: false,
+        message: "Invalid login or password"
       });
     }
 
-    delete user.password_hash;
-
-    const token = createToken(user);
+    const token = signToken(user);
 
     res.json({
-      message: "Login successful.",
+      success: true,
+      message: "Login successful",
       token,
-      user
+      user: publicUser(user)
     });
-
   } catch (error) {
     console.error("Login error:", error);
 
     res.status(500).json({
-      message: "Login failed."
+      success: false,
+      message: "Login failed"
     });
   }
 });
+
+/* =========================================================
+   CURRENT USER
+========================================================= */
 
 app.get("/api/me", authRequired, async (req, res) => {
   try {
     const result = await pool.query(
       `
-      SELECT
-        id,
-        name,
-        email,
-        mobile,
-        role,
-        company,
-        created_at
+      SELECT id, name, email, mobile, role, company, created_at
       FROM users
       WHERE id = $1
       `,
@@ -368,74 +377,106 @@ app.get("/api/me", authRequired, async (req, res) => {
 
     if (!result.rows.length) {
       return res.status(404).json({
-        message: "User not found."
+        success: false,
+        message: "User not found"
       });
     }
 
-    res.json(result.rows[0]);
-
+    res.json({
+      success: true,
+      user: publicUser(result.rows[0])
+    });
   } catch (error) {
     console.error("Get me error:", error);
 
     res.status(500).json({
-      message: "Unable to load profile."
+      success: false,
+      message: "Could not load profile"
     });
   }
 });
 
+/* =========================================================
+   UPDATE PROFILE
+========================================================= */
+
 app.put("/api/me", authRequired, async (req, res) => {
   try {
-    const {
-      name,
-      mobile,
-      company
-    } = req.body;
+    const name = cleanString(req.body.name);
+    const mobile = cleanString(req.body.mobile);
+    const company = cleanString(req.body.company);
+
+    if (!name) {
+      return res.status(400).json({
+        success: false,
+        message: "Name is required"
+      });
+    }
 
     const result = await pool.query(
       `
       UPDATE users
-      SET
-        name = COALESCE($1, name),
-        mobile = COALESCE($2, mobile),
-        company = COALESCE($3, company)
+      SET name = $1,
+          mobile = $2,
+          company = $3
       WHERE id = $4
       RETURNING id, name, email, mobile, role, company, created_at
       `,
       [
-        name ?? null,
-        mobile ?? null,
-        company ?? null,
+        name,
+        mobile || null,
+        company || null,
         req.user.id
       ]
     );
 
-    res.json(result.rows[0]);
+    if (!result.rows.length) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
 
+    res.json({
+      success: true,
+      message: "Profile updated",
+      user: publicUser(result.rows[0])
+    });
   } catch (error) {
-    console.error("Profile update error:", error);
+    console.error("Update profile error:", error);
 
     res.status(500).json({
-      message: "Profile update failed."
+      success: false,
+      message: "Profile update failed"
     });
   }
 });
 
+/* =========================================================
+   CHANGE PASSWORD
+========================================================= */
+
 app.post("/api/auth/change-password", authRequired, async (req, res) => {
   try {
-    const {
-      currentPassword,
-      newPassword
-    } = req.body;
+    const currentPassword = String(
+      req.body.currentPassword || ""
+    );
+
+    const newPassword = String(
+      req.body.newPassword || ""
+    );
 
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
-        message: "Current and new password are required."
+        success: false,
+        message: "Current and new password are required"
       });
     }
 
-    if (String(newPassword).length < 6) {
+    if (newPassword.length < 6) {
       return res.status(400).json({
-        message: "New password must be at least 6 characters."
+        success: false,
+        message: "New password must be at least 6 characters"
       });
     }
 
@@ -446,25 +487,24 @@ app.post("/api/auth/change-password", authRequired, async (req, res) => {
 
     if (!result.rows.length) {
       return res.status(404).json({
-        message: "User not found."
+        success: false,
+        message: "User not found"
       });
     }
 
-    const valid = await bcrypt.compare(
-      String(currentPassword),
+    const correct = await bcrypt.compare(
+      currentPassword,
       result.rows[0].password_hash
     );
 
-    if (!valid) {
-      return res.status(400).json({
-        message: "Current password is incorrect."
+    if (!correct) {
+      return res.status(401).json({
+        success: false,
+        message: "Current password is incorrect"
       });
     }
 
-    const newHash = await bcrypt.hash(
-      String(newPassword),
-      12
-    );
+    const newHash = await bcrypt.hash(newPassword, 12);
 
     await pool.query(
       `
@@ -472,149 +512,195 @@ app.post("/api/auth/change-password", authRequired, async (req, res) => {
       SET password_hash = $1
       WHERE id = $2
       `,
-      [
-        newHash,
-        req.user.id
-      ]
+      [newHash, req.user.id]
     );
 
     res.json({
-      message: "Password changed successfully."
+      success: true,
+      message: "Password changed successfully"
     });
-
   } catch (error) {
     console.error("Change password error:", error);
 
     res.status(500).json({
-      message: "Password change failed."
+      success: false,
+      message: "Password change failed"
     });
   }
 });
 
 /* =========================================================
-   VEHICLES
+   VEHICLES - GET
 ========================================================= */
 
 app.get("/api/vehicles", authRequired, async (req, res) => {
   try {
-    const result = await pool.query(
-      `
-      SELECT *
+    const result = await pool.query(`
+      SELECT
+        id,
+        vehicle_number,
+        vehicle_type,
+        driver_name,
+        contractor,
+        status,
+        created_at
       FROM vehicles
-      ORDER BY id DESC
-      `
-    );
+      ORDER BY vehicle_number ASC
+    `);
 
-    res.json(result.rows);
-
+    res.json({
+      success: true,
+      vehicles: result.rows
+    });
   } catch (error) {
     console.error("Get vehicles error:", error);
 
     res.status(500).json({
-      message: "Unable to load vehicles."
+      success: false,
+      message: "Could not load vehicles"
     });
   }
 });
 
+/* =========================================================
+   VEHICLES - CREATE
+========================================================= */
+
 app.post("/api/vehicles", authRequired, async (req, res) => {
   try {
-    const {
-      vehicle_number,
-      vehicle_type,
-      driver_name,
-      contractor,
-      status
-    } = req.body;
+    const vehicleNumber = cleanString(req.body.vehicle_number);
+    const vehicleType = cleanString(req.body.vehicle_type);
+    const driverName = cleanString(req.body.driver_name);
+    const contractor = cleanString(req.body.contractor);
+    const status = cleanString(req.body.status) || "Active";
 
-    if (!vehicle_number || !vehicle_type) {
+    if (!vehicleNumber || !vehicleType) {
       return res.status(400).json({
-        message: "Vehicle number and type are required."
+        success: false,
+        message: "Vehicle number and type are required"
       });
     }
 
     const result = await pool.query(
       `
       INSERT INTO vehicles
-      (vehicle_number, vehicle_type, driver_name, contractor, status)
-      VALUES ($1, $2, $3, $4, $5)
+        (vehicle_number, vehicle_type, driver_name, contractor, status)
+      VALUES
+        ($1, $2, $3, $4, $5)
       RETURNING *
       `,
       [
-        String(vehicle_number).trim().toUpperCase(),
-        vehicle_type,
-        driver_name || null,
+        vehicleNumber.toUpperCase(),
+        vehicleType,
+        driverName || null,
         contractor || null,
-        status || "Active"
+        status
       ]
     );
 
-    res.status(201).json(result.rows[0]);
-
+    res.status(201).json({
+      success: true,
+      message: "Vehicle added successfully",
+      vehicle: result.rows[0]
+    });
   } catch (error) {
     console.error("Create vehicle error:", error);
 
     if (error.code === "23505") {
       return res.status(409).json({
-        message: "Vehicle number already exists."
+        success: false,
+        message: "Vehicle number already exists"
       });
     }
 
     res.status(500).json({
-      message: "Unable to create vehicle."
+      success: false,
+      message: "Could not add vehicle"
     });
   }
 });
 
+/* =========================================================
+   VEHICLES - UPDATE
+========================================================= */
+
 app.put("/api/vehicles/:id", authRequired, async (req, res) => {
   try {
-    const {
-      vehicle_number,
-      vehicle_type,
-      driver_name,
-      contractor,
-      status
-    } = req.body;
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid vehicle ID"
+      });
+    }
+
+    const vehicleNumber = cleanString(req.body.vehicle_number);
+    const vehicleType = cleanString(req.body.vehicle_type);
+    const driverName = cleanString(req.body.driver_name);
+    const contractor = cleanString(req.body.contractor);
+    const status = cleanString(req.body.status) || "Active";
+
+    if (!vehicleNumber || !vehicleType) {
+      return res.status(400).json({
+        success: false,
+        message: "Vehicle number and type are required"
+      });
+    }
 
     const result = await pool.query(
       `
       UPDATE vehicles
-      SET
-        vehicle_number = COALESCE($1, vehicle_number),
-        vehicle_type = COALESCE($2, vehicle_type),
-        driver_name = $3,
-        contractor = $4,
-        status = COALESCE($5, status)
+      SET vehicle_number = $1,
+          vehicle_type = $2,
+          driver_name = $3,
+          contractor = $4,
+          status = $5
       WHERE id = $6
       RETURNING *
       `,
       [
-        vehicle_number
-          ? String(vehicle_number).trim().toUpperCase()
-          : null,
-        vehicle_type || null,
-        driver_name || null,
+        vehicleNumber.toUpperCase(),
+        vehicleType,
+        driverName || null,
         contractor || null,
-        status || null,
-        req.params.id
+        status,
+        id
       ]
     );
 
     if (!result.rows.length) {
       return res.status(404).json({
-        message: "Vehicle not found."
+        success: false,
+        message: "Vehicle not found"
       });
     }
 
-    res.json(result.rows[0]);
-
+    res.json({
+      success: true,
+      message: "Vehicle updated successfully",
+      vehicle: result.rows[0]
+    });
   } catch (error) {
     console.error("Update vehicle error:", error);
 
+    if (error.code === "23505") {
+      return res.status(409).json({
+        success: false,
+        message: "Vehicle number already exists"
+      });
+    }
+
     res.status(500).json({
-      message: "Unable to update vehicle."
+      success: false,
+      message: "Could not update vehicle"
     });
   }
 });
+
+/* =========================================================
+   VEHICLES - DELETE
+========================================================= */
 
 app.delete(
   "/api/vehicles/:id",
@@ -622,163 +708,254 @@ app.delete(
   adminRequired,
   async (req, res) => {
     try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid vehicle ID"
+        });
+      }
+
       const result = await pool.query(
         "DELETE FROM vehicles WHERE id = $1 RETURNING id",
-        [req.params.id]
+        [id]
       );
 
       if (!result.rows.length) {
         return res.status(404).json({
-          message: "Vehicle not found."
+          success: false,
+          message: "Vehicle not found"
         });
       }
 
       res.json({
-        message: "Vehicle deleted successfully."
+        success: true,
+        message: "Vehicle deleted successfully"
       });
-
     } catch (error) {
       console.error("Delete vehicle error:", error);
 
       res.status(500).json({
-        message: "Unable to delete vehicle."
+        success: false,
+        message: "Could not delete vehicle"
       });
     }
   }
 );
 
 /* =========================================================
-   ENTRIES
+   ENTRIES - GET
 ========================================================= */
 
 app.get("/api/entries", authRequired, async (req, res) => {
   try {
+    const conditions = [];
+    const values = [];
+
+    if (req.query.date) {
+      values.push(req.query.date);
+      conditions.push(`e.entry_date = $${values.length}`);
+    }
+
+    if (req.query.from) {
+      values.push(req.query.from);
+      conditions.push(`e.entry_date >= $${values.length}`);
+    }
+
+    if (req.query.to) {
+      values.push(req.query.to);
+      conditions.push(`e.entry_date <= $${values.length}`);
+    }
+
+    if (req.query.vehicle_id) {
+      values.push(Number(req.query.vehicle_id));
+      conditions.push(`e.vehicle_id = $${values.length}`);
+    }
+
+    const where = conditions.length
+      ? `WHERE ${conditions.join(" AND ")}`
+      : "";
+
     const result = await pool.query(
       `
-      SELECT *
-      FROM entries
-      ORDER BY entry_date DESC, entry_time DESC, id DESC
-      `
+      SELECT
+        e.id,
+        e.vehicle_id,
+        e.user_id,
+        e.vehicle_number,
+        e.vehicle_type,
+        e.driver_name,
+        e.contractor,
+        TO_CHAR(e.entry_date, 'YYYY-MM-DD') AS entry_date,
+        TO_CHAR(e.entry_time, 'HH24:MI') AS entry_time,
+        CASE
+          WHEN e.exit_time IS NULL THEN NULL
+          ELSE TO_CHAR(e.exit_time, 'HH24:MI')
+        END AS exit_time,
+        e.duration,
+        e.purpose,
+        e.notes,
+        e.created_at
+      FROM entries e
+      ${where}
+      ORDER BY e.entry_date DESC, e.entry_time DESC, e.id DESC
+      `,
+      values
     );
 
-    res.json(result.rows);
-
+    res.json({
+      success: true,
+      entries: result.rows
+    });
   } catch (error) {
     console.error("Get entries error:", error);
 
     res.status(500).json({
-      message: "Unable to load entries."
+      success: false,
+      message: "Could not load entries"
     });
   }
 });
 
+/* =========================================================
+   ENTRIES - CREATE
+========================================================= */
+
 app.post("/api/entries", authRequired, async (req, res) => {
   try {
-    const {
-      vehicle_id,
-      vehicle_number,
-      vehicle_type,
-      driver_name,
-      contractor,
-      entry_date,
-      entry_time,
-      exit_time,
-      purpose,
-      notes
-    } = req.body;
+    const vehicleId = Number(req.body.vehicle_id);
+    const entryDate = cleanString(req.body.entry_date);
+    const entryTime = cleanString(req.body.entry_time);
+    const exitTime = cleanString(req.body.exit_time);
+    const purpose = cleanString(req.body.purpose);
+    const notes = cleanString(req.body.notes);
 
-    if (
-      !vehicle_number ||
-      !entry_date ||
-      !entry_time
-    ) {
+    if (!Number.isInteger(vehicleId)) {
       return res.status(400).json({
-        message: "Vehicle, date and entry time are required."
+        success: false,
+        message: "Vehicle is required"
       });
     }
 
-    const duration = calculateDuration(
-      entry_time,
-      exit_time
+    if (!entryDate || !entryTime) {
+      return res.status(400).json({
+        success: false,
+        message: "Date and entry time are required"
+      });
+    }
+
+    const vehicleResult = await pool.query(
+      `
+      SELECT *
+      FROM vehicles
+      WHERE id = $1
+      `,
+      [vehicleId]
     );
+
+    if (!vehicleResult.rows.length) {
+      return res.status(404).json({
+        success: false,
+        message: "Vehicle not found"
+      });
+    }
+
+    const vehicle = vehicleResult.rows[0];
+
+    let duration = 0;
+
+    if (exitTime) {
+      const start = new Date(`1970-01-01T${entryTime}`);
+      const end = new Date(`1970-01-01T${exitTime}`);
+
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid time"
+        });
+      }
+
+      let difference = end.getTime() - start.getTime();
+
+      /*
+        Supports overnight duration.
+        Example: 23:30 -> 01:00
+      */
+      if (difference < 0) {
+        difference += 24 * 60 * 60 * 1000;
+      }
+
+      duration = Math.round(difference / 60000);
+    }
 
     const result = await pool.query(
       `
       INSERT INTO entries
-      (
-        vehicle_id,
-        user_id,
-        vehicle_number,
-        vehicle_type,
-        driver_name,
-        contractor,
-        entry_date,
-        entry_time,
-        exit_time,
-        duration,
-        purpose,
-        notes
-      )
+        (
+          vehicle_id,
+          user_id,
+          vehicle_number,
+          vehicle_type,
+          driver_name,
+          contractor,
+          entry_date,
+          entry_time,
+          exit_time,
+          duration,
+          purpose,
+          notes
+        )
       VALUES
-      (
-        $1, $2, $3, $4, $5, $6,
-        $7, $8, $9, $10, $11, $12
-      )
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING *
       `,
       [
-        vehicle_id || null,
+        vehicle.id,
         req.user.id,
-        String(vehicle_number).trim().toUpperCase(),
-        vehicle_type || null,
-        driver_name || null,
-        contractor || null,
-        entry_date,
-        entry_time,
-        exit_time || null,
+        vehicle.vehicle_number,
+        vehicle.vehicle_type,
+        vehicle.driver_name,
+        vehicle.contractor,
+        entryDate,
+        entryTime,
+        exitTime || null,
         duration,
         purpose || null,
         notes || null
       ]
     );
 
-    const entry = result.rows[0];
-
-    /* Automatic notification for the user */
-    try {
-      await pool.query(
-        `
-        INSERT INTO notifications
-        (user_id, title, message, type)
-        VALUES ($1, $2, $3, $4)
-        `,
-        [
-          req.user.id,
-          "Vehicle Entry Added",
-          `${entry.vehicle_number} entry has been recorded successfully.`,
-          "entry"
-        ]
-      );
-    } catch (notificationError) {
-      console.error(
-        "Entry notification error:",
-        notificationError
-      );
-    }
-
-    res.status(201).json(entry);
-
+    res.status(201).json({
+      success: true,
+      message: "Entry saved successfully",
+      entry: result.rows[0]
+    });
   } catch (error) {
     console.error("Create entry error:", error);
 
     res.status(500).json({
-      message: "Unable to create entry."
+      success: false,
+      message: "Could not save entry"
     });
   }
 });
 
+/* =========================================================
+   ENTRIES - DELETE
+========================================================= */
+
 app.delete("/api/entries/:id", authRequired, async (req, res) => {
   try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid entry ID"
+      });
+    }
+
     let result;
 
     if (req.user.role === "Admin") {
@@ -788,7 +965,7 @@ app.delete("/api/entries/:id", authRequired, async (req, res) => {
         WHERE id = $1
         RETURNING id
         `,
-        [req.params.id]
+        [id]
       );
     } else {
       result = await pool.query(
@@ -798,68 +975,70 @@ app.delete("/api/entries/:id", authRequired, async (req, res) => {
           AND user_id = $2
         RETURNING id
         `,
-        [
-          req.params.id,
-          req.user.id
-        ]
+        [id, req.user.id]
       );
     }
 
     if (!result.rows.length) {
       return res.status(404).json({
-        message: "Entry not found or permission denied."
+        success: false,
+        message: "Entry not found or you do not have permission"
       });
     }
 
     res.json({
-      message: "Entry deleted successfully."
+      success: true,
+      message: "Entry deleted successfully"
     });
-
   } catch (error) {
     console.error("Delete entry error:", error);
 
     res.status(500).json({
-      message: "Unable to delete entry."
+      success: false,
+      message: "Could not delete entry"
     });
   }
 });
 
 /* =========================================================
-   NOTIFICATIONS
+   NOTIFICATIONS - GET
 ========================================================= */
 
-app.get(
-  "/api/notifications",
-  authRequired,
-  async (req, res) => {
-    try {
-      const result = await pool.query(
-        `
-        SELECT
-          id,
-          title,
-          message,
-          type,
-          is_read,
-          created_at
-        FROM notifications
-        WHERE user_id = $1
-        ORDER BY created_at DESC, id DESC
-        `,
-        [req.user.id]
-      );
+app.get("/api/notifications", authRequired, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `
+      SELECT
+        id,
+        title,
+        message,
+        type,
+        is_read,
+        created_at
+      FROM notifications
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      `,
+      [req.user.id]
+    );
 
-      res.json(result.rows);
+    res.json({
+      success: true,
+      notifications: result.rows
+    });
+  } catch (error) {
+    console.error("Get notifications error:", error);
 
-    } catch (error) {
-      console.error("Get notifications error:", error);
-
-      res.status(500).json({
-        message: "Unable to load notifications."
-      });
-    }
+    res.status(500).json({
+      success: false,
+      message: "Could not load notifications"
+    });
   }
-);
+});
+
+/* =========================================================
+   NOTIFICATIONS - UNREAD COUNT
+========================================================= */
 
 app.get(
   "/api/notifications/unread-count",
@@ -868,7 +1047,7 @@ app.get(
     try {
       const result = await pool.query(
         `
-        SELECT COUNT(*)::int AS count
+        SELECT COUNT(*)::INTEGER AS count
         FROM notifications
         WHERE user_id = $1
           AND is_read = FALSE
@@ -877,68 +1056,71 @@ app.get(
       );
 
       res.json({
+        success: true,
         count: result.rows[0].count
       });
-
     } catch (error) {
-      console.error(
-        "Unread notification count error:",
-        error
-      );
+      console.error("Unread notification error:", error);
 
       res.status(500).json({
-        message: "Unable to load unread count."
+        success: false,
+        message: "Could not get notification count"
       });
     }
   }
 );
 
-app.post(
-  "/api/notifications",
-  authRequired,
-  async (req, res) => {
-    try {
-      const {
+/* =========================================================
+   NOTIFICATIONS - CREATE FOR CURRENT USER
+========================================================= */
+
+app.post("/api/notifications", authRequired, async (req, res) => {
+  try {
+    const title = cleanString(req.body.title);
+    const message = cleanString(req.body.message);
+    const type = cleanString(req.body.type) || "info";
+
+    if (!title || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "Title and message are required"
+      });
+    }
+
+    const result = await pool.query(
+      `
+      INSERT INTO notifications
+        (user_id, title, message, type)
+      VALUES
+        ($1, $2, $3, $4)
+      RETURNING *
+      `,
+      [
+        req.user.id,
         title,
         message,
         type
-      } = req.body;
+      ]
+    );
 
-      if (!title || !message) {
-        return res.status(400).json({
-          message: "Title and message are required."
-        });
-      }
+    res.status(201).json({
+      success: true,
+      message: "Notification created",
+      notification: result.rows[0]
+    });
+  } catch (error) {
+    console.error("Create notification error:", error);
 
-      const result = await pool.query(
-        `
-        INSERT INTO notifications
-        (user_id, title, message, type)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *
-        `,
-        [
-          req.user.id,
-          title,
-          message,
-          type || "general"
-        ]
-      );
-
-      res.status(201).json(result.rows[0]);
-
-    } catch (error) {
-      console.error(
-        "Create notification error:",
-        error
-      );
-
-      res.status(500).json({
-        message: "Unable to create notification."
-      });
-    }
+    res.status(500).json({
+      success: false,
+      message: "Could not create notification"
+    });
   }
-);
+});
+
+/* =========================================================
+   ADMIN - SEND NOTIFICATION
+========================================================= */
 
 app.post(
   "/api/admin/notifications",
@@ -946,54 +1128,87 @@ app.post(
   adminRequired,
   async (req, res) => {
     try {
-      const {
-        user_id,
-        title,
-        message,
-        type
-      } = req.body;
+      const userId = Number(req.body.user_id);
+      const title = cleanString(req.body.title);
+      const message = cleanString(req.body.message);
+      const type = cleanString(req.body.type) || "info";
 
-      if (!user_id || !title || !message) {
+      if (!Number.isInteger(userId)) {
         return res.status(400).json({
-          message: "User, title and message are required."
+          success: false,
+          message: "Valid user ID is required"
+        });
+      }
+
+      if (!title || !message) {
+        return res.status(400).json({
+          success: false,
+          message: "Title and message are required"
+        });
+      }
+
+      const userResult = await pool.query(
+        "SELECT id FROM users WHERE id = $1",
+        [userId]
+      );
+
+      if (!userResult.rows.length) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found"
         });
       }
 
       const result = await pool.query(
         `
         INSERT INTO notifications
-        (user_id, title, message, type)
-        VALUES ($1, $2, $3, $4)
+          (user_id, title, message, type)
+        VALUES
+          ($1, $2, $3, $4)
         RETURNING *
         `,
         [
-          user_id,
+          userId,
           title,
           message,
-          type || "admin"
+          type
         ]
       );
 
-      res.status(201).json(result.rows[0]);
-
+      res.status(201).json({
+        success: true,
+        message: "Notification sent",
+        notification: result.rows[0]
+      });
     } catch (error) {
-      console.error(
-        "Admin notification error:",
-        error
-      );
+      console.error("Admin notification error:", error);
 
       res.status(500).json({
-        message: "Unable to send notification."
+        success: false,
+        message: "Could not send notification"
       });
     }
   }
 );
+
+/* =========================================================
+   NOTIFICATION - MARK READ
+========================================================= */
 
 app.put(
   "/api/notifications/:id/read",
   authRequired,
   async (req, res) => {
     try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid notification ID"
+        });
+      }
+
       const result = await pool.query(
         `
         UPDATE notifications
@@ -1002,32 +1217,34 @@ app.put(
           AND user_id = $2
         RETURNING *
         `,
-        [
-          req.params.id,
-          req.user.id
-        ]
+        [id, req.user.id]
       );
 
       if (!result.rows.length) {
         return res.status(404).json({
-          message: "Notification not found."
+          success: false,
+          message: "Notification not found"
         });
       }
 
-      res.json(result.rows[0]);
-
+      res.json({
+        success: true,
+        notification: result.rows[0]
+      });
     } catch (error) {
-      console.error(
-        "Mark notification read error:",
-        error
-      );
+      console.error("Mark notification error:", error);
 
       res.status(500).json({
-        message: "Unable to update notification."
+        success: false,
+        message: "Could not update notification"
       });
     }
   }
 );
+
+/* =========================================================
+   NOTIFICATIONS - MARK ALL READ
+========================================================= */
 
 app.put(
   "/api/notifications/read-all",
@@ -1039,32 +1256,44 @@ app.put(
         UPDATE notifications
         SET is_read = TRUE
         WHERE user_id = $1
+          AND is_read = FALSE
         `,
         [req.user.id]
       );
 
       res.json({
-        message: "All notifications marked as read."
+        success: true,
+        message: "All notifications marked as read"
       });
-
     } catch (error) {
-      console.error(
-        "Mark all notifications error:",
-        error
-      );
+      console.error("Mark all notifications error:", error);
 
       res.status(500).json({
-        message: "Unable to update notifications."
+        success: false,
+        message: "Could not update notifications"
       });
     }
   }
 );
+
+/* =========================================================
+   NOTIFICATION - DELETE ONE
+========================================================= */
 
 app.delete(
   "/api/notifications/:id",
   authRequired,
   async (req, res) => {
     try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid notification ID"
+        });
+      }
+
       const result = await pool.query(
         `
         DELETE FROM notifications
@@ -1072,34 +1301,34 @@ app.delete(
           AND user_id = $2
         RETURNING id
         `,
-        [
-          req.params.id,
-          req.user.id
-        ]
+        [id, req.user.id]
       );
 
       if (!result.rows.length) {
         return res.status(404).json({
-          message: "Notification not found."
+          success: false,
+          message: "Notification not found"
         });
       }
 
       res.json({
-        message: "Notification deleted."
+        success: true,
+        message: "Notification deleted"
       });
-
     } catch (error) {
-      console.error(
-        "Delete notification error:",
-        error
-      );
+      console.error("Delete notification error:", error);
 
       res.status(500).json({
-        message: "Unable to delete notification."
+        success: false,
+        message: "Could not delete notification"
       });
     }
   }
 );
+
+/* =========================================================
+   NOTIFICATIONS - DELETE ALL
+========================================================= */
 
 app.delete(
   "/api/notifications",
@@ -1115,24 +1344,22 @@ app.delete(
       );
 
       res.json({
-        message: "All notifications deleted."
+        success: true,
+        message: "All notifications cleared"
       });
-
     } catch (error) {
-      console.error(
-        "Clear notifications error:",
-        error
-      );
+      console.error("Clear notifications error:", error);
 
       res.status(500).json({
-        message: "Unable to clear notifications."
+        success: false,
+        message: "Could not clear notifications"
       });
     }
   }
 );
 
 /* =========================================================
-   ADMIN USERS
+   ADMIN - USERS
 ========================================================= */
 
 app.get(
@@ -1152,17 +1379,20 @@ app.get(
           company,
           created_at
         FROM users
-        ORDER BY id DESC
+        ORDER BY created_at DESC
         `
       );
 
-      res.json(result.rows);
-
+      res.json({
+        success: true,
+        users: result.rows
+      });
     } catch (error) {
       console.error("Admin users error:", error);
 
       res.status(500).json({
-        message: "Unable to load users."
+        success: false,
+        message: "Could not load users"
       });
     }
   }
@@ -1174,100 +1404,35 @@ app.get(
 
 const publicPath = path.join(__dirname, "public");
 
+app.use(express.static(publicPath));
+
 /*
-  IMPORTANT:
-  Static middleware is mounted BEFORE the fallback route.
-  This allows:
-    /index.html
-    /style.css
-    /app.js
-    /pages/login.html
-    /pages/register.html
-    etc.
-  to open correctly.
+  Root always opens the main landing page.
 */
-
-app.use(
-  express.static(publicPath, {
-    extensions: ["html"],
-    index: "index.html"
-  })
-);
-
-/* Explicit page routes for reliability */
-
 app.get("/", (req, res) => {
-  res.sendFile(
-    path.join(publicPath, "index.html")
-  );
+  res.sendFile(path.join(publicPath, "index.html"));
 });
 
-app.get("/login", (req, res) => {
-  res.sendFile(
-    path.join(publicPath, "pages", "login.html")
-  );
+/*
+  Prevent API routes from falling through to HTML.
+*/
+app.use("/api", (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "API route not found"
+  });
 });
 
-app.get("/register", (req, res) => {
-  res.sendFile(
-    path.join(publicPath, "pages", "register.html")
-  );
-});
-
-app.get("/dashboard", (req, res) => {
-  res.sendFile(
-    path.join(publicPath, "pages", "dashboard.html")
-  );
-});
-
-/* =========================================================
-   404
-========================================================= */
-
+/*
+  Website fallback.
+  Existing files are served normally by express.static.
+*/
 app.use((req, res) => {
-  if (req.path.startsWith("/api/")) {
-    return res.status(404).json({
-      message: "API endpoint not found."
-    });
-  }
-
-  res.status(404).send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Page Not Found</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px 20px;
-            background: #f5f7fa;
-          }
-
-          a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 20px;
-            background: #f59e0b;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-          }
-        </style>
-      </head>
-
-      <body>
-        <h1>404</h1>
-        <p>Page not found.</p>
-        <a href="/">Go Home</a>
-      </body>
-    </html>
-  `);
+  res.status(404).send("Page not found");
 });
 
 /* =========================================================
-   START SERVER
+   SERVER START
 ========================================================= */
 
 async function startServer() {
@@ -1275,17 +1440,10 @@ async function startServer() {
     await initDatabase();
 
     app.listen(PORT, "0.0.0.0", () => {
-      console.log(
-        `My Home Group server running on port ${PORT}`
-      );
+      console.log(`My Home Group server running on port ${PORT}`);
     });
-
   } catch (error) {
-    console.error(
-      "Server startup failed:",
-      error
-    );
-
+    console.error("Server startup failed:", error);
     process.exit(1);
   }
 }
