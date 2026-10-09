@@ -520,42 +520,48 @@ function setupPersonalDuration() {
   calculateButton.addEventListener(
     "click",
     () => {
-      const inTime =
-        document.getElementById("personalIn").value;
+      const inHourValue =
+        document.getElementById("personalInHour").value.trim();
+      const inMinuteValue =
+        document.getElementById("personalInMinute").value.trim();
+      const outHourValue =
+        document.getElementById("personalOutHour").value.trim();
+      const outMinuteValue =
+        document.getElementById("personalOutMinute").value.trim();
 
-      const outTime =
-        document.getElementById("personalOut").value;
-
-      if (!inTime || !outTime) {
+      if (
+        inHourValue === "" ||
+        inMinuteValue === "" ||
+        outHourValue === "" ||
+        outMinuteValue === ""
+      ) {
         showToast(
-          "Please enter both In Time and Out Time.",
+          "Please enter HH and MM for both In Time and Out Time.",
           "error"
         );
         return;
       }
 
-      // Accept only valid 24-hour HH:MM values (for example, 09:30).
-      const timePattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+      const inH = Number(inHourValue);
+      const inM = Number(inMinuteValue);
+      const outH = Number(outHourValue);
+      const outM = Number(outMinuteValue);
 
-      if (!timePattern.test(inTime) || !timePattern.test(outTime)) {
+      if (
+        !Number.isInteger(inH) || inH < 0 || inH > 23 ||
+        !Number.isInteger(outH) || outH < 0 || outH > 23 ||
+        !Number.isInteger(inM) || inM < 0 || inM > 59 ||
+        !Number.isInteger(outM) || outM < 0 || outM > 59
+      ) {
         showToast(
-          "Time HH:MM format mein likho, jaise 09:30.",
+          "HH 00-23 aur MM 00-59 ke beech hona chahiye.",
           "error"
         );
         return;
       }
 
-      const [inH, inM] =
-        inTime.split(":").map(Number);
-
-      const [outH, outM] =
-        outTime.split(":").map(Number);
-
-      let start =
-        inH * 60 + inM;
-
-      let end =
-        outH * 60 + outM;
+      let start = inH * 60 + inM;
+      let end = outH * 60 + outM;
 
       if (end < start) {
         end += 24 * 60;
@@ -565,21 +571,21 @@ function setupPersonalDuration() {
 
       document.getElementById(
         "personalResult"
-      ).textContent =
-        formatMinutes(duration);
+      ).textContent = formatMinutes(duration);
     }
   );
 
   resetButton?.addEventListener(
     "click",
     () => {
-      document.getElementById(
-        "personalIn"
-      ).value = "";
-
-      document.getElementById(
-        "personalOut"
-      ).value = "";
+      [
+        "personalInHour",
+        "personalInMinute",
+        "personalOutHour",
+        "personalOutMinute"
+      ].forEach((id) => {
+        document.getElementById(id).value = "";
+      });
 
       document.getElementById(
         "personalResult"
