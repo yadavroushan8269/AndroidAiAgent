@@ -534,6 +534,17 @@ function setupPersonalDuration() {
         return;
       }
 
+      // Accept only valid 24-hour HH:MM values (for example, 09:30).
+      const timePattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+      if (!timePattern.test(inTime) || !timePattern.test(outTime)) {
+        showToast(
+          "Time HH:MM format mein likho, jaise 09:30.",
+          "error"
+        );
+        return;
+      }
+
       const [inH, inM] =
         inTime.split(":").map(Number);
 
