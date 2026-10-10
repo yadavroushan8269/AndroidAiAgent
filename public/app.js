@@ -529,6 +529,7 @@ function setupPersonalDuration() {
       const clean = field.value.replace(/\D/g, "").slice(0, 2);
       if (field.value !== clean) field.value = clean;
       if (field === inHour && clean.length === 2) inMinute.focus();
+      if (field === inMinute && clean.length === 2) outHour.focus();
       if (field === outHour && clean.length === 2) outMinute.focus();
     });
   });
@@ -559,6 +560,25 @@ function setupPersonalDuration() {
 
 /* Cyber-style keyboard/click audio; starts only after a user interaction. */
 function setupCyberSounds() {
+  // Apply the same cyber-black / neon-green appearance across every page using app.js.
+  if (!document.getElementById("globalCyberTheme")) {
+    const cyberStyle = document.createElement("style");
+    cyberStyle.id = "globalCyberTheme";
+    cyberStyle.textContent = `
+      :root { color-scheme: dark; --cyber-green:#39ff14; --cyber-black:#030705; }
+      html, body { background:var(--cyber-black)!important; color:#d8ffe0!important; }
+      body, main, .page, .page-content, .app-shell, .content, .container { background-color:var(--cyber-black)!important; color:#d8ffe0!important; }
+      header, .app-header, .app-header-inner, nav, .bottom-nav, aside, .sidebar { background:#050b08!important; border-color:rgba(57,255,20,.3)!important; }
+      .card, .stat-card, .panel, .modal-content, .form-card, .vehicle-card, .entry-card, .calendar-card, .greeting, .quick-actions { background:#08120d!important; color:#d8ffe0!important; border-color:rgba(57,255,20,.32)!important; box-shadow:0 0 14px rgba(57,255,20,.06), inset 0 0 12px rgba(57,255,20,.025)!important; }
+      h1,h2,h3,h4,label,.card-title,.stat-value,p,small { color:#d8ffe0; }
+      input,textarea,select,.form-control { background:#030906!important; color:#c8ffc4!important; border:1px solid rgba(57,255,20,.45)!important; caret-color:var(--cyber-green)!important; }
+      input:focus,textarea:focus,select:focus { outline:2px solid rgba(57,255,20,.5)!important; box-shadow:0 0 12px rgba(57,255,20,.22)!important; }
+      button,.btn-primary,.entry-button { background:var(--cyber-green)!important; color:#031006!important; border-color:var(--cyber-green)!important; }
+      .btn-secondary,.icon-btn,.quick-action { background:#0b1910!important; color:#baffb1!important; border:1px solid rgba(57,255,20,.3)!important; }
+      a { color:#a8ff9e!important; } ::selection { background:var(--cyber-green); color:#001800; }
+    `;
+    document.head.appendChild(cyberStyle);
+  }
   let audioContext;
   const playTone = (frequency = 760, duration = 0.025, volume = 0.018) => {
     try {
