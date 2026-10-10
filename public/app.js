@@ -580,7 +580,7 @@ function setupCyberSounds() {
     document.head.appendChild(cyberStyle);
   }
   let audioContext;
-  const playTone = (frequency = 760, duration = 0.025, volume = 0.05) => {
+  const playTone = (frequency = 760, duration = 0.025, volume = 0.5) => {
     try {
       audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
       if (audioContext.state === "suspended") audioContext.resume();
@@ -598,8 +598,8 @@ function setupCyberSounds() {
   };
   document.addEventListener("keydown", (event) => {
     if (event.key.length === 1 || event.key === "Backspace" || event.key === "Enter") {
-      playTone(650 + Math.random() * 350, 0.022, 0.05);
-playTone(520, 0.035, 0.05);
+      playTone(650 + Math.random() * 350, 0.022, 0.5);
+playTone(520, 0.305, 0.5);
     }
   });
 }
