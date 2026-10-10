@@ -580,7 +580,7 @@ function setupCyberSounds() {
     document.head.appendChild(cyberStyle);
   }
   let audioContext;
-  const playTone = (frequency = 760, duration = 0.025, volume = 0.018) => {
+  const playTone = (frequency = 760, duration = 0.025, volume = 0.05) => {
     try {
       audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
       if (audioContext.state === "suspended") audioContext.resume();
