@@ -507,91 +507,85 @@ function renderTodayActivity(entries) {
 ========================================================= */
 
 function setupPersonalDuration() {
-  const calculateButton =
-    document.getElementById("calculatePersonal");
+  const calculateButton = document.getElementById("calculatePersonal");
+  const resetButton = document.getElementById("resetPersonal");
+  const inHour = document.getElementById("personalInHour");
+  const inMinute = document.getElementById("personalInMinute");
+  const outHour = document.getElementById("personalOutHour");
+  const outMinute = document.getElementById("personalOutMinute");
+  const result = document.getElementById("personalResult");
 
-  const resetButton =
-    document.getElementById("resetPersonal");
+  if (!calculateButton || !inHour || !inMinute || !outHour || !outMinute || !result) return;
 
-  if (!calculateButton) {
-    return;
-  }
+  // Exactly two digits per field; after HH reaches two digits, focus moves to MM.
+  const hourFields = [inHour, outHour];
+  const minuteFields = [inMinute, outMinute];
+  [...hourFields, ...minuteFields].forEach((field) => {
+    field.type = "text";
+    field.inputMode = "numeric";
+    field.maxLength = 2;
+    field.autocomplete = "off";
+    field.addEventListener("input", () => {
+      const clean = field.value.replace(/\D/g, "").slice(0, 2);
+      if (field.value !== clean) field.value = clean;
+      if (field === inHour && clean.length === 2) inMinute.focus();
+      if (field === outHour && clean.length === 2) outMinute.focus();
+    });
+  });
 
-  calculateButton.addEventListener(
-    "click",
-    () => {
-      const inHourValue =
-        document.getElementById("personalInHour").value.trim();
-      const inMinuteValue =
-        document.getElementById("personalInMinute").value.trim();
-      const outHourValue =
-        document.getElementById("personalOutHour").value.trim();
-      const outMinuteValue =
-        document.getElementById("personalOutMinute").value.trim();
-
-      if (
-        inHourValue === "" ||
-        inMinuteValue === "" ||
-        outHourValue === "" ||
-        outMinuteValue === ""
-      ) {
-        showToast(
-          "Please enter HH and MM for both In Time and Out Time.",
-          "error"
-        );
-        return;
-      }
-
-      const inH = Number(inHourValue);
-      const inM = Number(inMinuteValue);
-      const outH = Number(outHourValue);
-      const outM = Number(outMinuteValue);
-
-      if (
-        !Number.isInteger(inH) || inH < 0 || inH > 23 ||
-        !Number.isInteger(outH) || outH < 0 || outH > 23 ||
-        !Number.isInteger(inM) || inM < 0 || inM > 59 ||
-        !Number.isInteger(outM) || outM < 0 || outM > 59
-      ) {
-        showToast(
-          "HH 00-23 aur MM 00-59 ke beech hona chahiye.",
-          "error"
-        );
-        return;
-      }
-
-      let start = inH * 60 + inM;
-      let end = outH * 60 + outM;
-
-      if (end < start) {
-        end += 24 * 60;
-      }
-
-      const duration = end - start;
-
-      document.getElementById(
-        "personalResult"
-      ).textContent = formatMinutes(duration);
+  calculateButton.addEventListener("click", () => {
+    const values = [inHour.value, inMinute.value, outHour.value, outMinute.value];
+    if (values.some((v) => v.length !== 2)) {
+      showToast("In aur Out time mein HH aur MM ke dono boxes bharo.", "error");
+      return;
     }
-  );
-
-  resetButton?.addEventListener(
-    "click",
-    () => {
-      [
-        "personalInHour",
-        "personalInMinute",
-        "personalOutHour",
-        "personalOutMinute"
-      ].forEach((id) => {
-        document.getElementById(id).value = "";
-      });
-
-      document.getElementById(
-        "personalResult"
-      ).textContent = "0h 0m";
+    const [ih, im, oh, om] = values.map(Number);
+    if (ih > 23 || oh > 23 || im > 59 || om > 59) {
+      showToast("Valid time enter karo: HH 00–23, MM 00–59.", "error");
+      return;
     }
-  );
+    const start = ih * 60 + im;
+    let end = oh * 60 + om;
+    if (end < start) end += 24 * 60;
+    result.textContent = formatMinutes(end - start);
+  });
+
+  resetButton?.addEventListener("click", () => {
+    [inHour, inMinute, outHour, outMinute].forEach((field) => { field.value = ""; });
+    result.textContent = "0h 0m";
+    inHour.focus();
+  });
+}
+
+/* Cyber-style keyboard/click audio; starts only after a user interaction. */
+function setupCyberSounds() {
+  let audioContext;
+  const playTone = (frequency = 760, duration = 0.025, volume = 0.018) => {
+    try {
+      audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === "suspended") audioContext.resume();
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      oscillator.type = "square";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(volume, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + duration);
+    } catch (_) { /* Audio may be unavailable or blocked by browser. */ }
+  };
+  document.addEventListener("keydown", (event) => {
+    if (event.key.length === 1 || event.key === "Backspace" || event.key === "Enter") {
+      playTone(650 + Math.random() * 350, 0.022, 0.012);
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("input, textarea, select, button, a, label, h1, h2, h3, p, span, strong, .card, .stat-card")) {
+      playTone(520, 0.035, 0.018);
+    }
+  });
 }
 
 /* =========================================================
@@ -2111,6 +2105,7 @@ document.addEventListener(
     setupRegisterPage();
 
     setupPersonalDuration();
+    setupCyberSounds();
 
     setupEntryPage();
 
