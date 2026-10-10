@@ -15,6 +15,26 @@
     rel="stylesheet"
     href="/style.css"
   >
+
+  <style>
+    :root { color-scheme: dark; --cyber-green:#39ff14; --cyber-dim:#0a1b12; --cyber-black:#030705; }
+    body, .page { background:var(--cyber-black)!important; color:#d8ffe0!important; }
+    .app-header, .app-header-inner, .bottom-nav, .page-content { background:#050b08!important; }
+    .app-header, .card, .stat-card, .greeting, .quick-actions, .personal-result {
+      border-color:rgba(57,255,20,.28)!important; box-shadow:0 0 14px rgba(57,255,20,.06), inset 0 0 12px rgba(57,255,20,.025);
+    }
+    .card, .stat-card, .greeting, .personal-result { background:#08120d!important; }
+    h1,h2,h3,.card-title,.header-brand strong,label,.stat-value { color:#d8ffe0!important; }
+    .brand-logo, .btn-primary, .entry-button { background:var(--cyber-green)!important; color:#031006!important; border-color:var(--cyber-green)!important; }
+    .btn-secondary, .icon-btn, .quick-action { background:#0b1910!important; color:#baffb1!important; border-color:rgba(57,255,20,.3)!important; }
+    .form-control, input, textarea, select { background:#030906!important; color:#c8ffc4!important; border:1px solid rgba(57,255,20,.42)!important; caret-color:var(--cyber-green); }
+    input:focus,textarea:focus,select:focus { outline:2px solid rgba(57,255,20,.5)!important; box-shadow:0 0 12px rgba(57,255,20,.22)!important; }
+    .btn-primary:hover, .quick-action:hover { box-shadow:0 0 16px rgba(57,255,20,.28)!important; }
+    a, .bottom-nav a { color:#a8ff9e!important; }
+    .stat-value.primary,.stat-value.success { color:var(--cyber-green)!important; }
+    ::selection { background:var(--cyber-green); color:#001800; }
+  </style>
+
 </head>
 
 <body>
@@ -186,7 +206,7 @@
               <input
                 id="personalInHour"
                 class="form-control"
-                type="number"
+                type="text"
                 inputmode="numeric"
                 min="0"
                 max="23"
@@ -198,7 +218,7 @@
               <input
                 id="personalInMinute"
                 class="form-control"
-                type="number"
+                type="text"
                 inputmode="numeric"
                 min="0"
                 max="59"
@@ -219,7 +239,7 @@
               <input
                 id="personalOutHour"
                 class="form-control"
-                type="number"
+                type="text"
                 inputmode="numeric"
                 min="0"
                 max="23"
@@ -231,7 +251,7 @@
               <input
                 id="personalOutMinute"
                 class="form-control"
-                type="number"
+                type="text"
                 inputmode="numeric"
                 min="0"
                 max="59"
