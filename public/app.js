@@ -598,12 +598,8 @@ function setupCyberSounds() {
   };
   document.addEventListener("keydown", (event) => {
     if (event.key.length === 1 || event.key === "Backspace" || event.key === "Enter") {
-      playTone(650 + Math.random() * 350, 0.022, 0.012);
-    }
-  });
-  document.addEventListener("click", (event) => {
-    if (event.target.closest("input, textarea, select, button, a, label, h1, h2, h3, p, span, strong, .card, .stat-card")) {
-      playTone(520, 0.035, 0.018);
+      playTone(650 + Math.random() * 350, 0.022, 0.05);
+playTone(520, 0.035, 0.05);
     }
   });
 }
